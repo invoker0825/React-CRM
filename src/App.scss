@@ -1,0 +1,41 @@
+.app {
+  .app-title {
+    color: red;
+  }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
+.j-c-center {
+  justify-content: center;
+}
+
+.j-c-space-between {
+  justify-content: space-between;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+div, input {
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+}
