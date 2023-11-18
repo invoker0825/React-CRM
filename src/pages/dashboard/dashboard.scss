@@ -1,0 +1,127 @@
+.dashboard-page {
+    width: 100vw;
+    height: 100vh;
+    padding: 20px 50px 0 50px;
+    overflow-y: auto;
+
+    .mb-30 {
+        margin-bottom: 30px;
+    }
+
+    .logo-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 30px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: #000000;
+        margin-right: 96px;
+    }
+
+    .nav-radio {
+        label {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            color: #000000 !important;
+            border: none;
+            padding: 0;
+            margin-right: 50px;
+
+            .ant-wave {
+                display: none !important;
+            }
+
+            &::before {
+                width: 0px;
+            }
+
+            &:hover {
+                font-weight: 600;
+            }
+        }
+
+        .ant-radio-button-wrapper-checked {
+            font-weight: 600;
+        }
+    }
+
+    button {
+        height: 40px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        letter-spacing: 0.005em;
+    }
+
+    .status-card {
+        width: 18%;
+        height: 108px;
+        border-radius: 10px;
+        border: 1px solid #E4E4E7;
+        margin-right: 14px;
+
+        .ant-card-body {
+            padding-left: 38px;
+            padding-top: 20px;
+        }
+
+        .card-name {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 18px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 13px;
+        }
+
+        .card-value {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 32px;
+            padding-left: 5px;
+        }
+    }
+
+    .table-card {
+        width: 97%;
+
+        .ant-card-body {
+            padding: 0;
+        }
+
+        .top-section {
+            padding: 18px 25px;
+        }
+
+        .card-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 28px;
+            letter-spacing: 0.005em;
+            color: #333843;
+            margin-right: 10px;
+        }
+    }
+
+}
+
+.dashboard-page::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dashboard-page::-webkit-scrollbar-track {
+    background: #5c59e852;
+}
+
+.dashboard-page::-webkit-scrollbar-thumb {
+    background: #5c59e8c7;
+    border-radius: 4px;
+}

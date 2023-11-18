@@ -1,0 +1,112 @@
+.custom-table {
+    th {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        letter-spacing: 0.005em;
+        color: #333843;
+        background-color: #F9F9FC !important;
+        border-radius: 0 !important;
+
+        &:first-child {
+            padding-left: 23px !important;
+        }
+
+        &:nth-child(2) {
+            padding-left: 0 !important;
+        }
+
+        &:before {
+            width: 0px !important;
+        }
+    }
+
+    tbody {
+        tr {
+            height: 80px;
+
+            td {
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                color: #667085;
+                background-color: #ffffff !important;
+
+                &:first-child {
+                    padding-left: 23px !important;
+                }
+
+                &:nth-child(2) {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 20px;
+                    letter-spacing: 0.005em;
+                    color: #5C59E8;
+                    padding-left: 0 !important;
+                }
+            }
+        }
+    }
+
+    .ant-pagination {
+        padding: 0 25px;
+        margin-bottom: 25px;
+
+        .ant-pagination-total-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.005em;
+            color: #667085;
+            position: absolute;
+            left: 25px;
+        }
+
+        .ant-pagination-prev, .ant-pagination-next {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #DEDEFA;
+
+            svg {
+                color: #5C59E8;
+                transform: scaleY(1.2);
+            }
+        }
+
+        .ant-pagination-item {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #5C59E8;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 30px;
+            letter-spacing: 0.005em;
+            text-align: center;
+            
+            a {
+                color: #fff;
+            }
+        }
+    }
+
+    .black-text {
+        color: #333843;        
+    }
+
+    .small-text {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 18px;
+    }
+
+    .material-symbols-outlined {
+        cursor: pointer;
+    }
+}

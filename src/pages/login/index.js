@@ -1,20 +1,26 @@
 import { useState } from 'react';
 import { Button, Checkbox, Form, Input, Col, Row } from 'antd';
+import {useNavigate} from 'react-router-dom';
 import loginImage from '../../assets/img/login-image.png'
 import './login.scss';
 
 const LogIn = () => {
+    const navigate = useNavigate()
 
     const [ step, setStep ] = useState('login');
     const [ logInData, setLogInData ] = useState({});
 
-    const onFinish = (values) => {
+    const onFinishLogIn = (values) => {
         setLogInData(values);
         setStep('authenticate');
     };
 
     const backToLogin = () => {
         setStep('login');
+    }
+
+    const onFinishAuth = (value) => {
+        navigate('/dashboard');
     }
 
     return (
@@ -35,7 +41,7 @@ const LogIn = () => {
                             <p className='login-title'>Login</p>
                             
                             <Form
-                                name="basic"
+                                name="login"
                                 labelCol={{
                                     span: 8,
                                 }}
@@ -51,7 +57,7 @@ const LogIn = () => {
                                     remember: logInData.remember
                                 }}
                                 layout='vertical'
-                                onFinish={onFinish}
+                                onFinish={onFinishLogIn}
                                 autoComplete="off"
                             >
                                 <Form.Item
@@ -98,7 +104,7 @@ const LogIn = () => {
                                     </Col>
                                     
                                     <Col span={7}>
-                                        <a href='/' className='forgot'>Forgot password?</a>
+                                        <a href='/forgot' className='forgot'>Forgot password?</a>
                                     </Col>
                                 </Row>
 
@@ -118,11 +124,47 @@ const LogIn = () => {
                             <p className='detail'>{logInData.username}</p>
                             <p className='enter-code'>Enter Code</p>
                             <p className='detail'>Enter the code displayed in the Microsoft Authenticator app on your mobile phone.</p>
-                            <input placeholder='Code...' />
-                            <div className='d-flex align-center j-c-space-between'>
-                                <Button type="primary" onClick={backToLogin}>Back</Button>
-                                <Button type="primary">Verify</Button>
-                            </div>
+                            
+                            <Form
+                                name="auth"
+                                labelCol={{
+                                    span: 8,
+                                }}
+                                wrapperCol={{
+                                    span: 24,
+                                }}
+                                style={{
+                                    maxWidth: 485,
+                                }}
+                                layout='vertical'
+                                onFinish={onFinishAuth}                               
+                                autoComplete="off"
+                            >
+                                <Form.Item
+                                    label=""
+                                    name="code"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please input your code!'
+                                        },
+                                    ]}
+                                    className='form-input-section code-input'
+                                >
+                                    <Input placeholder="Code..."/>
+                                </Form.Item>
+
+                                <Form.Item
+                                    wrapperCol={{
+                                        span: 24,
+                                    }}
+                                >
+                                    <div className='d-flex align-center j-c-space-between'>
+                                        <Button type="primary" onClick={backToLogin}>Back</Button>
+                                        <Button type="primary" htmlType="submit">Verify</Button>
+                                    </div>
+                                </Form.Item>
+                            </Form>
                         </div>
                     }
                 </div>

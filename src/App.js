@@ -1,6 +1,7 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ConfigProvider } from 'antd';
 import Login from './pages/login'
+import Dashboard from './pages/dashboard'
 import './App.scss';
 
 function App() {
@@ -16,8 +17,9 @@ function App() {
         <BrowserRouter>
         <Routes>
           <Route>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Routes>
       </BrowserRouter>
