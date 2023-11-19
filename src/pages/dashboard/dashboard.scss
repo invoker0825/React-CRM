@@ -33,6 +33,8 @@
 
     .table-card {
         width: 97%;
+        box-shadow: 0px 1.5px 2px 0px #1018281A;
+        margin-bottom: 25px;
 
         .ant-card-body {
             padding: 0;
@@ -51,19 +53,48 @@
             color: #333843;
             margin-right: 10px;
         }
+
+        .map-section {
+            position: relative;
+
+            img {
+                width: 80%;
+            }
+
+            .player-label {
+                padding: 12px 16px;
+                border-radius: 8px;
+                border: none;
+                box-shadow: 0px 4px 6px -2px #10182808, 0px 12px 16px -4px #10182814;
+                position: absolute;
+                left: 25%;
+                bottom: 24%;
+
+                .player-name {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 12px;
+                    font-weight: 600;
+                    line-height: 18px;
+                    letter-spacing: 0em;
+                    text-align: center;
+                    color: #344054;
+                }
+
+                .player-number {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 18px;
+                    letter-spacing: 0em;
+                    text-align: center;
+                    color: #667085;
+                }
+
+                &:before {
+                    border: none !important;
+                }
+            }
+        }
     }
 
-}
-
-.dashboard-page::-webkit-scrollbar {
-    width: 8px;
-}
-
-.dashboard-page::-webkit-scrollbar-track {
-    background: #5c59e852;
-}
-
-.dashboard-page::-webkit-scrollbar-thumb {
-    background: #5c59e8c7;
-    border-radius: 4px;
 }

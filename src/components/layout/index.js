@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from "react-router-dom";
-import {useNavigate} from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Button, Radio } from 'antd';
 import Dashboard from '../../pages/dashboard';
 import Media from '../../pages/media';
@@ -66,7 +65,7 @@ const Layout = () => {
 
     return (
         <div className="layout-page">
-            <div className='d-flex align-center j-c-space-between mb-30'>
+            <div className='d-flex align-center j-c-space-between nav-bar'>
                 <div className='d-flex align-center'>
                     <a href='/' className='logo-title'>Digital signage</a>
                     <Radio.Group
@@ -79,11 +78,13 @@ const Layout = () => {
                 </div>
                 <Button type='primary' onClick={logOut}>Logout</Button>
             </div>
-            <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/media" element={<Media />} />
-            </Routes>
+            <div className='routing-section'>
+                <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/media" element={<Media />} />
+                </Routes>
+            </div>
         </div> 
     );
 }

@@ -1,11 +1,24 @@
 .layout-page {
     width: 100vw;
     height: 100vh;
-    padding: 20px 50px 0 50px;
     overflow-y: auto;
 
     .mb-30 {
         margin-bottom: 30px;
+    }
+
+    .nav-bar {
+        width: 100%;
+        padding: 20px 50px 30px 50px;
+        background-color: #ffffff;
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+
+    .routing-section {
+        padding: 0 50px;
     }
 
     .logo-title {
@@ -58,17 +71,4 @@
         letter-spacing: 0.005em;
     }
 
-}
-
-.layout-page::-webkit-scrollbar {
-    width: 8px;
-}
-
-.layout-page::-webkit-scrollbar-track {
-    background: #5c59e852;
-}
-
-.layout-page::-webkit-scrollbar-thumb {
-    background: #5c59e8c7;
-    border-radius: 4px;
 }

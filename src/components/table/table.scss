@@ -54,7 +54,7 @@
 
     .ant-pagination {
         padding: 0 25px;
-        margin-bottom: 25px;
+        margin-bottom: 25px !important;
 
         .ant-pagination-total-text {
             font-family: 'Inter', sans-serif;
@@ -98,6 +98,10 @@
 
     .black-text {
         color: #333843;        
+    }
+
+    .purple-text {
+        color: #5C59E8;
     }
 
     .small-text {
