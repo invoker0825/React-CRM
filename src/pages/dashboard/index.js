@@ -1,46 +1,9 @@
-import { useState } from 'react';
-import { Button, Card, Checkbox, Form, Input, Col, Row, Radio, Space } from 'antd';
-import {useNavigate} from 'react-router-dom';
+import { Button, Card, Space } from 'antd';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import './dashboard.scss';
 import packImg from '../../assets/img/pack.png';
 import watchImg from '../../assets/img/watch.png';
-
-const options = [
-    {
-      label: 'Dashboard',
-      value: 'dashboard',
-    },
-    {
-      label: 'Media',
-      value: 'media',
-    },
-    {
-      label: 'Layout',
-      value: 'layout',
-    },
-    {
-      label: 'Playlist',
-      value: 'playlist',
-    },
-    {
-      label: 'Schedule',
-      value: 'schedule',
-    },
-    {
-      label: 'Player',
-      value: 'player',
-    },
-    {
-      label: 'Report',
-      value: 'report',
-    },
-    {
-      label: 'Settings',
-      value: 'settings',
-    },
-];
 
 const mediaColumns = [
     {
@@ -128,34 +91,9 @@ const Dashboard = () => {
         { name: 'Active Playlist', value: 6 },
         { name: 'Total Users', value: 8 }
     ]
-    const navigate = useNavigate()
-
-    const [navValue, setNavValue] = useState('dashboard');
-    
-    const onChangeNav = ({ target: { value } }) => {
-        console.log('radio4 checked', value);
-        setNavValue(value);
-    };
-
-    const logOut = () => {
-        navigate('/login');
-    }
 
     return (
         <div className="dashboard-page">
-            <div className='d-flex align-center j-c-space-between mb-30'>
-                <div className='d-flex align-center'>
-                    <a href='/' className='logo-title'>Digital signage</a>
-                    <Radio.Group
-                        options={options}
-                        onChange={onChangeNav}
-                        value={navValue}
-                        optionType="button"
-                        className='nav-radio'
-                    />
-                </div>
-                <Button type='primary' onClick={logOut}>Logout</Button>
-            </div>
             <div className='d-flex align-center mb-30'>
                 {
                     cardInfo.map(card => 

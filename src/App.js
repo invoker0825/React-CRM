@@ -1,7 +1,9 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ConfigProvider } from 'antd';
-import Login from './pages/login'
-import Dashboard from './pages/dashboard'
+import Login from './pages/login';
+import Layout from './components/layout';
+import Dashboard from "./pages/dashboard";
+import Media from "./pages/media";
 import './App.scss';
 
 function App() {
@@ -15,14 +17,14 @@ function App() {
         }}
       >
         <BrowserRouter>
-        <Routes>
-          <Route>
-            <Route path="/" element={<Dashboard />} />
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/media" element={<Media />} />
+            </Route>
             <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
      </ConfigProvider>
     </div>
   );

@@ -12,7 +12,7 @@ const LogIn = () => {
 
     const onFinishLogIn = (values) => {
         setLogInData(values);
-        setStep('authenticate');
+        if (values.username === 'test@test.com' && values.password === 'test1234') setStep('authenticate');
     };
 
     const backToLogin = () => {
@@ -20,7 +20,8 @@ const LogIn = () => {
     }
 
     const onFinishAuth = (value) => {
-        navigate('/dashboard');
+        localStorage.setItem('logged', true);
+        if (value.code === '123456') navigate('/dashboard');
     }
 
     return (
