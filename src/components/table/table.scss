@@ -72,6 +72,10 @@
             border-radius: 8px;
             background-color: #DEDEFA;
 
+            button {
+                height: 100% !important;
+            }
+
             svg {
                 color: #5C59E8;
                 transform: scaleY(1.2);
