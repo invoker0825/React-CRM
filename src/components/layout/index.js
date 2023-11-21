@@ -3,6 +3,8 @@ import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Button, Radio } from 'antd';
 import Dashboard from '../../pages/dashboard';
 import Media from '../../pages/media';
+import Report from '../../pages/report';
+import User from '../../pages/user';
 import './layout.scss';
 
 const options = [
@@ -83,6 +85,8 @@ const Layout = () => {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/media" element={<Media />} />
+                    <Route path="/report" element={<Report />} />
+                    <Route path="/user" element={<User />} />
                 </Routes>
             </div>
         </div> 

@@ -1,0 +1,70 @@
+.media-page {
+    .pr-20 {
+        padding-right: 20px;
+    }
+
+    .table-card {
+        width: 97%;
+        box-shadow: 0px 1.5px 2px 0px #1018281A;
+        margin-bottom: 25px;
+
+        .ant-card-body {
+            padding: 0;
+        }
+
+        .top-section {
+            padding: 18px 25px;
+
+            button {
+                display: flex;
+                align-items: center;
+
+                .material-symbols-outlined {
+                    font-size: 18px;
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .report-table {
+            .ant-table {
+                min-height: calc(100vh - 275px);
+            }
+
+            .ant-pagination {
+                border-top: 1px solid #F0F1F3
+            }
+        }
+
+        .card-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 28px;
+            letter-spacing: 0.005em;
+            color: #333843;
+            margin-right: 10px;
+        }
+
+        .ant-input-affix-wrapper {
+            height: 40px;
+            border-radius: 8px;
+            background-color: #F9F9FC;
+            
+            input {
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                background-color: #F9F9FC;
+            }
+
+            svg {
+                width: 19px;
+                height: 19px;
+            }
+        }
+
+    }
+}
