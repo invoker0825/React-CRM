@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Button, Card, Space, Input, Menu, Badge, Row, Col, Checkbox, Modal, Upload, message } from 'antd';
+import React, { useState } from 'react';
+import { Button, Card, Space, Input, Menu, Badge, Row, Col, Checkbox, Modal, Upload, message, Collapse, Select } from 'antd';
 import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
@@ -8,6 +8,7 @@ import watchImg from '../../assets/img/watch.png';
 import './media.scss';
 
 const { Dragger } = Upload;
+const CheckboxGroup = Checkbox.Group;
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -110,7 +111,103 @@ const mediaData = [
     }
 ];
 
-const mediaFilterData = [
+var mediaFilterData = [
+    {
+        name: 'BP-backdrop 1',
+        duration: 10,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 8/8/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop 2',
+        duration: 15,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 9/9/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop 3',
+        duration: 43,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 10/10/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop',
+        duration: 23,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 11/11/2023',
+        screenshot: watchImg
+    },
+    {
+        name: 'BP-backdrop 1',
+        duration: 10,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 8/8/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop 2',
+        duration: 15,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 9/9/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop 3',
+        duration: 43,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 10/10/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop',
+        duration: 23,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 11/11/2023',
+        screenshot: watchImg
+    },
+    {
+        name: 'BP-backdrop 1',
+        duration: 10,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 8/8/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop 2',
+        duration: 15,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 9/9/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop 3',
+        duration: 43,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 10/10/2023',
+        screenshot: packImg
+    },
+    {
+        name: 'BP-backdrop',
+        duration: 23,
+        resolution: '1920x1080',
+        user: 'Arnold',
+        date: ' 11/11/2023',
+        screenshot: watchImg
+    },
     {
         name: 'BP-backdrop 1',
         duration: 10,
@@ -150,11 +247,31 @@ const Media = () => {
     const [importModalShow, setImportModalShow] = useState(false);
     const [webPageShow, setWebPageShow] = useState(false);
     const [rssShow, setRssShow] = useState(false);
+    const [editShow, setEditShow] = useState(false);
+    const [filterShow, setFilterShow] = useState(false);
     const [filelist, setFileList] = useState();
+    const [checkedList, setCheckedList] = useState([]);
+    const [editMedia, setEditMedia] = useState();
+
+    const fileTypes = ['Video', 'Picture', 'Stream', 'Powerpoint', 'Capture Card'];
+    const checkAll = fileTypes.length === checkedList.length;
+    const indeterminate = checkedList.length > 0 && checkedList.length < fileTypes.length;
 
     const onClickMenu = (e) => {
       console.log('click------------------ ', e);
     };
+
+    const onChangeFileType = (list) => {
+        setCheckedList(list);
+    };
+
+    const onCheckAllTypes = (e) => {
+        setCheckedList(e.target.checked ? fileTypes : []);
+    };
+
+    const resetFilter = () => {
+        setCheckedList([]);
+    }
 
     const onFileChange = (info) => {
         const { status } = info.file;
@@ -170,6 +287,26 @@ const Media = () => {
 
     const onFileDrop = (e) => {
         console.log('Dropped files', e.dataTransfer.files);
+    }
+
+    const fileTypeCheck = () => {
+        return (
+            <>
+                <Checkbox indeterminate={indeterminate} onChange={onCheckAllTypes} checked={checkAll}>
+                    All
+                </Checkbox>
+                <CheckboxGroup options={fileTypes} value={checkedList} onChange={onChangeFileType} />
+            </>
+        );
+    }
+
+    const editMediaData = (media) => {
+        setEditMedia(media);
+        setEditShow(true);
+    }
+
+    const changeDuration = (duration) => {
+        setEditMedia({...editMedia, duration: duration})
     }
 
     return (
@@ -189,7 +326,7 @@ const Media = () => {
                         <p className='card-title'>Media Library</p>
                         <div className='d-flex align-center'>
                             <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
-                            <Button className='filter-btn'>
+                            <Button className='filter-btn' onClick={() => setFilterShow(true)}>
                                 <div className='d-flex align-center'>
                                     <span className="material-symbols-outlined">tune</span><span>&nbsp;&nbsp;Filters</span>
                                 </div>
@@ -226,7 +363,7 @@ const Media = () => {
                                                 style={{backgroundImage: 'url(' + media.screenshot + ')'}}
                                             >
                                                 <Checkbox className='card-check'/>
-                                                <span className="material-symbols-outlined">edit</span>
+                                                <span className="material-symbols-outlined" onClick={() => editMediaData(media)}>edit</span>
                                             </Card>
                                             <div className='d-flex align-center j-c-space-between'>
                                                 <p>{media.name}</p>
@@ -291,7 +428,7 @@ const Media = () => {
             </Modal>
             
             <Modal
-                title="webpage"
+                title="Add RSS/Ticker"
                 centered
                 open={rssShow}
                 onCancel={() => setRssShow(false)}
@@ -303,6 +440,92 @@ const Media = () => {
                 <p className='label'>Output</p>
                 <Input placeholder="Sample Output Here" className='url-input rss-input'/>
                 <Button className='modal-cancel-button' onClick={() => setRssShow(false)}>Cancel</Button>
+            </Modal>
+            
+            <Modal
+                title={
+                    <div className='d-flex align-center j-c-space-between'>
+                        <p>Filters</p>
+                        <div className='reset-button' onClick={resetFilter}><span class="material-symbols-outlined">close</span><p>Reset</p></div>
+                    </div>
+                }
+                centered
+                open={filterShow}
+                onCancel={() => setFilterShow(false)}
+                footer={false}
+                className='filter-modal'
+            >
+                <Collapse
+                    items={[
+                        {
+                        key: '1',
+                        label: 'File Type',
+                        children: <>{fileTypeCheck()}</>,
+                        }
+                    ]}
+                    defaultActiveKey={['1']}
+                    expandIconPosition='end'
+                    className='file-type-collapse'
+                />
+                <div className='d-flex align-center j-c-end'>
+                    <Button className='modal-cancel-button' onClick={() => setFilterShow(false)}>Cancel</Button>
+                    <Button 
+                        type='primary' 
+                        disabled={checkedList.length === 0} 
+                        className={checkedList.length === 0 && 'ant-btn-disabled'} 
+                        onClick={() => setFilterShow(false)}
+                    >
+                        Apply Filter
+                    </Button>
+                </div>
+            </Modal>
+            
+            <Modal
+                title={editMedia?.name}
+                centered
+                open={editShow}
+                onCancel={() => setEditShow(false)}
+                footer={false}
+                className='edit-modal'
+            >
+                <p className='select-label'>Duration (Seconds)</p>
+                <Select
+                    value={editMedia?.duration}
+                    options={[
+                        {
+                            value: 10,
+                            label: '10',
+                        },
+                        {
+                            value: 20,
+                            label: '20',
+                        },
+                        {
+                            value: 30,
+                            label: '30',
+                        }
+                    ]}
+                    onChange={changeDuration}
+                />
+                <p className='select-label'>Media Tags</p>
+                <Select
+                    mode='multiple'
+                    options={[
+                        {
+                            value: 'watch',
+                            label: 'Watch',
+                        },
+                        {
+                            value: 'gadget',
+                            label: 'Gadget',
+                        }
+                    ]}
+                />
+                <p className='select-label'>Start-End Date</p>
+                <Select />
+                <p className='select-label'>Author/Provider</p>
+                <Select />
+                <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
             </Modal>
         </>
     );
