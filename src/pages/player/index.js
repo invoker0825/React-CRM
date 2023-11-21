@@ -91,7 +91,7 @@ const playerData = [
         status: {label: 'Active', color: 'green'}
     },
     {
-        key: '1',
+        key: '3',
         name: 'SCH 1',
         screenshot: packImg,
         schedule: 'Schedule A',
@@ -104,7 +104,7 @@ const playerData = [
         status: {label: 'Active', color: 'green'}
     },
     {
-        key: '2',
+        key: '4',
         name: 'SCH 2',
         screenshot: watchImg,
         schedule: 'Schedule B',
@@ -117,7 +117,7 @@ const playerData = [
         status: {label: 'Active', color: 'green'}
     },
     {
-        key: '1',
+        key: '5',
         name: 'SCH 1',
         screenshot: packImg,
         schedule: 'Schedule A',
@@ -130,7 +130,7 @@ const playerData = [
         status: {label: 'Active', color: 'green'}
     },
     {
-        key: '2',
+        key: '6',
         name: 'SCH 2',
         screenshot: watchImg,
         schedule: 'Schedule B',
