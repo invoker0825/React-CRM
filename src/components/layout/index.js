@@ -5,6 +5,7 @@ import Dashboard from '../../pages/dashboard';
 import Media from '../../pages/media';
 import Report from '../../pages/report';
 import User from '../../pages/user';
+import Player from '../../pages/player';
 import './layout.scss';
 
 const options = [
@@ -87,6 +88,7 @@ const Layout = () => {
                     <Route path="/media" element={<Media />} />
                     <Route path="/report" element={<Report />} />
                     <Route path="/user" element={<User />} />
+                    <Route path="/player" element={<Player />} />
                 </Routes>
             </div>
         </div> 

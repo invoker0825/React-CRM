@@ -36,6 +36,10 @@
   flex-direction: column;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .text-center {
   text-align: center;
 }
@@ -84,12 +88,21 @@ button {
   }
 }
 
+.material-symbols-outlined {
+    cursor: pointer;
+
+    &:hover {
+        color: #5C59E8;
+    }
+}
+
 ::-webkit-scrollbar {
   width: 8px !important;
 }
 
 ::-webkit-scrollbar-track {
   background: #5c59e852 !important;
+  border-radius: 4px !important;
 }
 
 ::-webkit-scrollbar-thumb {

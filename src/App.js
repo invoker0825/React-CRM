@@ -6,6 +6,7 @@ import Dashboard from "./pages/dashboard";
 import Media from "./pages/media";
 import Report from "./pages/report";
 import User from "./pages/user";
+import Player from './pages/player';
 import './App.scss';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
               <Route path="/media" element={<Media />} />
               <Route path="/report" element={<Report />} />
               <Route path="/user" element={<User />} />
+              <Route path="/player" element={<Player />} />
             </Route>
             <Route path="/login" element={<Login />} />
           </Routes>

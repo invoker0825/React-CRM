@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Card, Space } from 'antd';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
@@ -69,7 +69,7 @@ const Report = () => {
 
     return (
         <>
-            <div className="media-page">
+            <div className="report-page">
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Report</p>
