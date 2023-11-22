@@ -7,6 +7,7 @@ import Media from "./pages/media";
 import Report from "./pages/report";
 import User from "./pages/user";
 import Player from './pages/player';
+import Schedule from './pages/schedule';
 import './App.scss';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
               <Route path="/report" element={<Report />} />
               <Route path="/user" element={<User />} />
               <Route path="/player" element={<Player />} />
+              <Route path="/schedule" element={<Schedule />} />
             </Route>
             <Route path="/login" element={<Login />} />
           </Routes>

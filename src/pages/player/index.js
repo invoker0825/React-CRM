@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, Space, Pagination, Select, Modal, Input, Row, Col } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import packImg from '../../assets/img/pack.png';
@@ -169,8 +170,9 @@ const Player = () => {
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Player</p>
-                        <div className='d-flex align-center'>                        
-                            <Select
+                        <div className='d-flex align-center'>
+                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>       
+                            { viewMode !== 'list' && <Select
                                 defaultValue='group1'
                                 options={[
                                     {
@@ -186,7 +188,7 @@ const Player = () => {
                                         label: 'Group 3',
                                     }
                                 ]}
-                            />
+                            />}
                             <Button className='view-mode-btn' type='primary' onClick={toggleViewMode}>{viewMode === 'list' ? <div className='d-flex align-center j-c-center'><span class="material-symbols-outlined">grid_view</span>Thumb View</div> : <div className='d-flex align-center j-c-center'><span class="material-symbols-outlined">lists</span>List View</div>}</Button>    
                         </div>
                     </div>

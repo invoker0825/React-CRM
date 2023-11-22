@@ -17,7 +17,6 @@
 
             button {
                 min-width: 146px;
-                margin-left: 25px;
 
                 .material-symbols-outlined {
                     font-size: 18px;
@@ -28,6 +27,12 @@
             .ant-select {
                 width: 170px;
                 height: 40px;
+                margin-right: 25px;
+            }
+
+            .search-input {
+                width: 25vw;
+                margin-right: 25px;
             }
         }
 

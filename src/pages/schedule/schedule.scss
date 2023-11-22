@@ -1,0 +1,356 @@
+.schedule-page {
+    .pr-20 {
+        padding-right: 20px;
+    }
+
+    .table-card {
+        width: 97%;
+        box-shadow: 0px 1.5px 2px 0px #1018281A;
+        margin-bottom: 25px;
+
+        .ant-card-body {
+            padding: 0;
+        }
+
+        .top-section {
+            padding: 18px 25px;
+
+            button {
+                display: flex;
+                align-items: center;
+
+                .material-symbols-outlined {
+                    font-size: 18px;
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .report-table {
+            .ant-table {
+                min-height: calc(100vh - 275px);
+            }
+
+            .ant-pagination {
+                border-top: 1px solid #F0F1F3
+            }
+        }
+
+        .card-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 28px;
+            letter-spacing: 0.005em;
+            color: #333843;
+            margin-right: 10px;
+        }
+
+        .ant-input-affix-wrapper {
+            height: 40px;
+            border-radius: 8px;
+            background-color: #F9F9FC;
+            
+            input {
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                background-color: #F9F9FC;
+            }
+
+            svg {
+                width: 19px;
+                height: 19px;
+            }
+        }
+
+    }
+}
+
+.create-schedule-modal {
+    .ant-modal-body {
+        width: 1320px;
+        margin-top: 15px;
+
+        .ant-card {
+            border-radius: 8px;
+            border: 1px solid #E0E2E7;
+            box-shadow: 0px 1.5px 2px 0px #1018281A;
+            padding: 0;
+            height: 100%;
+
+            .sub-title {
+                font-family: 'Inter', sans-serif;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 28px;
+                letter-spacing: 0.005em;
+                color: #1A1C21;
+                margin-bottom: 15px;
+            }
+        }
+
+        .select-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #4D5464;
+            margin-bottom: 6px;
+        }
+
+        .ant-input {
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #333843;            
+        }
+
+        .grey-input {
+            background-color: #F9F9FC;
+        }
+
+        .ant-input-affix-wrapper {
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+
+            input {
+                margin-bottom: 0;
+                height: auto !important;
+            }
+        }
+
+        .add-button {
+            display: flex;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #fff;
+
+            .material-symbols-outlined {
+                font-size: 18px;
+                margin-right: 10px;
+            }
+        }
+
+        .playlist-section {
+            width: 100%;
+            height: 300px;
+            overflow-y: auto;
+            margin-top: 25px;
+
+            .playlist-drag-item {
+                height: 42px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background-color: #fff;
+                border: 1px solid #E4E4E4;
+                border-radius: 10px;
+                margin-bottom: 5px;
+                padding: 0 5px;
+
+                .playlist-name {
+                    font-family: 'Lato', sans-serif;
+                    font-size: 12px;
+                    font-weight: 700;
+                    line-height: 14px;
+                    letter-spacing: 0em;
+                    color: #000000;
+                    margin-left: 10px;
+                    width: 160px;
+                }
+
+                .playlist-time-range {
+                    font-family: 'Lato', sans-serif;
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 14px;
+                    letter-spacing: 0em;
+                    color: #000000;
+                    width: 160px;
+                }
+
+                .playlist-duration {
+                    font-family: 'Lato', sans-serif;
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 14px;
+                    letter-spacing: 0em;
+                    color: #000000;
+                    width: 250px;
+
+                    span {
+                        font-weight: 700;
+                    }
+                }
+
+                .material-symbols-outlined {
+                    color: #667085;
+
+                    &:hover {
+                        color: #5C59E8;
+                    }
+                }
+            }
+        }
+
+        .playlist-section > div:first-child {
+            width: 100% !important;
+            padding: 0 !important;
+            background-color: #fff !important;
+        }
+
+        .ant-picker {
+            width: 100%;
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+            background-color: #F9F9FC;
+        }
+
+        .ant-select {
+            width: 100%;
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+
+            .ant-select-selector {
+                background-color: #F9F9FC;
+            }
+        }
+
+        .ant-select-multiple {
+            .ant-select-selection-item {
+                font-family: 'Inter', sans-serif;
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: 0.005em;
+                background-color: #DEDEFA;
+                color: #5C59E8;
+            }
+
+            .anticon-close {
+                color: #5C59E8;
+            }
+        }
+
+        .location-tree {
+            margin-top: 15px;
+            padding-left: 12px;
+        }
+
+        .ant-tree-treenode {
+            align-items: center;
+            padding-bottom: 10px;
+
+            .ant-tree-switcher {
+                display: none;
+            }
+
+            .ant-tree-node-content-wrapper {
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                color: #667085;
+            }
+
+            .ant-tree-checkbox {
+                margin-top: 0;
+            }
+
+            .ant-tree-checkbox-inner {
+                width: 20px;
+                height: 20px;
+
+                &::after {
+                    transform: rotate(45deg) scale(1.3) translate(-50%,-50%);
+                }
+            }
+
+            &:last-child {
+                margin-bottom: 25px;
+            }
+        }
+
+        .ant-tree-treenode-checkbox-indeterminate {
+            .ant-tree-checkbox-inner {
+                &::after {
+                    transform: scale(1.7) translate(-50%,-50%) !important;
+                    top: 64% !important;
+                    inset-inline-start: 63% !important;
+                    border-radius: 2px;
+                }
+            }
+        }
+
+        .modal-cancel-button {
+            width: 155px;
+            margin-top: 15px;
+            margin-left: 22px;
+        }
+
+        .save-button {
+            width: 155px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #fff;
+        }
+    }
+}
+
+.playlist-modal {
+    .ant-modal-body {
+        width: 512px;
+        margin-top: 15px;
+
+        .modal-cancel-button {
+            margin-top: 15px;
+            margin-left: 10px;
+        }
+
+        button {
+            width: 75px;
+        }
+
+        .ant-checkbox-wrapper {
+            margin-bottom: 15px;
+            width: 100%;
+
+            span {
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                color: #667085;
+            }
+
+            .ant-checkbox-inner {
+                width: 20px;
+                height: 20px;
+
+                &::after {
+                    transform: rotate(45deg) scale(1.3) translate(-50%,-50%);
+                }
+            }
+        }
+    }
+}

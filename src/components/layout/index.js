@@ -6,6 +6,7 @@ import Media from '../../pages/media';
 import Report from '../../pages/report';
 import User from '../../pages/user';
 import Player from '../../pages/player';
+import Schedule from '../../pages/schedule';
 import './layout.scss';
 
 const options = [
@@ -89,6 +90,7 @@ const Layout = () => {
                     <Route path="/report" element={<Report />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/player" element={<Player />} />
+                    <Route path="/schedule" element={<Schedule />} />
                 </Routes>
             </div>
         </div> 
