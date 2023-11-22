@@ -68,3 +68,72 @@
 
     }
 }
+
+.create-report-modal {
+    .ant-modal-body {
+        width: 400px;
+        margin-top: 15px;
+        text-align: center;
+
+        .select-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #4D5464;
+            margin-bottom: 6px;
+            text-align: left;
+        }
+
+        .ant-input {
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #333843;            
+        }
+
+        .grey-input {
+            background-color: #F9F9FC;
+        }
+
+        .ant-picker {
+            width: 100%;
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+            background-color: #F9F9FC;
+        }
+
+        .ant-select {
+            width: 100%;
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+
+            .ant-select-selector {
+                background-color: #F9F9FC;
+            }
+        }
+
+        .ant-select-multiple {
+            .ant-select-selection-item {
+                font-family: 'Inter', sans-serif;
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: 0.005em;
+                background-color: #DEDEFA;
+                color: #5C59E8;
+            }
+
+            .anticon-close {
+                color: #5C59E8;
+            }
+        }
+    }
+}

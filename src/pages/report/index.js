@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Card, Space } from 'antd';
+import React, {useState} from 'react';
+import { Button, Card, Space, Select, Input, Row, Col, Modal, DatePicker } from 'antd';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import './report.scss';
@@ -67,13 +67,27 @@ const reportData = [
 
 const Report = () => {
 
+    const [modalTitle, setModalTitle] = useState('');
+    const [newShow, setNewShow] = useState(false);
+    const [reportType, setReportType] = useState('');
+
+    const createNewReport = () => {
+        setModalTitle('Report Details');
+        setReportType('');
+        setNewShow(true);
+    }
+
+    const changeReportType = (e) => {
+        setReportType(e);
+    }
+
     return (
         <>
             <div className="report-page">
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Report</p>
-                        <Button type='primary'><span class="material-symbols-outlined">add</span>Report</Button>
+                        <Button type='primary' onClick={createNewReport}><span class="material-symbols-outlined">add</span>Report</Button>
                     </div>
                     <Table
                         columns={reportColumns}
@@ -82,6 +96,90 @@ const Report = () => {
                     />
                 </Card>
             </div> 
+            
+            <Modal
+                title={modalTitle}
+                centered
+                open={newShow}
+                onCancel={() => setNewShow(false)}
+                footer={false}
+                className='create-report-modal'
+            >
+                <p className='select-label'>Name</p>
+                <Input className='grey-input' placeholder='name...' />
+                <Row justify='space-between'>
+                    <Col span={11}>
+                        <p className='select-label'>Start Date*</p>
+                        <DatePicker />
+                    </Col>
+                    <Col span={11}>
+                        <p className='select-label'>End Date*</p>
+                        <DatePicker />
+                    </Col>
+                </Row>
+                <p className='select-label'>Report Type</p>
+                <Select
+                    value={reportType}
+                    options={[
+                        {
+                            value: 'user',
+                            label: 'User'
+                        },
+                        {
+                            value: 'media',
+                            label: 'Media'
+                        },
+                        {
+                            value: 'playback',
+                            label: 'Playback'
+                        }
+                    ]}
+                    onChange={changeReportType}
+                />
+                <p className='select-label'>Report Type</p>
+                <Select
+                    mode='multiple'
+                    options={[
+                        {
+                            value: 'Ali',
+                            label: 'Ali'
+                        },
+                        {
+                            value: 'Muthu',
+                            label: 'Muthu'
+                        },
+                        {
+                            value: 'Ah Kau',
+                            label: 'Ah Kau'
+                        }
+                    ]}
+                    disabled={reportType === ''}
+                />
+                <p className='select-label'>All Schedules</p>
+                <Select
+                    mode='multiple'
+                    options={[
+                        {
+                            value: 'Schedule 1',
+                            label: 'Schedule 1'
+                        },
+                        {
+                            value: 'Schedule 2',
+                            label: 'Schedule 2'
+                        },
+                        {
+                            value: 'Schedule 3',
+                            label: 'Schedule 3'
+                        },
+                        {
+                            value: 'Schedule 4',
+                            label: 'Schedule 4'
+                        },
+                    ]}
+                    disabled={reportType === '' || reportType === 'user'}
+                />
+                <Button className='modal-cancel-button' onClick={() => setNewShow(false)}>Cancel</Button>
+            </Modal>
         </>
     );
 }
