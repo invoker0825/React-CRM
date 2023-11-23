@@ -184,7 +184,7 @@ const Schedule = () => {
             result.destination.index
         );
         setPlayList(tempItems);
-      }
+    }
 
     return (
         <>

@@ -1,4 +1,4 @@
-.playlist-page {
+.layout-list-page {
     .pr-20 {
         padding-right: 20px;
     }
@@ -204,11 +204,15 @@
     color: #858D9D !important;
 }
 
-.edit-playlist-modal {
+.edit-layoutlist-modal {
     
     .ant-modal-body {
         width: 1320px;
         margin-top: 15px;
+
+        button {
+            font-family: 'Inter', sans-serif;
+        }
 
         .ant-card {
             border-radius: 8px;
@@ -274,10 +278,6 @@
 
             .ant-card-body {
                 padding: 15px !important;
-
-                .sub-title {
-                    margin: 0;
-                }
             }
 
             .ant-row {
@@ -288,6 +288,82 @@
                     height: min-content;
                 }
             }
+
+            button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+
+                .material-symbols-outlined {
+                    font-size: 15px;
+                }
+            }
+
+            .drag-section {
+                height: 465px;
+                margin-top: 20px;
+                overflow-y: auto;
+
+                .layout-drag-item {
+                    height: 55px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: #fff;
+                    border: 1px solid #E4E4E4;
+                    border-radius: 10px;
+                    margin-bottom: 5px;
+                    padding: 0 5px;
+
+                    .layout-name {
+                        font-family: 'Lato', sans-serif;
+                        font-size: 12px;
+                        font-weight: 700;
+                        line-height: 14px;
+                        letter-spacing: 0em;
+                        color: #000000;
+                        margin-bottom: 2px;
+                    }
+
+                    .layout-position {
+                        font-family: 'Lato', sans-serif;
+                        font-size: 11px;
+                        font-weight: 400;
+                        line-height: 13px;
+                        letter-spacing: 0em;
+                        color: #808080;
+                        
+                        span {
+                            font-weight: 700;
+                            color: #5C59E8;
+                        }
+                    }
+
+                    div {
+                        .material-symbols-outlined {
+                            font-size: 30px;
+                            width: 20px;
+                        }
+                    }
+
+                    .material-symbols-outlined {
+                        font-variation-settings:
+                        'FILL' 1,
+                        'wght' 400,
+                        'GRAD' 0,
+                        'opsz' 24
+                    }
+
+                    .material-symbols-outlined {
+                        color: #667085;
+
+                        &:hover {
+                            color: #5C59E8;
+                        }
+                    }
+                }
+            }
         }
 
         .left-section {
@@ -295,8 +371,8 @@
             overflow-y: auto;
 
             .ant-card {
-                height: auto;
-                margin-bottom: 10px;
+                height: 100%;
+                background-color: #F9F9FC;
             }
 
             .ant-card-body {
@@ -490,6 +566,28 @@
             line-height: 20px;
             letter-spacing: 0.005em;
             color: #fff;
+        }
+    }
+}
+
+.VW-modal {
+    .ant-modal-body {
+        width: 352px;
+        margin-top: 15px;
+
+        .modal-cancel-button {
+            margin-top: 15px;
+            margin-left: 10px;
+        }
+
+        button {
+            width: 75px !important;
+        }
+
+        .VW-card {
+            width: 100%;
+            height: 100%;
+            background-color: #F9F9FC;
         }
     }
 }
