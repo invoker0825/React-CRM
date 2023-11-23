@@ -1,0 +1,495 @@
+.playlist-page {
+    .pr-20 {
+        padding-right: 20px;
+    }
+
+    .table-card {
+        width: 97%;
+        box-shadow: 0px 1.5px 2px 0px #1018281A;
+        margin-bottom: 25px;
+
+        .ant-card-body {
+            padding: 0;
+        }
+
+        .top-section {
+            padding: 18px 25px;
+
+            button {
+                min-width: 146px;
+
+                .material-symbols-outlined {
+                    font-size: 18px;
+                    margin-right: 10px;
+                }
+            }
+
+            .ant-select {
+                width: 170px;
+                height: 40px;
+                margin-right: 25px;
+            }
+
+            .search-input {
+                width: 25vw;
+                margin-right: 25px;
+            }
+        }
+
+        .report-table {
+            .ant-table {
+                min-height: calc(100vh - 275px);
+            }
+
+            .ant-pagination {
+                border-top: 1px solid #F0F1F3;
+            }
+        }
+
+        .card-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 28px;
+            letter-spacing: 0.005em;
+            color: #333843;
+            margin-right: 10px;
+        }
+
+        .ant-input-affix-wrapper {
+            height: 40px;
+            border-radius: 8px;
+            background-color: #F9F9FC;
+            
+            input {
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                background-color: #F9F9FC;
+            }
+
+            svg {
+                width: 19px;
+                height: 19px;
+            }
+        }
+
+        .thumb-view {
+           .thumb-container {
+                padding: 18px 25px;
+                padding-right: 0;
+                height: calc(100vh - 275px);
+                overflow-y: auto;
+
+                .w-20 {
+                    width: 20%;
+                    padding-right: 25px;
+                    padding-bottom: 25px;
+                
+                    .player-card {
+                        width: 100%;
+                        height: 120px;
+                        border-radius: 8px;
+                        border: 1px solid #E0E2E7;
+                        box-shadow: 0px 1.5px 2px 0px #1018281A;
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        position: relative;
+                        margin-bottom: 5px;
+
+                        .card-check {
+                            position: absolute;
+                            left: 12px;
+                            top: 12px;
+                            line-height: 0;
+                        }
+
+                        .material-symbols-outlined {
+                            font-size: 16px;
+                            position: absolute;
+                            right: 8px;
+                            bottom: 8px;
+                            cursor: pointer;
+
+                            &:hover {
+                                color: #5C59E8;
+                            }
+                        }
+                    }
+
+                    .name {
+                        font-family: 'Plus Jakarta Sans', sans-serif;
+                        font-size: 16px;
+                        font-weight: 400;
+                        line-height: 24px;
+                        letter-spacing: 0px;
+                        color: #18181B;
+                    }
+
+                    .material-symbols-outlined {
+                        font-size: 20px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+
+            .ant-pagination {
+                margin: 0 !important;
+                padding: 16px 25px;
+                padding-bottom: 25px !important;
+                border-top: 1px solid #F0F1F3;
+                text-align: right;
+
+                .ant-pagination-total-text {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 400;
+                    letter-spacing: 0.005em;
+                    color: #667085;
+                    position: absolute;
+                    left: 25px;
+                }
+
+                .ant-pagination-prev, .ant-pagination-next {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    background-color: #DEDEFA;
+
+                    button {
+                        height: 100% !important;
+                    }
+
+                    svg {
+                        color: #5C59E8;
+                        transform: scaleY(1.2);
+                    }
+                }
+
+                .ant-pagination-item {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    background-color: #5C59E8;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 600;
+                    line-height: 30px;
+                    letter-spacing: 0.005em;
+                    text-align: center;
+                    
+                    a {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+.ant-select-item {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 20px;
+    letter-spacing: 0.005em;
+    text-align: left;
+    color: #858D9D !important;
+}
+
+.edit-playlist-modal {
+    
+    .ant-modal-body {
+        width: 1320px;
+        margin-top: 15px;
+
+        .ant-card {
+            border-radius: 8px;
+            border: 1px solid #E0E2E7;
+            box-shadow: 0px 1.5px 2px 0px #1018281A;
+            padding: 0;
+            height: 100%;
+
+            .sub-title {
+                font-family: 'Inter', sans-serif;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 28px;
+                letter-spacing: 0.005em;
+                color: #1A1C21;
+                margin-bottom: 15px;
+            }
+            
+            .ant-checkbox-wrapper {
+                margin-bottom: 25px;
+                width: 100%;
+
+                span {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 20px;
+                    letter-spacing: 0.005em;
+                    color: #5C59E8;
+                }
+
+                .ant-checkbox-inner {
+                    width: 20px;
+                    height: 20px;
+
+                    &::after {
+                        transform: rotate(45deg) scale(1.3) translate(-50%,-50%);
+                    }
+                }
+            }
+
+            .filter-btn {
+                margin-left: 12px;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                letter-spacing: 0.005em;     
+                color: #667085;
+                border-color: #667085;
+                margin: 0;
+
+                &:hover {
+                    color: #5C59E8;
+                    border-color: #5C59E8;
+                }
+            }
+            
+        }
+
+        .right-card {
+            height: 100%;
+
+            .ant-card-body {
+                padding: 15px !important;
+
+                .sub-title {
+                    margin: 0;
+                }
+            }
+
+            .ant-row {
+                max-height: 445px;
+                overflow-y: auto;
+
+                .ant-col {
+                    height: min-content;
+                }
+            }
+        }
+
+        .left-section {
+            height: 600px;
+            overflow-y: auto;
+
+            .ant-card {
+                height: auto;
+                margin-bottom: 10px;
+            }
+
+            .ant-card-body {
+                padding: 15px;
+
+                .thumb-placeholder {
+                    height: 90px;
+                    margin-bottom: 12px;
+                    background-color: #D9D9D9;
+                }
+
+                .panel-name {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 600;
+                    line-height: 20px;
+                    letter-spacing: 0.005em;
+                    color: #5C59E8;
+                }
+
+                .panel-tag {
+                    display: flex;
+                    align-items: center;
+                    height: 18px;
+                    border-radius: 9px;
+                    background-color: #5C59E8;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 12px;
+                    font-weight: 600;
+                    line-height: 20px;
+                    letter-spacing: 0.005em;
+                    color: #ffffff;
+                    padding: 0 10px;
+
+                    &:last-child {
+                        margin-left: 5px;
+                    }
+                }
+
+                .ant-upload-wrapper {
+                    position: relative;
+
+                    .ant-upload-list {
+                        position: absolute;
+                        left: 20px;
+                        top: 20px;
+
+                        .ant-upload-list-item-container {
+                            width: 110px;
+                            height: 86px;
+                            margin-bottom: 0;
+
+                            .ant-upload-list-item {
+                                background-color: #D9D9D9;
+                            }
+                        }
+                    }
+                }
+                
+                .import-drag-file {
+                    .ant-upload-drag {
+                        padding: 20px;
+                        background-color: #F9F9FC;
+
+                        .ant-upload-btn {
+                            padding: 0;
+                            min-height: 86px;
+                        }
+                    }
+
+                    .ant-upload-drag-container {
+                        text-align: -webkit-center;
+
+                        .ant-upload-drag-icon {
+                            div {
+                                width: 44px;
+                                height: 44px;
+                                border-radius: 50%;
+                                background-color: #DEDEFA;
+                                border: 4px solid #EFEFFD;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+
+                                .material-symbols-outlined {
+                                    font-size: 28px;
+                                    color: #5C59E8;
+                                }
+                            }
+                        }
+
+                        .ant-upload-text {
+                            font-family: 'Inter', sans-serif;
+                            font-size: 14px;
+                            font-weight: 400;
+                            line-height: 20px;
+                            letter-spacing: 0.005em;
+                            color: #858D9D;
+                        }
+
+                        button {
+                            width: 125px;
+                            height: 40px;
+                            border-radius: 8px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background-color: #DEDEFA;
+                            border: none;
+                            font-family: 'Inter', sans-serif;
+                            font-size: 14px;
+                            font-weight: 600;
+                            line-height: 20px;
+                            letter-spacing: 0.005em;
+                            color: #5C59E8;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .ant-upload-list-item-action {
+                        height: auto !important;
+                    }
+
+                    .ant-upload-list-item {
+                        text-align: left;
+                    }
+                }
+            }
+        }
+
+        .img-placeholder {
+            width: 100%;
+            height: 85px;
+            border-radius: 10px;
+            border: 1px solid #D9D9D9;
+
+            &:active {
+                border: 1px solid #5C59E8;
+            }
+        }
+
+        .select-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #4D5464;
+            margin-bottom: 6px;
+            text-align: left;
+        }
+
+        .ant-input {
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #333843;            
+        }
+
+        .grey-input {
+            background-color: #F9F9FC;
+        }
+
+        .ant-select {
+            width: 100%;
+            margin-bottom: 15px;
+            text-align: left;
+            height: 40px;
+
+            .ant-select-selector {
+                background-color: #F9F9FC;
+            }
+        }
+
+        .modal-cancel-button {
+            width: 155px;
+            margin-top: 15px;
+            margin-left: 22px;
+        }
+
+        .save-button {
+            width: 155px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #fff;
+        }
+    }
+}

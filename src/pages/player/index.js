@@ -189,7 +189,7 @@ const Player = () => {
                                     }
                                 ]}
                             />}
-                            <Button className='view-mode-btn' type='primary' onClick={toggleViewMode}>{viewMode === 'list' ? <div className='d-flex align-center j-c-center'><span class="material-symbols-outlined">grid_view</span>Thumb View</div> : <div className='d-flex align-center j-c-center'><span class="material-symbols-outlined">lists</span>List View</div>}</Button>    
+                            <Button className='view-mode-btn' type='primary' onClick={toggleViewMode}>{viewMode === 'list' ? <div className='d-flex align-center j-c-center'><span className="material-symbols-outlined">grid_view</span>Thumb View</div> : <div className='d-flex align-center j-c-center'><span className="material-symbols-outlined">lists</span>List View</div>}</Button>    
                         </div>
                     </div>
                     {

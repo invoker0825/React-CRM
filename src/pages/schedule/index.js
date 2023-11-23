@@ -21,7 +21,6 @@ const Schedule = () => {
     const [newShow, setNewShow] = useState(false);
     const [detailShow, setDetailShow] = useState(false);
     const [playListDuration, setPlayListDuration] = useState('Daily');
-    const [selectedSchedule, setSelectedSchedule] = useState();
     const [playList, setPlayList] = useState([
         {
             id: 'Playlist 1',
@@ -165,13 +164,11 @@ const Schedule = () => {
     const days = new Array(32).fill(0);
 
     const editSchedule = (schedule) => {
-        setSelectedSchedule(schedule);
         setNewShow(true);
     }
 
     const editPlayList = (pl) => {
         setPlayListDuration(pl.duration);
-        setSelectedSchedule(pl);        
         setDetailShow(true);
     }
 
@@ -293,7 +290,7 @@ const Schedule = () => {
                             </Row>
                             <p className='select-label'>#Tag</p>
                             <Input className='grey-input' defaultValue='#Promo #ABC'/>
-                            <Button type='primary' className='add-button' onClick={() => setDetailShow(true)}><span class="material-symbols-outlined">add</span>Playlist</Button>
+                            <Button type='primary' className='add-button' onClick={() => setDetailShow(true)}><span className="material-symbols-outlined">add</span>Playlist</Button>
                             <div className='playlist-section'>
                                 <DragDropContext onDragEnd={onDragEnd}>
                                     <Droppable droppableId="droppable">
@@ -311,12 +308,12 @@ const Schedule = () => {
                                                             >
                                                                 <div className='playlist-drag-item'>
                                                                     <div className='d-flex align-center'>
-                                                                        <span class="material-symbols-outlined" {...provided.dragHandleProps}>drag_indicator</span>
+                                                                        <span className="material-symbols-outlined" {...provided.dragHandleProps}>drag_indicator</span>
                                                                         <p className='playlist-name'>{item.name}</p>
                                                                         <p className='playlist-time-range'>{item.timeRange}</p>
                                                                         <p className='playlist-duration'><span>{item.duration}: </span>{item.period}</p>
                                                                     </div>
-                                                                    <span class="material-symbols-outlined" onClick={() => editPlayList(item)}>edit</span>
+                                                                    <span className="material-symbols-outlined" onClick={() => editPlayList(item)}>edit</span>
                                                                 </div>
                                                             </div>
                                                         )}

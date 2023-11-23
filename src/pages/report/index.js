@@ -87,7 +87,7 @@ const Report = () => {
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Report</p>
-                        <Button type='primary' onClick={createNewReport}><span class="material-symbols-outlined">add</span>Report</Button>
+                        <Button type='primary' onClick={createNewReport}><span className="material-symbols-outlined">add</span>Report</Button>
                     </div>
                     <Table
                         columns={reportColumns}

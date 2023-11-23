@@ -406,7 +406,7 @@ const Media = () => {
                     className='import-drag-file'
                 >
                     <p className="ant-upload-drag-icon">
-                        <div><span class="material-symbols-outlined">imagesmode</span></div>
+                        <div><span className="material-symbols-outlined">imagesmode</span></div>
                     </p>
                     <p className="ant-upload-text">Drag and drop image here, or click add image</p>
                     <button>Open Explorer</button>
@@ -446,7 +446,7 @@ const Media = () => {
                 title={
                     <div className='d-flex align-center j-c-space-between'>
                         <p>Filters</p>
-                        <div className='reset-button' onClick={resetFilter}><span class="material-symbols-outlined">close</span><p>Reset</p></div>
+                        <div className='reset-button' onClick={resetFilter}><span className="material-symbols-outlined">close</span><p>Reset</p></div>
                     </div>
                 }
                 centered

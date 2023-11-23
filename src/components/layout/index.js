@@ -7,6 +7,8 @@ import Report from '../../pages/report';
 import User from '../../pages/user';
 import Player from '../../pages/player';
 import Schedule from '../../pages/schedule';
+import PlayList from '../../pages/playlist';
+import LayoutPage from '../../pages/layout';
 import './layout.scss';
 
 const options = [
@@ -91,6 +93,8 @@ const Layout = () => {
                     <Route path="/user" element={<User />} />
                     <Route path="/player" element={<Player />} />
                     <Route path="/schedule" element={<Schedule />} />
+                    <Route path="/playlist" element={<PlayList />} />
+                    <Route path="/layout" element={<LayoutPage />} />
                 </Routes>
             </div>
         </div> 
