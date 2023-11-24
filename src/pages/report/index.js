@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { Button, Card, Space, Select, Input, Row, Col, Modal, DatePicker } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import './report.scss';
@@ -87,7 +88,14 @@ const Report = () => {
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Report</p>
-                        <Button type='primary' onClick={createNewReport}><span className="material-symbols-outlined">add</span>Report</Button>
+                        <div className='d-flex align-center'>
+                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
+                            <Button className='view-mode-btn' type='primary' onClick={createNewReport}>
+                                <div className='d-flex align-center j-c-center'>
+                                    <span className="material-symbols-outlined">add</span>Report
+                                </div>
+                            </Button> 
+                        </div>
                     </div>
                     <Table
                         columns={reportColumns}

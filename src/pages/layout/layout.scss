@@ -205,9 +205,11 @@
 }
 
 .edit-layoutlist-modal {
+    .ant-modal-content {
+        width: 1500px;
+    }
     
     .ant-modal-body {
-        width: 1320px;
         margin-top: 15px;
 
         button {

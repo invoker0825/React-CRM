@@ -192,6 +192,14 @@ const Schedule = () => {
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Schedule</p>
+                        <div className='d-flex align-center'>
+                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
+                            <Button className='view-mode-btn' type='primary' onClick={() => setNewShow(true)}>
+                                <div className='d-flex align-center j-c-center'>
+                                    <span className="material-symbols-outlined">add</span>Schedule
+                                </div>
+                            </Button> 
+                        </div>
                     </div>
                     <Table
                         columns={scheduleColumns}

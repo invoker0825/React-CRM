@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Space, Select, Modal, Input, Row, Col } from 'antd';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import packImg from '../../assets/img/pack.png';
@@ -135,6 +136,14 @@ const Layout = () => {
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Layout List</p>
+                        <div className='d-flex align-center'>
+                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
+                            <Button className='view-mode-btn' type='primary' onClick={() => setEditShow(true)}>
+                                <div className='d-flex align-center j-c-center'>
+                                    <span className="material-symbols-outlined">add</span>Layout
+                                </div>
+                            </Button> 
+                        </div>
                     </div>
                     <Table
                         columns={layoutListColumns}
@@ -189,12 +198,12 @@ const Layout = () => {
                     </Row>
                 </Card>
                 <Row gutter={10}>
-                    <Col span={19} className='left-section'>
+                    <Col span={18} className='left-section'>
                         <Card>
                             
                         </Card>
                     </Col>
-                    <Col span={5}>
+                    <Col span={6}>
                         <Card className='right-card'>
                             <p className='sub-title'>Layout Toolbar</p>
                             <Row gutter={10}>

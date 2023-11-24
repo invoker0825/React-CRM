@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, Space, Select, Modal, Input, Row, Col, Checkbox, Upload, message } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import packImg from '../../assets/img/pack.png';
@@ -113,6 +114,14 @@ const PlayList = () => {
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Playlist</p>
+                        <div className='d-flex align-center'>
+                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
+                            <Button className='view-mode-btn' type='primary' onClick={() => setEditShow(true)}>
+                                <div className='d-flex align-center j-c-center'>
+                                    <span className="material-symbols-outlined">add</span>Playlist
+                                </div>
+                            </Button> 
+                        </div>
                     </div>
                     <Table
                         columns={playListColumns}

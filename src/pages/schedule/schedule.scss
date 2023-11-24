@@ -16,13 +16,17 @@
             padding: 18px 25px;
 
             button {
-                display: flex;
-                align-items: center;
+                min-width: 146px;
 
                 .material-symbols-outlined {
                     font-size: 18px;
                     margin-right: 10px;
                 }
+            }
+
+            .search-input {
+                width: 25vw;
+                margin-right: 25px;
             }
         }
 
