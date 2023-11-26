@@ -26,7 +26,7 @@ const LogIn = () => {
 
     return (
         <div className="login-page">
-            <div className='w-38'>
+            <div className='left-blue'>
                 <div className='login-left-section d-flex j-c-space-between flex-column'>
                     <div>
                         <p className='title'>Welcome to DSS Portal</p>
@@ -35,10 +35,11 @@ const LogIn = () => {
                     <img src={loginImage} alt='trust images'></img>
                 </div>
             </div>
-            <div className='w-62'>
+            <div className='right-white'>
                 <div className='login-right-section'>
                     {step === 'login' ?
                         <div>
+                            <p className='logo-text'>EUMEDIA DMS</p>
                             <p className='login-title'>Login</p>
                             
                             <Form
@@ -48,9 +49,6 @@ const LogIn = () => {
                                 }}
                                 wrapperCol={{
                                     span: 24,
-                                }}
-                                style={{
-                                    maxWidth: 485,
                                 }}
                                 initialValues={{
                                     username: logInData.username,
@@ -90,7 +88,7 @@ const LogIn = () => {
                                     <Input.Password placeholder="Password"/>
                                 </Form.Item>
 
-                                <Row className='align-center check-section'>
+                                <Row className='align-center check-section' justify={'space-between'}>
                                     <Col span={16}>
                                         <Form.Item
                                             name="remember"
@@ -104,7 +102,7 @@ const LogIn = () => {
                                         </Form.Item>
                                     </Col>
                                     
-                                    <Col span={7}>
+                                    <Col span={6}>
                                         <a href='/forgot' className='forgot'>Forgot password?</a>
                                     </Col>
                                 </Row>
@@ -117,8 +115,10 @@ const LogIn = () => {
                                     <Button type="primary" htmlType="submit">
                                         Login
                                     </Button>
+                                    <p className='signup-link'>Don't have an account?<span><a href='/'> Create free account</a></span></p>
                                 </Form.Item>
                             </Form>
+                            <p className='expire-warn'>Maintenance Date : Expired</p>
                         </div> :
                         <div className='authenticator-section'>
                             <p className='login-title'>Authenticator</p>

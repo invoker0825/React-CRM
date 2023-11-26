@@ -578,8 +578,10 @@
 }
 
 .VW-modal {
-    .ant-modal-body {
+    .ant-modal-content {
         width: 352px;
+    }
+    .ant-modal-body {
         margin-top: 15px;
 
         .modal-cancel-button {

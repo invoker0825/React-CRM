@@ -9,6 +9,7 @@ import Player from '../../pages/player';
 import Schedule from '../../pages/schedule';
 import PlayList from '../../pages/playlist';
 import LayoutPage from '../../pages/layout';
+import Settings from '../../pages/settings';
 import './layout.scss';
 
 const options = [
@@ -73,7 +74,7 @@ const Layout = () => {
         <div className="layout-page">
             <div className='d-flex align-center j-c-space-between nav-bar'>
                 <div className='d-flex align-center'>
-                    <a href='/' className='logo-title'>Digital signage</a>
+                    <a href='/' className='logo-title'>EUMEDIA DMS</a>
                     <Radio.Group
                         options={options}
                         onChange={onChangeNav}
@@ -95,6 +96,7 @@ const Layout = () => {
                     <Route path="/schedule" element={<Schedule />} />
                     <Route path="/playlist" element={<PlayList />} />
                     <Route path="/layout" element={<LayoutPage />} />
+                    <Route path="/settings" element={<Settings />} />
                 </Routes>
             </div>
         </div> 

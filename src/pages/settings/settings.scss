@@ -1,12 +1,162 @@
-.user-page {
+.settings-page {
     .pr-20 {
         padding-right: 20px;
     }
 
-    .table-card {
-        width: 97%;
+    .ant-tabs {
+        width: calc(100% - 6px);
+    }
+
+    .ant-tabs-nav {
+        margin: 0;
+
+        &::before {
+            border-color: #f0f0f0;
+        }
+    }
+
+    .select-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: 0.005em;
+        color: #4D5464;
+        margin-bottom: 6px;
+        text-align: left;
+    }
+
+    .ant-select {
+        width: 100%;
+        margin-bottom: 15px;
+        text-align: left;
+        height: 40px;
+
+        .ant-select-selector {
+            background-color: #F9F9FC;
+        }
+    }
+
+    .ant-input {
+        margin-bottom: 15px;
+        text-align: left;
+        height: 40px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: 0.005em;
+        color: #333843;        
+        background-color: #F9F9FC;         
+    }
+
+    .ant-input-textarea-affix-wrapper {
+        background-color: #F9F9FC;     
+        
+        .ant-input {
+            height: auto;
+            margin: 0;
+        }
+    }
+
+    .import-drag-file {
+        .ant-upload-drag {
+            padding: 25px;
+            background-color: #F9F9FC;
+            height: auto;
+
+            .ant-upload-btn {
+                padding: 0;
+            }
+        }
+
+        .ant-upload-drag-container {
+            text-align: -webkit-center;
+
+            .ant-upload-drag-icon {
+                div {
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 50%;
+                    background-color: #DEDEFA;
+                    border: 4px solid #EFEFFD;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .material-symbols-outlined {
+                        font-size: 28px;
+                        color: #5C59E8;
+                    }
+                }
+            }
+
+            .ant-upload-text {
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                color: #858D9D;
+                margin-bottom: 16px;
+            }
+
+            button {
+                width: 125px;
+                height: 40px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #DEDEFA;
+                border: none;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                color: #5C59E8;
+                cursor: pointer;
+            }
+        }
+
+        .ant-upload-list-item-action {
+            height: auto !important;
+        }
+
+        .ant-upload-list-item {
+            text-align: left;
+        }
+    }
+
+    .ant-tabs-tab {
+        background-color: #EAEAEA !important;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 23px;
+        letter-spacing: 0em;
+        color: #222222;
+        padding: 20px 32px !important;
+        margin: 0 !important;
+        border-color: #0000001A !important;
+    }
+
+    .ant-tabs-tab-active {
+        background-color: #ffffff !important;
+        border-bottom-color: #fff !important;
+    }
+
+    .general-card {
+        min-height: 750px;
+    }
+
+    .setting-card {
+        width: 100%;
         box-shadow: 0px 1.5px 2px 0px #1018281A;
         margin-bottom: 25px;
+        border-radius: 0 8px 8px 8px !important;
+        border-top: none;
 
         .ant-card-body {
             padding: 0;
@@ -52,6 +202,8 @@
                 line-height: 20px;
                 letter-spacing: 0.005em;
                 background-color: #F9F9FC;
+                height: auto;
+                margin: 0;
             }
 
             svg {
@@ -165,17 +317,6 @@
             text-align: left;
         }
 
-        .ant-select {
-            width: 100%;
-            margin-bottom: 15px;
-            text-align: left;
-            height: 40px;
-
-            .ant-select-selector {
-                background-color: #F9F9FC;
-            }
-        }
-
         .ant-input {
             margin-bottom: 15px;
             text-align: left;
@@ -185,17 +326,19 @@
             font-weight: 500;
             line-height: 20px;
             letter-spacing: 0.005em;
-            color: #333843;            
+            color: #333843;
         }
 
         .ant-input-affix-wrapper {
             margin-bottom: 15px;
             text-align: left;
             height: 40px;
+            background-color: #F9F9FC;     
 
             input {
                 margin-bottom: 0;
                 height: auto !important;
+                background-color: #F9F9FC;     
             }
         }
 

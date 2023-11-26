@@ -268,7 +268,9 @@ const Dashboard = () => {
         { name: 'Total players', value: 426 },
         { name: 'Active Schedule', value: 19 },
         { name: 'Active Playlist', value: 6 },
-        { name: 'Total Users', value: 8 }
+        { name: 'Total Users', value: 8 },
+        { name: 'Last Login', value: 8 }
+
     ]
 
     return (

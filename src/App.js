@@ -10,6 +10,7 @@ import Player from './pages/player';
 import Schedule from './pages/schedule';
 import PlayList from './pages/playlist';
 import LayoutPage from './pages/layout';
+import Settings from './pages/settings';
 import './App.scss';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/playlist" element={<PlayList />} />
               <Route path="/layout" element={<LayoutPage />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
             <Route path="/login" element={<Login />} />
           </Routes>

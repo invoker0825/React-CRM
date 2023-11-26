@@ -41,6 +41,10 @@ const Player = () => {
             dataIndex: 'ip'
         },
         {
+            title: 'Platform',
+            dataIndex: 'platform'
+        },
+        {
             title: 'Version #',
             dataIndex: 'version'
         },
@@ -79,6 +83,7 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
+            platform: 'platform 1',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
@@ -92,6 +97,7 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
+            platform: 'platform 2',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
@@ -105,6 +111,7 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
+            platform: 'platform 3',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
@@ -118,6 +125,7 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
+            platform: 'platform 4',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
@@ -131,6 +139,7 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
+            platform: 'platform 5',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
@@ -144,6 +153,7 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
+            platform: 'platform 6',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',

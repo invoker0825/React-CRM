@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { Button, Card, Space, Modal, Select, Input, Checkbox } from 'antd';
+import { Button, Card, Modal, Select, Input, Checkbox, Tabs, Col, Row, Upload } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
-import './user.scss';
+import './settings.scss';
+const { TextArea } = Input;
+const { Dragger } = Upload;
 
 const User = () => {
+
+    const [currentTab, setCurrentTab] = useState('general');
+    const [editShow, setEditShow] = useState(false);
 
     const userColumns = [
         {
@@ -29,15 +34,6 @@ const User = () => {
             dataIndex: 'status',        
             render: (status) => <Tag label={status.label} color={status.color}/>,
             sorter: (a, b) => a.status.label.localeCompare(b.status.label)
-        },
-        {
-            title: 'Action',
-            dataIndex: 'actino',
-            render: (_, record) => (
-              <Space size="small">
-                <span className="material-symbols-outlined" onClick={() => editUser(record)}>edit</span>
-              </Space>
-            ),
         }
     ];
     
@@ -60,32 +56,93 @@ const User = () => {
         }
     ];
 
-    const [editShow, setEditShow] = useState(false);
-
-    const editUser = (user) => {
-        console.log('-------------------', user);
-        setEditShow(true);
-    }
+    const cardItems = [
+        {
+            label: 'General',
+            key: 'general'
+        },
+        {
+            label: 'User',
+            key: 'user'
+        },
+        {
+            label: 'Maintenance',
+            key: 'maintenance'
+        },
+        {
+            label: 'Others',
+            key: 'others'
+        }
+    ]
 
     return (
         <>
-            <div className="user-page">
-                <Card className='table-card'>
-                    <div className='d-flex align-center j-c-space-between top-section'>
-                        <p className='card-title'>User</p>
-                        <div className='d-flex align-center'>
-                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
-                            <Button className='view-mode-btn' type='primary' onClick={() => setEditShow(true)}>
-                                <div className='d-flex align-center j-c-center'>
-                                    <span className="material-symbols-outlined">add</span>User
-                                </div>
-                            </Button> 
+            <div className="settings-page">
+                <Tabs
+                    activeKey={currentTab}
+                    type="card"
+                    items={cardItems}
+                    onChange={(e) => setCurrentTab(e)}
+                />
+                <Card className='setting-card'>
+                    { currentTab === 'general' &&
+                        <div className='general-card'>
+                            <div className='d-flex align-center j-c-space-between top-section'>
+                                <p className='card-title'>Company Details</p>
+                            </div>
+                            <Row style={{marginLeft: '25px'}}>
+                                <Col span={7}>
+                                    <p className='select-label'>Company Name</p>
+                                    <Input className='grey-input' placeholder='Company Name...' />
+                                    <p className='select-label'>Title</p>
+                                    <Input className='grey-input' placeholder='Title...' />
+                                    <p className='select-label'>Description</p>
+                                    <TextArea
+                                        maxLength={100}
+                                        placeholder="Description..."
+                                        style={{
+                                            height: 120,
+                                            resize: 'none',
+                                        }}
+                                    />
+                                    <p className='select-label'>Logo (133 x 133px)</p>
+                                    <Dragger
+                                        name="file"
+                                        multiple={false}
+                                        listType="picture-card"
+                                        action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
+                                        accept="image/png, image/jpeg"
+                                        className='import-drag-file'
+                                    >
+                                        <p className="ant-upload-drag-icon">
+                                            <div><span className="material-symbols-outlined">imagesmode</span></div>
+                                        </p>
+                                        <p className="ant-upload-text">Drag and drop image here, or click add image</p>
+                                        <button>Open Explorer</button>
+                                    </Dragger>
+                                </Col>
+                            </Row>
                         </div>
-                    </div>
-                    <Table
-                        columns={userColumns}
-                        dataSource={userData}
-                    />
+                    }
+                    { currentTab === 'user' &&
+                        <>
+                            <div className='d-flex align-center j-c-space-between top-section'>
+                                <p className='card-title'>Settings</p>
+                                <div className='d-flex align-center'>
+                                    <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
+                                    <Button className='view-mode-btn' type='primary' onClick={() => setEditShow(true)}>
+                                        <div className='d-flex align-center j-c-center'>
+                                            <span className="material-symbols-outlined">add</span>User
+                                        </div>
+                                    </Button> 
+                                </div>
+                            </div>
+                            <Table
+                                columns={userColumns}
+                                dataSource={userData}
+                            />
+                        </>
+                    }
                 </Card>
             </div> 
             

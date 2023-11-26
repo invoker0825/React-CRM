@@ -36,8 +36,8 @@
     .nav-radio {
         label {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 16px;
-            font-weight: 400;
+            font-size: 18px;
+            font-weight: 700;
             letter-spacing: 0px;
             color: #000000 !important;
             border: none;
@@ -51,14 +51,10 @@
             &::before {
                 width: 0px;
             }
-
-            &:hover {
-                font-weight: 600;
-            }
         }
 
         .ant-radio-button-wrapper-checked {
-            font-weight: 600;
+            font-weight: 800;
         }
     }
 

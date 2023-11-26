@@ -281,17 +281,28 @@
             }
 
             .ant-row {
-                max-height: 445px;
+                max-height: 375px;
                 overflow-y: auto;
 
                 .ant-col {
                     height: min-content;
                 }
             }
+
+            .search-input {
+                height: 40px;
+                margin: 5px 0;
+
+                .ant-input {
+                    height: auto !important;
+                    margin: 0;
+                }
+
+            }
         }
 
         .left-section {
-            height: 600px;
+            height: 555px;
             overflow-y: auto;
 
             .ant-card {

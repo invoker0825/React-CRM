@@ -96,6 +96,30 @@ button {
     }
 }
 
+.ant-modal-confirm {
+  width: 400px !important;
+
+  .ant-modal-content {
+    padding-bottom: 15px !important;
+  }
+
+  button {
+    height: 40px !important;
+    width: 75px;
+  }
+
+  .ant-btn-default {
+    &:hover {
+      color: #5C59E8 !important;
+      border-color: #5C59E8 !important;
+    }
+  }
+
+  .ant-btn-primary {
+    background-color: #5C59E8 !important;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px !important;
 }

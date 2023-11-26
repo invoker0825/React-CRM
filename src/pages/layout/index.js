@@ -38,10 +38,12 @@ const Layout = () => {
             icon: 'volume_up'
         },
         {
-            name: 'Panel 3'
+            name: 'Panel 3',
+            icon: 'volume_mute'
         },
         {
-            name: 'Panel 4'
+            name: 'Panel 4',
+            icon: 'volume_mute'
         },
     ]);
 
@@ -126,8 +128,32 @@ const Layout = () => {
     
     const addPanel = () => {
         let temp = [...panelList];
-        temp.push({name: `Panel ${temp.length + 1}`});
+        temp.push({name: `Panel ${temp.length + 1}`, icon: 'volume_mute'});
         setPanelList(temp);
+    }
+
+    const toggleIcon = (i) => {
+        let temp = [...panelList];
+        temp[i].icon === 'volume_up' ? temp[i].icon = 'volume_mute' : temp[i].icon = 'volume_up';
+        setPanelList(temp);
+    }
+
+    const confirmSave = () => {
+        Modal.confirm({
+            title: 'Confirm',
+            content: 'Are you sure you want to save?',
+            onOk: saveLayout,
+            footer: (_, { OkBtn, CancelBtn }) => (
+              <>
+                <CancelBtn />
+                <OkBtn/>
+              </>
+            ),
+        });
+    }
+
+    const saveLayout = () => {
+        setEditShow(false);
     }
 
     return (
@@ -237,7 +263,7 @@ const Layout = () => {
                                                                             {item.position && <p className='layout-position'><span>W</span>{item.position.w} <span>H</span>{item.position.h} <span>X</span>{item.position.x} <span>Y</span>{item.position.y}</p>}
                                                                         </div>
                                                                     </div>
-                                                                    {item.icon && <span className="material-symbols-outlined">{item.icon}</span>}
+                                                                    {item.icon && <span className="material-symbols-outlined" onClick={() => toggleIcon(index)}>{item.icon}</span>}
                                                                 </div>
                                                             </div>
                                                         )}
@@ -252,7 +278,7 @@ const Layout = () => {
                         </Card>
                     </Col>
                 </Row>
-                <Button type='primary' className='save-button' onClick={() => setEditShow(false)}>Save Layout</Button>
+                <Button type='primary' className='save-button' onClick={confirmSave}>Save Layout</Button>
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
             </Modal>
 

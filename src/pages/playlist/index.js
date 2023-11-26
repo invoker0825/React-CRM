@@ -108,6 +108,24 @@ const PlayList = () => {
     const onFileDrop = (e) => {
     }
 
+    const confirmSave = () => {
+        Modal.confirm({
+            title: 'Confirm',
+            content: 'Are you sure you want to save?',
+            onOk: savePlayList,
+            footer: (_, { OkBtn, CancelBtn }) => (
+              <>
+                <CancelBtn />
+                <OkBtn/>
+              </>
+            ),
+        });
+    }
+
+    const savePlayList = () => {
+        setEditShow(false);
+    }
+
     return (
         <>
             <div className="playlist-page">
@@ -145,26 +163,6 @@ const PlayList = () => {
                             <p className='select-label'>Name</p>
                             <Input className='grey-input' defaultValue='Playlist ABV' />
                         </Col>
-                        <Col span={3}>
-                            <p className='select-label'>User Group</p>
-                            <Select
-                                defaultValue='Group'
-                                options={[
-                                    {
-                                        value: 'group',
-                                        label: 'Group'
-                                    },
-                                    {
-                                        value: 'group1',
-                                        label: 'Group 1'
-                                    },
-                                    {
-                                        value: 'group2',
-                                        label: 'Group 2'
-                                    }
-                                ]}
-                            />
-                        </Col>
                         <Col span={5}>
                             <p className='select-label'>Layout</p>
                             <Select
@@ -189,6 +187,8 @@ const PlayList = () => {
                             <Checkbox>Hide Locked Panel</Checkbox>
                         </Col>
                     </Row>
+                    <p className='select-label'>#Tag</p>
+                    <Input className='grey-input' defaultValue='#Promo #ABC' />
                 </Card>
                 <Row gutter={10}>
                     <Col span={19} className='left-section'>
@@ -238,7 +238,7 @@ const PlayList = () => {
                                     </div>
                                 </Button>
                             </div>
-                            <p className='select-label'>Folder</p>
+                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
                             <Select
                                 defaultValue='folder1'
                                 options={[
@@ -268,7 +268,7 @@ const PlayList = () => {
                         </Card>
                     </Col>
                 </Row>
-                <Button type='primary' className='save-button' onClick={() => setEditShow(false)}>Save Playlist</Button>
+                <Button type='primary' className='save-button' onClick={confirmSave}>Save Playlist</Button>
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
             </Modal>
         </>

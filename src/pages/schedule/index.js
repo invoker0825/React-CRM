@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { Button, Card, Space, Select, Input, Row, Col, Modal, DatePicker, Tree, TimePicker, Checkbox } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import dayjs from 'dayjs';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import './schedule.scss';
@@ -20,6 +21,9 @@ const Schedule = () => {
 
     const [newShow, setNewShow] = useState(false);
     const [detailShow, setDetailShow] = useState(false);
+    const [play24, setPlay24] = useState(false);
+    const [playForever, setPlayForever] = useState(false);
+    const [playListTime, setPlayListTime] = useState({start: null, end: null});
     const [playListDuration, setPlayListDuration] = useState('Daily');
     const [playList, setPlayList] = useState([
         {
@@ -186,6 +190,61 @@ const Schedule = () => {
         setPlayList(tempItems);
     }
 
+    const disabledHours = () => {
+        const hours = [];    
+        for (let i = 0; i < playListTime.start?.$H; i++) {
+          hours.push(i);
+        }    
+        return hours;
+    };
+
+    const disabledMinutes = (selectedHour) => {
+        const minutes = [];
+        if (selectedHour === playListTime.start?.$H) {
+            for (let i = 0; i < playListTime.start.$m; i++) {
+            minutes.push(i);
+            }
+        }
+        return minutes;
+    };
+
+    const disabledSeconds = (selectedHour, selectedMinute) => {
+        const seconds = [];
+        if (selectedHour === playListTime.start?.$H && selectedMinute === playListTime.start?.$m) {
+            for (let i = 0; i <= playListTime.start.$s; i++) {
+                seconds.push(i);
+            }
+        }
+        return seconds;
+    };
+
+    const disabledTime = () => {
+        return {disabledHours: disabledHours, disabledMinutes: disabledMinutes, disabledSeconds: disabledSeconds}
+    }
+
+    const changePlayListTime = (e, c) => {
+        let temp = {...playListTime, [c]: e};
+        setPlayListTime(temp);
+    }
+
+    const confirmSave = () => {
+        Modal.confirm({
+            title: 'Confirm',
+            content: 'Are you sure you want to save?',
+            onOk: saveSchedule,
+            footer: (_, { OkBtn, CancelBtn }) => (
+              <>
+                <CancelBtn />
+                <OkBtn/>
+              </>
+            ),
+        });
+    }
+
+    const saveSchedule = () => {
+        setNewShow(false);
+    }
+
     return (
         <>
             <div className="schedule-page">
@@ -226,26 +285,6 @@ const Schedule = () => {
                                     <Input className='grey-input' placeholder='name...' />
                                 </Col>
                                 <Col span={5}>
-                                    <p className='select-label'>Group</p>
-                                    <Select
-                                        defaultValue='home'
-                                        options={[
-                                            {
-                                                value: 'home',
-                                                label: 'Home'
-                                            },
-                                            {
-                                                value: 'home1',
-                                                label: 'Home 1'
-                                            },
-                                            {
-                                                value: 'home2',
-                                                label: 'Home 2'
-                                            }
-                                        ]}
-                                    />
-                                </Col>
-                                <Col span={5}>
                                     <p className='select-label'>Priority</p>
                                     <Select
                                         options={[
@@ -266,17 +305,24 @@ const Schedule = () => {
                                 </Col>
                             </Row>
                             <Row gutter={10}>
-                                <Col span={10}>
-                                    <Row justify='space-between' gutter={10}>
-                                        <Col span={12}>
-                                            <p className='select-label'>Start Date*</p>
-                                            <DatePicker />
-                                        </Col>
-                                        <Col span={12}>
-                                            <p className='select-label'>End Date*</p>
-                                            <DatePicker />
-                                        </Col>
-                                    </Row>
+                                <Col span={5}>
+                                    <p className='select-label'>Start Date*</p>
+                                    <DatePicker disabled={playForever} />
+                                </Col>
+                                <Col span={5}>
+                                    <p className='select-label'>End Date*</p>
+                                    <DatePicker disabled={playForever} />
+                                </Col>
+                                <Col span={5}>
+                                    <p className='select-label'>Start Time*</p>
+                                    <TimePicker disabled={playForever} />
+                                </Col>
+                                <Col span={5}>
+                                    <p className='select-label'>End Time*</p>
+                                    <TimePicker disabled={playForever} />
+                                </Col>
+                                <Col span={4}>
+                                    <Checkbox checked={playForever} onChange={() => setPlayForever(!playForever)}>Play Forever</Checkbox>
                                 </Col>
                             </Row>
                             <Row gutter={10}>
@@ -349,7 +395,7 @@ const Schedule = () => {
                         </Card>
                     </Col>
                 </Row>
-                <Button type='primary' className='save-button' onClick={() => setNewShow(false)}>Save Schedule</Button>
+                <Button type='primary' className='save-button' onClick={confirmSave}>Save Schedule</Button>
                 <Button className='modal-cancel-button' onClick={() => setNewShow(false)}>Cancel</Button>
             </Modal>
             
@@ -385,13 +431,16 @@ const Schedule = () => {
                     </Col>
                 </Row>
                 <Row justify='space-between' gutter={10}>
-                    <Col span={12}>
+                    <Col span={9}>
                         <p className='select-label'>Start Time*</p>
-                        <TimePicker />
+                        <TimePicker disabled={play24} value={play24 ? dayjs('00:00:00', 'HH:mm:ss') : playListTime?.start} onChange={(e) => changePlayListTime(e, 'start')}/>
                     </Col>
-                    <Col span={12}>
+                    <Col span={9}>
                         <p className='select-label'>End Time*</p>
-                        <TimePicker />
+                        <TimePicker disabled={play24} value={play24 ? dayjs('23:59:59', 'HH:mm:ss') : playListTime?.end} onChange={(e) => changePlayListTime(e, 'end')} disabledTime={disabledTime}/>
+                    </Col>
+                    <Col span={6}>
+                        <Checkbox checked={play24} onChange={() => setPlay24(!play24)}>24 HR</Checkbox>
                     </Col>
                 </Row>
                 <Row gutter={10}>

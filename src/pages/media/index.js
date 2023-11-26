@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Card, Space, Input, Menu, Badge, Row, Col, Checkbox, Modal, Upload, message, Collapse, Select } from 'antd';
+import { Button, Card, Input, Menu, Badge, Row, Col, Checkbox, Modal, Upload, message, Collapse, Select, Breadcrumb, DatePicker } from 'antd';
 import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
-import Tag from '../../components/tag';
-import Table from '../../components/table';
 import packImg from '../../assets/img/pack.png';
 import watchImg from '../../assets/img/watch.png';
 import './media.scss';
@@ -32,85 +30,6 @@ const items = [
     ]),
 ];
 
-const mediaColumns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        width: '150px'
-    },
-    {
-        title: 'Screenshot',
-        dataIndex: 'screenshot',
-        render: (screenShot) => <img src={screenShot} alt='' />,
-        width: '170px',
-        sorter: (a, b) => a.screenshot - b.screenshot,
-    },
-    {
-        title: 'Date/Time',
-        dataIndex: 'date',
-        width: '200px',
-        sorter: (a, b) => a.date.localeCompare(b.date),
-    },
-    {
-        title: 'By User',
-        dataIndex: 'user',
-        render: (user) => <><p className='black-text'>{user.name}</p><p className='small-text'>{user.email}</p></>,
-        width: '180px'
-    },
-    {
-        title: 'Resolution (px)',
-        dataIndex: 'resolution',
-        width: '175px',
-        sorter: (a, b) => a.resolution.localeCompare(b.resolution),
-    },
-    {
-        title: 'File Type',
-        dataIndex: 'fileType',
-        width: '140px',
-        render: (fileType) => <p>{fileType.toUpperCase()}</p>,
-    },
-    {
-        title: 'Status',
-        dataIndex: 'status',        
-        render: (status) => <Tag label={status.label} color={status.color}/>,
-        width: '145px',
-        sorter: (a, b) => a.status.label.localeCompare(b.status.label),
-    },
-    {
-        title: 'Action',
-        dataIndex: 'actino',
-        render: (_, record) => (
-          <Space size="small">
-            <span className="material-symbols-outlined">visibility</span>
-            <span className="material-symbols-outlined">edit</span>
-          </Space>
-        ),
-    }
-];
-
-const mediaData = [
-    {
-        key: '1',
-        name: 'BP-backdrop',
-        screenshot: packImg,
-        date: '1 min ago',
-        user: {name: 'John Bushmill', email: 'Johnb@mail.com'},
-        resolution: '800x600',
-        fileType: 'ppt',
-        status: {label: 'Uploading', color: 'orange'},
-    },
-    {
-        key: '2',
-        name: 'Powerpoint',
-        screenshot: watchImg,
-        date: '1 min ago',
-        user: {name: 'Ilham Budi A', email: 'ilahmbudi@mail.com'},
-        resolution: '1920x1080',
-        fileType: 'jpg',
-        status: {label: 'Processing', color: 'purple'},
-    }
-];
-
 var mediaFilterData = [
     {
         name: 'BP-backdrop 1',
@@ -118,7 +37,8 @@ var mediaFilterData = [
         resolution: '1920x1080',
         user: 'Arnold',
         date: ' 8/8/2023',
-        screenshot: packImg
+        screenshot: packImg,
+        format: 'jpg'
     },
     {
         name: 'BP-backdrop 2',
@@ -126,7 +46,8 @@ var mediaFilterData = [
         resolution: '1920x1080',
         user: 'Arnold',
         date: ' 9/9/2023',
-        screenshot: packImg
+        screenshot: packImg,
+        format: 'jpg'
     },
     {
         name: 'BP-backdrop 3',
@@ -134,7 +55,8 @@ var mediaFilterData = [
         resolution: '1920x1080',
         user: 'Arnold',
         date: ' 10/10/2023',
-        screenshot: packImg
+        screenshot: packImg,
+        format: 'png'
     },
     {
         name: 'BP-backdrop',
@@ -142,7 +64,8 @@ var mediaFilterData = [
         resolution: '1920x1080',
         user: 'Arnold',
         date: ' 11/11/2023',
-        screenshot: watchImg
+        screenshot: watchImg,
+        format: 'jpg'
     },
     {
         name: 'BP-backdrop 1',
@@ -150,7 +73,8 @@ var mediaFilterData = [
         resolution: '1920x1080',
         user: 'Arnold',
         date: ' 8/8/2023',
-        screenshot: packImg
+        screenshot: packImg,
+        format: 'png'
     },
     {
         name: 'BP-backdrop 2',
@@ -158,7 +82,8 @@ var mediaFilterData = [
         resolution: '1920x1080',
         user: 'Arnold',
         date: ' 9/9/2023',
-        screenshot: packImg
+        screenshot: packImg,
+        format: 'png'
     },
     {
         name: 'BP-backdrop 3',
@@ -166,79 +91,8 @@ var mediaFilterData = [
         resolution: '1920x1080',
         user: 'Arnold',
         date: ' 10/10/2023',
-        screenshot: packImg
-    },
-    {
-        name: 'BP-backdrop',
-        duration: 23,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 11/11/2023',
-        screenshot: watchImg
-    },
-    {
-        name: 'BP-backdrop 1',
-        duration: 10,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 8/8/2023',
-        screenshot: packImg
-    },
-    {
-        name: 'BP-backdrop 2',
-        duration: 15,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 9/9/2023',
-        screenshot: packImg
-    },
-    {
-        name: 'BP-backdrop 3',
-        duration: 43,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 10/10/2023',
-        screenshot: packImg
-    },
-    {
-        name: 'BP-backdrop',
-        duration: 23,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 11/11/2023',
-        screenshot: watchImg
-    },
-    {
-        name: 'BP-backdrop 1',
-        duration: 10,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 8/8/2023',
-        screenshot: packImg
-    },
-    {
-        name: 'BP-backdrop 2',
-        duration: 15,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 9/9/2023',
-        screenshot: packImg
-    },
-    {
-        name: 'BP-backdrop 3',
-        duration: 43,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 10/10/2023',
-        screenshot: packImg
-    },
-    {
-        name: 'BP-backdrop',
-        duration: 23,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 11/11/2023',
-        screenshot: watchImg
+        screenshot: packImg,
+        format: 'jpg'
     }
 ]
 
@@ -314,15 +168,6 @@ const Media = () => {
             <div className="media-page">
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
-                        <p className='card-title'>Recent Media</p>
-                    </div>
-                    <Table
-                        columns={mediaColumns}
-                        dataSource={mediaData}
-                    />
-                </Card>
-                <Card className='table-card'>
-                    <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Media Library</p>
                         <div className='d-flex align-center'>
                             <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
@@ -354,6 +199,21 @@ const Media = () => {
                             />
                         </div>
                         <div className='result-board'>
+                            <Breadcrumb
+                                separator=">"
+                                items={[
+                                    {
+                                        title: 'Home',
+                                    },
+                                    {
+                                        title: 'Sub Folder',
+                                        href: '',
+                                    },
+                                    {
+                                        title: 'Sub Folder 1'
+                                    }
+                                ]}
+                            />
                             <Row justify="start">
                                 {
                                     mediaFilterData.map(media => 
@@ -363,6 +223,7 @@ const Media = () => {
                                                 style={{backgroundImage: 'url(' + media.screenshot + ')'}}
                                             >
                                                 <Checkbox className='card-check'/>
+                                                <p className='media-format'>{media.format}</p>
                                                 <span className="material-symbols-outlined" onClick={() => editMediaData(media)}>edit</span>
                                             </Card>
                                             <div className='d-flex align-center j-c-space-between'>
@@ -521,8 +382,8 @@ const Media = () => {
                         }
                     ]}
                 />
-                <p className='select-label'>Start-End Date</p>
-                <Select />
+                <p className='select-label'>Expiry Date</p>
+                <DatePicker />
                 <p className='select-label'>Author/Provider</p>
                 <Select />
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
