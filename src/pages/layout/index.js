@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Button, Card, Space, Select, Modal, Input, Row, Col } from 'antd';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { SearchOutlined } from '@ant-design/icons';
+import GridLayout, { Responsive, WidthProvider } from "react-grid-layout";
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import packImg from '../../assets/img/pack.png';
 import watchImg from '../../assets/img/watch.png';
 import './layout.scss';
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -25,24 +28,34 @@ const Layout = () => {
     const [panelList, setPanelList] = useState([
         {
             name: 'Panel 1',
-            position: {
-                w: '308.69',
-                h: '288.4',
-                x: '20',
-                y: '20',
-            },
+            w: 308,
+            h: 288,
+            x: 20,
+            y: 20,
             icon: 'volume_mute'
         },
         {
             name: 'Panel 2',
+            w: 30,
+            h: 28,
+            x: 34,
+            y: 234,
             icon: 'volume_up'
         },
         {
             name: 'Panel 3',
+            w: 123,
+            h: 54,
+            x: 123,
+            y: 20,
             icon: 'volume_mute'
         },
         {
             name: 'Panel 4',
+            w: 58,
+            h: 92,
+            x: 265,
+            y: 123,
             icon: 'volume_mute'
         },
     ]);
@@ -109,8 +122,43 @@ const Layout = () => {
         }
     ];
 
+    const onLayoutChange = (layout) => {
+        let temp = [...panelList];
+        temp.forEach(t => {
+            const l = layout.filter(lo => lo.i === t.name)[0];
+            t.x = l.x;
+            t.y = l.y;
+            t.w = l.w;
+            t.h = l.h;
+        })
+        setPanelList(temp);
+    }
+
+    const onGridDragEnd = (layout) => {
+        let temp = [...panelList];
+        temp.forEach(t => {
+            const l = layout.filter(lo => lo.i === t.name)[0];
+            t.x = l.x;
+            t.y = l.y > 599 - l.h ? 599 - l.h : l.y;
+            t.w = l.w;
+            t.h = l.h;
+        })
+        setPanelList(temp);
+    }
+
     const editLayoutListData = () => {
         setEditShow(true);
+    }
+
+    const generateVW = () => {
+        let temp = [...panelList];
+        for (let i = 0; i < heightCount; i++) {
+            for (let j = 0; j < widthCount; j++) {
+                temp.push({name: `Panel ${temp.length + 1}`, icon: 'volume_mute', w: 100, h: 100, x: 100*j, y: 100*i});                
+            }            
+        }
+        setVWShow(false);
+        setPanelList(temp);
     }
 
     const onDragEnd = (result) => {
@@ -128,7 +176,7 @@ const Layout = () => {
     
     const addPanel = () => {
         let temp = [...panelList];
-        temp.push({name: `Panel ${temp.length + 1}`, icon: 'volume_mute'});
+        temp.push({name: `Panel ${temp.length + 1}`, icon: 'volume_mute', w: 100, h: 100, x: 0, y: 0});
         setPanelList(temp);
     }
 
@@ -225,9 +273,25 @@ const Layout = () => {
                 </Card>
                 <Row gutter={10}>
                     <Col span={18} className='left-section'>
-                        <Card>
-                            
-                        </Card>
+                        <ResponsiveGridLayout
+                            layout={panelList}
+                            onLayoutChange={onLayoutChange}
+                            onDragStop={onGridDragEnd}
+                            isResizable={true}
+                            cols={{ lg: 1085, md: 1085, sm: 1085, xs: 1085, xxs: 1085 }}
+                            rowHeight={1}
+                            autoSize={false}
+                            margin={[0, 0]}
+                            isBounded={false}
+                            allowOverlap
+                        >
+                            {
+                                panelList.map(panel => 
+                                    <div className='panel-div' key={panel.name} data-grid={{ x: panel.x, y: panel.y, w: panel.w, h: panel.h, isResizable: true}}>
+                                    </div>
+                                )
+                            }
+                        </ResponsiveGridLayout>
                     </Col>
                     <Col span={6}>
                         <Card className='right-card'>
@@ -260,7 +324,7 @@ const Layout = () => {
                                                                         <span className="material-symbols-outlined" {...provided.dragHandleProps}>drag_indicator</span>
                                                                         <div style={{marginLeft: '10px'}}>
                                                                             <p className='layout-name'>{item.name}</p>
-                                                                            {item.position && <p className='layout-position'><span>W</span>{item.position.w} <span>H</span>{item.position.h} <span>X</span>{item.position.x} <span>Y</span>{item.position.y}</p>}
+                                                                            <p className='layout-position'><span>W</span>{item.w} <span>H</span>{item.h} <span>X</span>{item.x} <span>Y</span>{item.y}</p>
                                                                         </div>
                                                                     </div>
                                                                     {item.icon && <span className="material-symbols-outlined" onClick={() => toggleIcon(index)}>{item.icon}</span>}
@@ -349,7 +413,7 @@ const Layout = () => {
                         </Col>
                     )}
                 </Row>
-                <Button type='primary' onClick={() => setVWShow(false)}>OK</Button>
+                <Button type='primary' onClick={generateVW}>OK</Button>
                 <Button className='modal-cancel-button' onClick={() => setVWShow(false)}>Cancel</Button>
             </Modal>
         </>
