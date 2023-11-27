@@ -318,6 +318,10 @@
                     margin-bottom: 5px;
                     padding: 0 5px;
 
+                    .delete-btn {
+                        margin: 0 10px;
+                    }
+
                     .layout-name {
                         font-family: 'Lato', sans-serif;
                         font-size: 12px;
@@ -368,34 +372,32 @@
             }
         }
 
+        .layout-section {
+            margin: 0 !important;
+        }
+
         .left-section {
             height: 600px;
             width: 1068px;
-            overflow-y: auto;
+            overflow: hidden;
+            padding: 0 !important;
+            background-image: linear-gradient(45deg, #e6e6e6 25%, transparent 25%, transparent 50%, #e6e6e6 50%, #e6e6e6 75%, transparent 75%, #fff);
+            background-size: 2px 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             .react-grid-layout {
                 width: 100%;
-                height: 600px !important;
+                height: 600px;
                 border: 1px solid #E0E2E7;
                 box-shadow: 0px 1.5px 2px 0px #1018281A;
-                background-color: #F9F9FC;
+                background-color: #fff;
 
                 .panel-div {
-                    background-color: #5C59E8;
+                    background-color: #5b59e880;
                     border: 1px solid #18181B;
                     position: relative;
-
-                    .react-resizable-handle {
-                        position: absolute;
-                        right: 1px;
-                        bottom: 1px;
-                        display: block;
-                        height: 6px;
-                        width: 6px;
-                        border-radius: 50%;
-                        background-color: #fff;
-                        cursor: nwse-resize;
-                    }
                 }
             }
 
@@ -530,6 +532,10 @@
                     }
                 }
             }
+        }
+
+        .right-section {
+            padding-right: 0 !important;
         }
 
         .img-placeholder {

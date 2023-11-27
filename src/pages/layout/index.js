@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Card, Space, Select, Modal, Input, Row, Col } from 'antd';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { SearchOutlined } from '@ant-design/icons';
-import GridLayout, { Responsive, WidthProvider } from "react-grid-layout";
+import { Responsive, WidthProvider } from "react-grid-layout";
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import packImg from '../../assets/img/pack.png';
@@ -25,6 +25,8 @@ const Layout = () => {
     const [VWShow, setVWShow] = useState(false);
     const [widthCount, setWidthCount] = useState(1);
     const [heightCount, setHeightCount] = useState(1);
+    const [areaWidth, setAreaWidth] = useState('1920');
+    const [areaHeight, setAreaHeight] = useState('1080');
     const [panelList, setPanelList] = useState([
         {
             name: 'Panel 1',
@@ -59,6 +61,7 @@ const Layout = () => {
             icon: 'volume_mute'
         },
     ]);
+    const [panelCount, setPanelCount] = useState(panelList.length);
 
     const layoutListColumns = [
         {
@@ -127,19 +130,7 @@ const Layout = () => {
         temp.forEach(t => {
             const l = layout.filter(lo => lo.i === t.name)[0];
             t.x = l.x;
-            t.y = l.y;
-            t.w = l.w;
-            t.h = l.h;
-        })
-        setPanelList(temp);
-    }
-
-    const onGridDragEnd = (layout) => {
-        let temp = [...panelList];
-        temp.forEach(t => {
-            const l = layout.filter(lo => lo.i === t.name)[0];
-            t.x = l.x;
-            t.y = l.y > 599 - l.h ? 599 - l.h : l.y;
+            t.y = l.y > parseInt(areaHeight)*600/1080 - 1 - l.h ? parseInt(areaHeight)*600/1080 - 1 - l.h : l.y;
             t.w = l.w;
             t.h = l.h;
         })
@@ -151,14 +142,17 @@ const Layout = () => {
     }
 
     const generateVW = () => {
+        let tempCount = panelCount;
         let temp = [...panelList];
         for (let i = 0; i < heightCount; i++) {
             for (let j = 0; j < widthCount; j++) {
-                temp.push({name: `Panel ${temp.length + 1}`, icon: 'volume_mute', w: 100, h: 100, x: 100*j, y: 100*i});                
+                tempCount ++;         
+                temp.push({name: `Panel ${tempCount}`, icon: 'volume_mute', w: 100, h: 100, x: 100*j, y: 100*i});
             }            
         }
         setVWShow(false);
         setPanelList(temp);
+        setPanelCount(tempCount);
     }
 
     const onDragEnd = (result) => {
@@ -175,9 +169,28 @@ const Layout = () => {
     }
     
     const addPanel = () => {
+        let tempCount = panelCount + 1;
         let temp = [...panelList];
-        temp.push({name: `Panel ${temp.length + 1}`, icon: 'volume_mute', w: 100, h: 100, x: 0, y: 0});
+        temp.push({name: `Panel ${tempCount}`, icon: 'volume_mute', w: 100, h: 100, x: 0, y: 0});
         setPanelList(temp);
+        setPanelCount(tempCount);
+    }
+
+    const removePanel = (i) => {
+        let temp = [...panelList];
+        temp.splice(i, 1);
+        setPanelList(temp);
+    }
+
+    const changeOrientation = (e) => {
+        console.log('-----------------', e)
+        if (e === 'landscape') {
+            setAreaHeight('1080');
+            setAreaWidth('1920');
+        } else {
+            setAreaHeight('1080');
+            setAreaWidth('600');
+        }
     }
 
     const toggleIcon = (i) => {
@@ -255,6 +268,7 @@ const Layout = () => {
                                         label: 'Portrait'
                                     }
                                 ]}
+                                onChange={(e) => changeOrientation(e)}
                             />
                         </Col>
                         <Col span={2} style={{paddingRight: '30px'}}>
@@ -263,37 +277,38 @@ const Layout = () => {
                         </Col>
                         <Col span={2}>
                             <p className='select-label'>Width (px)</p>
-                            <Input className='grey-input' defaultValue='1920' />
+                            <Input className='grey-input' defaultValue={areaWidth} onBlur={(e) => setAreaWidth(e.target.value)} />
                         </Col>
                         <Col span={2}>
                             <p className='select-label'>Height (px)</p>
-                            <Input className='grey-input' defaultValue='1080' />
+                            <Input className='grey-input' defaultValue={areaHeight} onBlur={(e) => setAreaHeight(e.target.value)} />
                         </Col>
                     </Row>
                 </Card>
-                <Row gutter={10}>
+                <Row gutter={10} className='layout-section'>
                     <Col span={18} className='left-section'>
                         <ResponsiveGridLayout
                             layout={panelList}
                             onLayoutChange={onLayoutChange}
-                            onDragStop={onGridDragEnd}
+                            onDragStop={onLayoutChange}
                             isResizable={true}
-                            cols={{ lg: 1085, md: 1085, sm: 1085, xs: 1085, xxs: 1085 }}
+                            cols={{ lg: parseInt(areaWidth)*1089/1920, md: parseInt(areaWidth)*1089/1920, sm: parseInt(areaWidth)*1089/1920, xs: parseInt(areaWidth)*1089/1920, xxs: parseInt(areaWidth)*1089/1920 }}
                             rowHeight={1}
                             autoSize={false}
                             margin={[0, 0]}
                             isBounded={false}
                             allowOverlap
+                            style={{width: parseInt(areaWidth)*1089/1920 + 'px', height: parseInt(areaHeight)*600/1080 + 'px'}}
                         >
                             {
                                 panelList.map(panel => 
-                                    <div className='panel-div' key={panel.name} data-grid={{ x: panel.x, y: panel.y, w: panel.w, h: panel.h, isResizable: true}}>
+                                    <div className='panel-div' key={panel.name} data-grid={{ x: panel.x, y: panel.y, w: panel.w > parseInt(areaWidth)*1089/1920 ? parseInt(areaWidth)*1089/1920 : panel.w, h: panel.h > parseInt(areaHeight)*600/1080 ? parseInt(areaHeight)*600/1080 : panel.h, maxW: parseInt(areaWidth)*1089/1920, maxH: parseInt(areaHeight)*600/1080, isResizable: true}}>
                                     </div>
                                 )
                             }
                         </ResponsiveGridLayout>
                     </Col>
-                    <Col span={6}>
+                    <Col span={6} className='right-section'>
                         <Card className='right-card'>
                             <p className='sub-title'>Layout Toolbar</p>
                             <Row gutter={10}>
@@ -327,7 +342,10 @@ const Layout = () => {
                                                                             <p className='layout-position'><span>W</span>{item.w} <span>H</span>{item.h} <span>X</span>{item.x} <span>Y</span>{item.y}</p>
                                                                         </div>
                                                                     </div>
-                                                                    {item.icon && <span className="material-symbols-outlined" onClick={() => toggleIcon(index)}>{item.icon}</span>}
+                                                                    <div className='d-flex align-center'>
+                                                                        {item.icon && <span className="material-symbols-outlined" onClick={() => toggleIcon(index)}>{item.icon}</span>}
+                                                                        <span className="material-symbols-outlined delete-btn" onClick={() => removePanel(index)}>delete</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         )}

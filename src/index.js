@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
 import 'semantic-ui-css/semantic.min.css';
+import 'react-grid-layout/css/styles.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
