@@ -321,7 +321,9 @@ const Schedule = () => {
                                     <p className='select-label'>End Time*</p>
                                     <TimePicker disabled={playForever} />
                                 </Col>
-                                <Col span={4}>
+                            </Row>
+                            <Row gutter={10}>
+                                <Col span={6}>
                                     <Checkbox checked={playForever} onChange={() => setPlayForever(!playForever)}>Play Forever</Checkbox>
                                 </Col>
                             </Row>
@@ -440,7 +442,7 @@ const Schedule = () => {
                         <TimePicker disabled={play24} value={play24 ? dayjs('23:59:59', 'HH:mm:ss') : playListTime?.end} onChange={(e) => changePlayListTime(e, 'end')} disabledTime={disabledTime}/>
                     </Col>
                     <Col span={6}>
-                        <Checkbox checked={play24} onChange={() => setPlay24(!play24)}>24 HR</Checkbox>
+                        <Checkbox className='hr-check' checked={play24} onChange={() => setPlay24(!play24)}>24 HR</Checkbox>
                     </Col>
                 </Row>
                 <Row gutter={10}>
@@ -469,7 +471,9 @@ const Schedule = () => {
                             onChange={(e) => setPlayListDuration(e)}
                         />
                     </Col>
-                    <Col span={6}>
+                </Row>
+                <Row gutter={10}>
+                    <Col span={8}>
                         <p className='select-label'>Play once every</p>
                         <div className='d-flex align-center'>
                             <Select

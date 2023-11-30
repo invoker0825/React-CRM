@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Card, Input, Menu, Badge, Row, Col, Checkbox, Modal, Upload, message, Collapse, Select, Breadcrumb, DatePicker } from 'antd';
+import { Button, Card, Input, Menu, Badge, Row, Col, Checkbox, Modal, Upload, message, Collapse, Select, Breadcrumb, DatePicker, Popover } from 'antd';
 import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
+import ContextMenu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import packImg from '../../assets/img/pack.png';
 import watchImg from '../../assets/img/watch.png';
 import './media.scss';
@@ -16,7 +18,7 @@ function getItem(label, key, icon, children, type) {
         label,
         type,
     };
-  }
+}
 
 const items = [
     getItem('Folder', 'sub1', <AppstoreOutlined />, [
@@ -98,6 +100,8 @@ var mediaFilterData = [
 
 const Media = () => {
 
+    const [cardContextMenu, setCardContextMenu] = useState(null);
+    const [menuContextMenu, setMenuContextMenu] = useState(null);
     const [importModalShow, setImportModalShow] = useState(false);
     const [webPageShow, setWebPageShow] = useState(false);
     const [rssShow, setRssShow] = useState(false);
@@ -106,6 +110,7 @@ const Media = () => {
     const [filelist, setFileList] = useState();
     const [checkedList, setCheckedList] = useState([]);
     const [editMedia, setEditMedia] = useState();
+    const [importMenuOpen, setImportMenuOpen] = useState(false);
 
     const fileTypes = ['Video', 'Picture', 'Stream', 'Powerpoint', 'Capture Card'];
     const checkAll = fileTypes.length === checkedList.length;
@@ -163,8 +168,39 @@ const Media = () => {
         setEditMedia({...editMedia, duration: duration})
     }
 
+    const handleCardContextMenu = (event) => {
+        event.preventDefault();
+        setCardContextMenu(
+            cardContextMenu === null
+            ? {
+                mouseX: event.clientX + 2,
+                mouseY: event.clientY - 6,
+              }
+            : 
+              null,
+        );
+    };
+
+    const handleMenuContextMenu = (event) => {
+        event.preventDefault();
+        setMenuContextMenu(
+            menuContextMenu === null
+            ? {
+                mouseX: event.clientX + 2,
+                mouseY: event.clientY - 6,
+              }
+            : 
+              null,
+        );
+    };
+    
+    const closeContext = () => {
+        setCardContextMenu(null);
+        setMenuContextMenu(null);
+    };
+
     return (
-        <>
+        <div>
             <div className="media-page">
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
@@ -180,23 +216,53 @@ const Media = () => {
                     </div>
                     <div className='d-flex'>
                         <div className='filter-board'>
-                            <Button type='primary'>+ New Folder</Button>
-                            <Button type='primary' onClick={() => setImportModalShow(true)}>Import Media</Button>
-                            <Button type='primary' onClick={() => setWebPageShow(true)}>+ Webpage</Button>
-                            <Button type='primary' onClick={() => setRssShow(true)}>+ RSS/Ticker</Button>
-                            <Button type='primary'>+ Stream Feed</Button>
-                            <Button type='primary'>+ Capture Card Feed</Button>
-                            <Menu
-                                onClick={onClickMenu}
-                                style={{
-                                    width: 256,
-                                }}
-                                defaultOpenKeys={['sub1']}
-                                items={items}
-                                mode="inline"
-                                className='media-filter-menu'
-                                selectable={false}
-                            />
+                            <Popover 
+                                content={
+                                    (<div>
+                                        <Button type='primary' onClick={() => {setWebPageShow(true); setImportMenuOpen(false)}}>+ Webpage</Button>
+                                        <Button type='primary' onClick={() => {setRssShow(true); setImportMenuOpen(false)}}>+ RSS/Ticker</Button>
+                                        <Button type='primary' onClick={() => setImportMenuOpen(false)}>+ Stream Feed</Button>
+                                        <Button type='primary' onClick={() => setImportMenuOpen(false)}>+ Capture Card Feed</Button>
+                                    </div>)
+                                } 
+                                title="" 
+                                trigger="click" 
+                                placement='bottom'
+                                open={importMenuOpen}
+                                onOpenChange={(e) => setImportMenuOpen(e)}
+                            >
+                                <Button type='primary' onClick={() => setImportMenuOpen(true)}>Import Media</Button>
+                                {/* <Button type='primary' onClick={() => setImportModalShow(true)}>Import Media</Button> */}
+                            </Popover>
+                            
+                            <div onContextMenu={handleMenuContextMenu} style={{ cursor: 'context-menu' }}>
+                                <Menu
+                                    onClick={onClickMenu}
+                                    style={{
+                                        width: 256,
+                                    }}
+                                    defaultOpenKeys={['sub1']}
+                                    items={items}
+                                    mode="inline"
+                                    className='media-filter-menu'
+                                    selectable={false}
+                                />
+                                <ContextMenu
+                                    open={menuContextMenu !== null}
+                                    onClose={closeContext}
+                                    anchorReference="anchorPosition"
+                                    anchorPosition={
+                                        menuContextMenu !== null
+                                        ? { top: menuContextMenu.mouseY, left: menuContextMenu.mouseX }
+                                        : undefined
+                                    }
+                                    className='context-menu'
+                                >
+                                    <MenuItem onClick={closeContext}>New Folder</MenuItem>
+                                    <MenuItem onClick={closeContext}>Rename</MenuItem>
+                                    <MenuItem onClick={closeContext}>Delete</MenuItem>
+                                </ContextMenu>
+                            </div>
                         </div>
                         <div className='result-board'>
                             <Breadcrumb
@@ -214,18 +280,36 @@ const Media = () => {
                                     }
                                 ]}
                             />
-                            <Row justify="start">
+                            <Row justify="start" gutter={[10, 10]}>
                                 {
-                                    mediaFilterData.map(media => 
-                                        <Col span={5}>
-                                            <Card 
-                                                className='filter-media-card'
-                                                style={{backgroundImage: 'url(' + media.screenshot + ')'}}
-                                            >
-                                                <Checkbox className='card-check'/>
-                                                <p className='media-format'>{media.format}</p>
-                                                <span className="material-symbols-outlined" onClick={() => editMediaData(media)}>edit</span>
-                                            </Card>
+                                    mediaFilterData.map((media, index) => 
+                                        <Col span={4} key={index}>
+                                            <div onContextMenu={handleCardContextMenu} style={{ cursor: 'context-menu' }}>
+                                                <Card
+                                                    className='filter-media-card'
+                                                    style={{backgroundImage: 'url(' + media.screenshot + ')'}}
+                                                >
+                                                    <Checkbox className='card-check'/>
+                                                    <p className='media-format'>{media.format}</p>
+                                                    <span className="material-symbols-outlined" onClick={() => editMediaData(media)}>edit</span>
+                                                </Card>
+                                                <ContextMenu
+                                                    open={cardContextMenu !== null}
+                                                    onClose={closeContext}
+                                                    anchorReference="anchorPosition"
+                                                    anchorPosition={
+                                                        cardContextMenu !== null
+                                                        ? { top: cardContextMenu.mouseY, left: cardContextMenu.mouseX }
+                                                        : undefined
+                                                    }
+                                                    className='context-menu'
+                                                >
+                                                    <MenuItem onClick={closeContext}>Rename</MenuItem>
+                                                    <MenuItem onClick={closeContext}>Download</MenuItem>
+                                                    <MenuItem onClick={closeContext}>Settings</MenuItem>
+                                                    <MenuItem onClick={closeContext}>Delete</MenuItem>
+                                                </ContextMenu>
+                                            </div>
                                             <div className='d-flex align-center j-c-space-between'>
                                                 <p>{media.name}</p>
                                                 <p>{media.duration}sec</p>
@@ -240,7 +324,7 @@ const Media = () => {
                         </div>
                     </div>
                 </Card>
-            </div> 
+            </div>
 
             <Modal
                 title="Media"
@@ -388,7 +472,7 @@ const Media = () => {
                 <Select />
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
             </Modal>
-        </>
+        </div>
     );
 }
 

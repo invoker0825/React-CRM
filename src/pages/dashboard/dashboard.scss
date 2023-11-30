@@ -6,9 +6,10 @@
         border-radius: 10px;
         border: 1px solid #E4E4E7;
         margin-right: 14px;
+        margin-bottom: 25px;
 
         .ant-card-body {
-            padding-left: 38px;
+            padding-left: 30px;
             padding-top: 20px;
         }
 
@@ -27,7 +28,6 @@
             font-size: 21px;
             font-weight: 700;
             line-height: 32px;
-            padding-left: 5px;
         }
     }
 
@@ -97,4 +97,24 @@
         }
     }
 
+}
+
+.MuiTooltip-tooltip {
+    background-color: #fff !important;
+    border: 1px solid #5C59E8;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 400 !important;
+    line-height: 12px;
+    letter-spacing: 0em;
+    color: #101011 !important;
+    border-radius: 1px !important;
+    padding: 8px !important;
+
+    .MuiTooltip-arrow {
+        &:before {
+            background-color: #fff !important;
+            border: 1px solid #5C59E8;
+        }
+    }
 }

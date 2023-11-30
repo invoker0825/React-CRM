@@ -140,8 +140,6 @@
             }
 
             .ant-col {
-                margin-right: 25px;
-                margin-bottom: 25px;
 
                 .filter-media-card {
                     width: 100%;
@@ -485,5 +483,57 @@
             height: 40px;
             background-color: #F9F9FC;
         }
+    }
+}
+
+.context-menu {
+    .MuiPaper-root {
+        width: 250px;
+        box-shadow: 0px 3px 10px 0px #00000033, 0px 1px 2px 0px #0000001A;
+
+        li {
+            height: 48px;
+            font-family: 'Arial', sans-serif;
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 22px;
+            letter-spacing: -0.4px;
+            color: #000;
+
+            &:hover {
+                background-color: #5C59E8;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.ant-popover {
+    .ant-popover-arrow {
+        display: none !important;
+    }
+
+    .ant-popover-content {
+        width: 215px;
+
+        .ant-popover-inner {
+            padding: 0;
+            box-shadow: none;
+
+            .ant-popover-inner-content {
+                button {
+                    &:last-child {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    button {
+        height: 36px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 8px;
     }
 }

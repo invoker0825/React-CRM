@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Space } from 'antd';
+import Tooltip from '@mui/material/Tooltip';
 import { Label } from 'semantic-ui-react'
 import Tag from '../../components/tag';
 import Table from '../../components/table';
@@ -269,19 +270,24 @@ const Dashboard = () => {
         { name: 'Active Schedule', value: 19 },
         { name: 'Active Playlist', value: 6 },
         { name: 'Total Users', value: 8 },
-        { name: 'Last Login', value: 8 }
+        { name: 'Last Login', value: 8 },
+        { name: 'Display', value: 88 },
+        { name: 'Licenses', value: '19/100' },
+        { name: 'Version Number', value: '8.8.888' }
 
     ]
 
     return (
         <div className="dashboard-page">
-            <div className='d-flex align-center mb-30'>
+            <div className='d-flex align-center mb-30 flex-wrap'>
                 {
                     cardInfo.map(card => 
-                        <Card className='status-card'>
-                            <p className='card-name'>{card.name}</p>
-                            <p className='card-value'>{card.value}</p>
-                        </Card>
+                        <Tooltip title={'This is ' + card.name + '.'} arrow placement="top-start" followCursor>
+                            <Card className='status-card'>
+                                <p className='card-name'>{card.name}</p>
+                                <p className='card-value'>{card.value}</p>
+                            </Card>
+                        </Tooltip>
                     )
                 }
             </div>

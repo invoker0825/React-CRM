@@ -23,6 +23,21 @@ const PlayList = () => {
             name: 'Panel 2',
             duration: '00:02:00',
             number: '3'
+        },
+        {
+            name: 'Panel 3',
+            duration: '00:06:00',
+            number: '5'
+        },
+        {
+            name: 'Panel 4',
+            duration: '00:02:00',
+            number: '8'
+        },
+        {
+            name: 'Panel 5',
+            duration: '00:06:00',
+            number: '2'
         }
     ]
 
@@ -217,10 +232,10 @@ const PlayList = () => {
                                                 onDrop={onFileDrop}
                                                 className='import-drag-file'
                                             >
-                                                        <p className="ant-upload-drag-icon">
-                                                            <div><span className="material-symbols-outlined">imagesmode</span></div>
-                                                        </p>
-                                                        <p className="ant-upload-text">Drag and drop image here, or click add image</p>
+                                                <p className="ant-upload-drag-icon">
+                                                    <div><span className="material-symbols-outlined">imagesmode</span></div>
+                                                </p>
+                                                <p className="ant-upload-text">Drag and drop image here, or click add image</p>
                                             </Dragger>
                                         </Col>
                                     </Row>

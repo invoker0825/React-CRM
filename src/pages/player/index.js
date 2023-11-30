@@ -1,17 +1,30 @@
 import React, { useState } from 'react';
-import { Button, Card, Space, Pagination, Select, Modal, Input, Row, Col } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import Tag from '../../components/tag';
+import { Button, Card, Space, Pagination, Select, Modal, Input, Row, Col, Checkbox, Badge, Menu } from 'antd';
+import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
+import ContextMenu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Table from '../../components/table';
 import packImg from '../../assets/img/pack.png';
 import watchImg from '../../assets/img/watch.png';
 import './player.scss';
+
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+    };
+}
 
 const Player = () => {
 
     const [viewMode, setViewMode] = useState('list');
     const [editShow, setEditShow] = useState(false);
     const [editPlayer, setEditPlayer] = useState();
+    const [displaySelect, setDisplaySelect] = useState('');
+    const [cardContextMenu, setCardContextMenu] = useState(null);
 
     const playerColumns = [
         {
@@ -60,7 +73,11 @@ const Player = () => {
         {
             title: 'Status',
             dataIndex: 'status',        
-            render: (status) => <Tag label={status.label} color={status.color}/>,
+            render: (status) => <div className='d-flex align-center status-icons'>
+                <span class="material-symbols-outlined">cloud_upload</span>
+                <span class="material-symbols-outlined">wifi</span>
+                <span class="material-symbols-outlined">check_circle</span>
+            </div>,
             sorter: (a, b) => a.status.label.localeCompare(b.status.label)
         },
         {
@@ -159,6 +176,186 @@ const Player = () => {
             lastActive: '22/05/23 09:07:24',
             status: {label: 'Active', color: 'green'}
         },
+        {
+            key: '7',
+            name: 'SCH 1',
+            screenshot: packImg,
+            schedule: 'Schedule A',
+            location: 'Kuala Lumpur',
+            pixel: '800x600',
+            ip: 'Landscape',
+            platform: 'platform 1',
+            version: '1.1.6.57',
+            freeSpace: '96 / 111.3G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '8',
+            name: 'SCH 2',
+            screenshot: watchImg,
+            schedule: 'Schedule B',
+            location: 'Petaling Jaya',
+            pixel: '1920x1080',
+            ip: 'Portrait',
+            platform: 'platform 2',
+            version: '1.1.6.57',
+            freeSpace: '12.1/29.5G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '9',
+            name: 'SCH 1',
+            screenshot: packImg,
+            schedule: 'Schedule A',
+            location: 'Kuala Lumpur',
+            pixel: '800x600',
+            ip: 'Landscape',
+            platform: 'platform 3',
+            version: '1.1.6.57',
+            freeSpace: '96 / 111.3G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '10',
+            name: 'SCH 2',
+            screenshot: watchImg,
+            schedule: 'Schedule B',
+            location: 'Petaling Jaya',
+            pixel: '1920x1080',
+            ip: 'Portrait',
+            platform: 'platform 4',
+            version: '1.1.6.57',
+            freeSpace: '12.1/29.5G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '11',
+            name: 'SCH 1',
+            screenshot: packImg,
+            schedule: 'Schedule A',
+            location: 'Kuala Lumpur',
+            pixel: '800x600',
+            ip: 'Landscape',
+            platform: 'platform 5',
+            version: '1.1.6.57',
+            freeSpace: '96 / 111.3G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '12',
+            name: 'SCH 2',
+            screenshot: watchImg,
+            schedule: 'Schedule B',
+            location: 'Petaling Jaya',
+            pixel: '1920x1080',
+            ip: 'Portrait',
+            platform: 'platform 6',
+            version: '1.1.6.57',
+            freeSpace: '12.1/29.5G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '13',
+            name: 'SCH 1',
+            screenshot: packImg,
+            schedule: 'Schedule A',
+            location: 'Kuala Lumpur',
+            pixel: '800x600',
+            ip: 'Landscape',
+            platform: 'platform 1',
+            version: '1.1.6.57',
+            freeSpace: '96 / 111.3G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '14',
+            name: 'SCH 2',
+            screenshot: watchImg,
+            schedule: 'Schedule B',
+            location: 'Petaling Jaya',
+            pixel: '1920x1080',
+            ip: 'Portrait',
+            platform: 'platform 2',
+            version: '1.1.6.57',
+            freeSpace: '12.1/29.5G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '15',
+            name: 'SCH 1',
+            screenshot: packImg,
+            schedule: 'Schedule A',
+            location: 'Kuala Lumpur',
+            pixel: '800x600',
+            ip: 'Landscape',
+            platform: 'platform 3',
+            version: '1.1.6.57',
+            freeSpace: '96 / 111.3G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '16',
+            name: 'SCH 2',
+            screenshot: watchImg,
+            schedule: 'Schedule B',
+            location: 'Petaling Jaya',
+            pixel: '1920x1080',
+            ip: 'Portrait',
+            platform: 'platform 4',
+            version: '1.1.6.57',
+            freeSpace: '12.1/29.5G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '17',
+            name: 'SCH 1',
+            screenshot: packImg,
+            schedule: 'Schedule A',
+            location: 'Kuala Lumpur',
+            pixel: '800x600',
+            ip: 'Landscape',
+            platform: 'platform 5',
+            version: '1.1.6.57',
+            freeSpace: '96 / 111.3G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+        {
+            key: '18',
+            name: 'SCH 2',
+            screenshot: watchImg,
+            schedule: 'Schedule B',
+            location: 'Petaling Jaya',
+            pixel: '1920x1080',
+            ip: 'Portrait',
+            platform: 'platform 6',
+            version: '1.1.6.57',
+            freeSpace: '12.1/29.5G',
+            lastActive: '22/05/23 09:07:24',
+            status: {label: 'Active', color: 'green'}
+        },
+    ];
+
+    const items = [
+        getItem('Folder', 'sub1', <AppstoreOutlined />, [
+            getItem('Sub Folder', '1'),
+            getItem('Sub Folder', '2'),
+        ]),
+        getItem(<div className='d-flex align-center j-c-space-between'><p>Menu</p><Badge count={13} /></div>, 'sub2', <AppstoreOutlined />),
+        getItem(<div className='d-flex align-center j-c-space-between pr-20'><p>Menu</p><Badge count={5} /></div>, 'sub4', <AppstoreOutlined />, [
+            getItem('Sub Menu 1', '9'),
+            getItem('Sub Menu 2', '10')
+        ]),
     ];
 
     const toggleViewMode = () => {
@@ -173,6 +370,27 @@ const Player = () => {
         setEditPlayer(player);
         setEditShow(true);
     }
+
+    const onClickMenu = (e) => {
+      console.log('click------------------ ', e);
+    };
+
+    const handleCardContextMenu = (event) => {
+        event.preventDefault();
+        setCardContextMenu(
+            cardContextMenu === null
+            ? {
+                mouseX: event.clientX + 2,
+                mouseY: event.clientY - 6,
+              }
+            : 
+              null,
+        );
+    };
+    
+    const closeContext = () => {
+        setCardContextMenu(null);
+    };
 
     return (
         <>
@@ -212,28 +430,70 @@ const Player = () => {
                         : 
                         <div className='thumb-view'>
                             <div className='thumb-container'>
-                                <div className='d-flex align-center flex-wrap'>
-                                    {
-                                        playerData.map(player => 
-                                            <>
-                                                <div className='w-20'>
-                                                    <Card 
-                                                        className='player-card'
-                                                        style={{backgroundImage: 'url(' + player.screenshot + ')'}}
-                                                    >
-                                                    </Card>
-                                                    <div className='d-flex align-center j-c-space-between'>
-                                                        <p className='name'>{player.name}</p>
-                                                        <div className='d-flex align-center'>
-                                                            <span className="material-symbols-outlined" onClick={() => editPlayerData(player)}>edit</span>
-                                                            <Tag label={player.status.label} color={player.status.color}/>
+                                <Row className='border-row'>
+                                    <Col span={4} style={{paddingLeft: '20px'}}>
+                                        <p className='sub-title'>Location</p>
+                                        <Menu
+                                            onClick={onClickMenu}
+                                            style={{
+                                                width: 256,
+                                            }}
+                                            defaultOpenKeys={['sub1']}
+                                            items={items}
+                                            mode="inline"
+                                            className='media-filter-menu'
+                                            selectable={false}
+                                        />
+                                    </Col>
+                                    <Col span={19} offset={1} style={{height: '100%'}}>
+                                        <p className='sub-title'>All Location</p>
+                                        <div className='d-flex align-center flex-wrap' style={{height: 'calc(100% - 38px)', overflowY: 'auto'}}>
+                                            {
+                                                playerData.map(player => 
+                                                    <>
+                                                        <div className='w-25'>
+                                                            
+                                                            <div onContextMenu={handleCardContextMenu} style={{ cursor: 'context-menu' }}>
+                                                                <Card 
+                                                                    className='player-card'
+                                                                    style={{backgroundImage: 'url(' + player.screenshot + ')'}}
+                                                                >
+                                                                </Card>
+                                                                <ContextMenu
+                                                                    open={cardContextMenu !== null}
+                                                                    onClose={closeContext}
+                                                                    anchorReference="anchorPosition"
+                                                                    anchorPosition={
+                                                                        cardContextMenu !== null
+                                                                        ? { top: cardContextMenu.mouseY, left: cardContextMenu.mouseX }
+                                                                        : undefined
+                                                                    }
+                                                                    className='context-menu'
+                                                                >
+                                                                    <MenuItem onClick={closeContext}>Rename</MenuItem>
+                                                                    <MenuItem onClick={closeContext}>Download</MenuItem>
+                                                                    <MenuItem onClick={closeContext}>Settings</MenuItem>
+                                                                    <MenuItem onClick={closeContext}>Delete</MenuItem>
+                                                                </ContextMenu>
+                                                            </div>
+                                                            <div className='d-flex align-center j-c-space-between'>
+                                                                <p className='name'>{player.name}</p>
+                                                                <div className='d-flex align-center'>
+                                                                    <span className="material-symbols-outlined" onClick={() => editPlayerData(player)}>edit</span>
+                                                                    <div className='d-flex align-center status-icons'>
+                                                                        <span class="material-symbols-outlined">cloud_upload</span>
+                                                                        <span class="material-symbols-outlined">wifi</span>
+                                                                        <span class="material-symbols-outlined">check_circle</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )
-                                    }
-                                </div>
+                                                    </>
+                                                )
+                                            }
+                                        </div>
+                                    </Col>
+                                </Row>
                             </div>
                             <Pagination pageSize={10} total={playerData.length} showTotal={showTotal} />
                         </div>
@@ -297,14 +557,127 @@ const Player = () => {
                 <Input className='grey-input' placeholder='Month August' />
                 <p className='select-label'>Display (Commercial display only)</p>
                 <Select
-                    defaultValue='lgvl5g'
+                    value={displaySelect}
                     options={[
+                        {
+                            value: '',
+                            label: ''
+                        },
                         {
                             value: 'lgvl5g',
                             label: 'LG VL5G Series'
                         }
                     ]}
+                    onChange={(e) => setDisplaySelect(e)}
                 />
+                {
+                    displaySelect !== '' &&
+                    <Row gutter={10}>
+                        <Col span={12}>
+                            <p className='select-label'>Check Interval (Seconds)</p>
+                            <Select
+                                options={[
+                                    {
+                                        value: '',
+                                        label: ''
+                                    }
+                                ]}
+                            />
+                        </Col>
+                        <Col span={12}></Col>
+                        <Col span={12}>
+                            <p className='select-label'>Default Brightness (0-100)</p>
+                            <Select
+                                options={[
+                                    {
+                                        value: '',
+                                        label: ''
+                                    }
+                                ]}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <p className='select-label'>Default Contrast (0-100)</p>
+                            <Select
+                                options={[
+                                    {
+                                        value: '',
+                                        label: ''
+                                    }
+                                ]}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <p className='select-label'>Default Input</p>
+                            <Select
+                                options={[
+                                    {
+                                        value: '',
+                                        label: ''
+                                    }
+                                ]}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <p className='select-label'>Default Volume (0-100)</p>
+                            <Select
+                                options={[
+                                    {
+                                        value: '',
+                                        label: ''
+                                    }
+                                ]}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <p className='select-label'>Power On Timer</p>
+                            <Select
+                                options={[
+                                    {
+                                        value: '',
+                                        label: ''
+                                    }
+                                ]}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <p className='select-label'>Power Off Timer</p>
+                            <Select
+                                options={[
+                                    {
+                                        value: '',
+                                        label: ''
+                                    }
+                                ]}
+                            />
+                        </Col>
+                        <Col span={24}>
+                            <p className='select-label'>Power On Days</p> 
+                        </Col>
+                        <Col span={6} className='text-left'>
+                            <Checkbox>Monday</Checkbox>
+                        </Col>
+                        <Col span={6} className='text-left'>
+                            <Checkbox>Tuesday</Checkbox>
+                        </Col>
+                        <Col span={6} className='text-left'>
+                            <Checkbox>Wednesday</Checkbox>
+                        </Col>
+                        <Col span={6} className='text-left'>
+                            <Checkbox>Thursday</Checkbox>
+                        </Col>
+                        <Col span={6} className='text-left'>
+                            <Checkbox>Friday</Checkbox>
+                        </Col>
+                        <Col span={6} className='text-left'>
+                            <Checkbox>Saturday</Checkbox>
+                        </Col>
+                        <Col span={6} className='text-left'>
+                            <Checkbox>Sunday</Checkbox>
+                        </Col>
+                    </Row>
+                }
+                <Button type='primary' onClick={() => setEditShow(false)}>Save</Button>
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
             </Modal>
         </>

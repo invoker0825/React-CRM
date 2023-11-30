@@ -129,10 +129,10 @@ const Layout = () => {
         let temp = [...panelList];
         temp.forEach(t => {
             const l = layout.filter(lo => lo.i === t.name)[0];
-            t.x = l.x;
-            t.y = l.y > parseInt(areaHeight)*600/1080 - 1 - l.h ? parseInt(areaHeight)*600/1080 - 1 - l.h : l.y;
-            t.w = l.w;
-            t.h = l.h;
+            t.x = Math.floor(l.x);
+            t.y = l.y > (parseInt(areaHeight)*612/1080).toFixed(2) - l.h ? Math.floor(parseInt(areaHeight)*612/1080) - l.h : l.y;
+            t.w = Math.floor(l.w);
+            t.h = Math.floor(l.h);
         })
         setPanelList(temp);
     }
@@ -292,17 +292,17 @@ const Layout = () => {
                             onLayoutChange={onLayoutChange}
                             onDragStop={onLayoutChange}
                             isResizable={true}
-                            cols={{ lg: parseInt(areaWidth)*1089/1920, md: parseInt(areaWidth)*1089/1920, sm: parseInt(areaWidth)*1089/1920, xs: parseInt(areaWidth)*1089/1920, xxs: parseInt(areaWidth)*1089/1920 }}
+                            cols={{ lg: Math.floor(parseInt(areaWidth)*1089/1920), md: Math.floor(parseInt(areaWidth)*1089/1920), sm: Math.floor(parseInt(areaWidth)*1089/1920), xs: Math.floor(parseInt(areaWidth)*1089/1920), xxs: Math.floor(parseInt(areaWidth)*1089/1920) }}
                             rowHeight={1}
                             autoSize={false}
                             margin={[0, 0]}
                             isBounded={false}
                             allowOverlap
-                            style={{width: parseInt(areaWidth)*1089/1920 + 'px', height: parseInt(areaHeight)*600/1080 + 'px'}}
+                            style={{width: Math.floor(parseInt(areaWidth)*1089/1920) + 'px', height: Math.floor(parseInt(areaHeight)*612/1080) + 'px'}}
                         >
                             {
                                 panelList.map(panel => 
-                                    <div className='panel-div' key={panel.name} data-grid={{ x: panel.x, y: panel.y, w: panel.w > parseInt(areaWidth)*1089/1920 ? parseInt(areaWidth)*1089/1920 : panel.w, h: panel.h > parseInt(areaHeight)*600/1080 ? parseInt(areaHeight)*600/1080 : panel.h, maxW: parseInt(areaWidth)*1089/1920, maxH: parseInt(areaHeight)*600/1080, isResizable: true}}>
+                                    <div className='panel-div' key={panel.name} data-grid={{ x: panel.x, y: panel.y, w: panel.w > parseInt(areaWidth)*1089/1920 ? parseInt(areaWidth)*1089/1920 : panel.w, h: panel.h > parseInt(areaHeight)*612/1080 ? Math.floor(parseInt(areaHeight)*612/1080) : panel.h, maxW: parseInt(areaWidth)*1089/1920, maxH: Math.floor(parseInt(areaHeight)*612/1080), isResizable: true}}>
                                     </div>
                                 )
                             }
@@ -339,7 +339,7 @@ const Layout = () => {
                                                                         <span className="material-symbols-outlined" {...provided.dragHandleProps}>drag_indicator</span>
                                                                         <div style={{marginLeft: '10px'}}>
                                                                             <p className='layout-name'>{item.name}</p>
-                                                                            <p className='layout-position'><span>W</span>{item.w} <span>H</span>{item.h} <span>X</span>{item.x} <span>Y</span>{item.y}</p>
+                                                                            <p className='layout-position'><span>W</span>{Math.floor(item.w*parseInt(areaWidth)/Math.floor(parseInt(areaWidth)*1089/1920))} <span>H</span>{Math.floor(item.h*parseInt(areaHeight)/Math.floor(parseInt(areaHeight)*612/1080))} <span>X</span>{Math.ceil(item.x*1920/1089)} <span>Y</span>{Math.ceil(item.y*1080/612)}</p>
                                                                         </div>
                                                                     </div>
                                                                     <div className='d-flex align-center'>
