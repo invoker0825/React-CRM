@@ -207,7 +207,7 @@
 .edit-playlist-modal {
     
     .ant-modal-body {
-        width: 1320px;
+        width: 1520px;
         margin-top: 15px;
 
         .ant-card {
@@ -449,6 +449,22 @@
             }
         }
 
+        .media-format {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 18px;
+            letter-spacing: 0.005em;                       
+            color: #5C59E8;
+            background-color: #EFEFFD;
+            border-radius: 12px;
+            padding: 0 6px;
+            text-transform: uppercase;
+            position: absolute;
+            right: 10px;
+            top: 5px;
+        }
+
         .select-label {
             font-family: 'Inter', sans-serif;
             font-size: 14px;
@@ -501,6 +517,111 @@
             line-height: 20px;
             letter-spacing: 0.005em;
             color: #fff;
+        }
+    }
+}
+
+.filter-modal {
+    .ant-modal-body {
+        width: 400px;
+        min-height: 490px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        margin-top: 15px;
+
+        .file-type-collapse {
+            width: 100%;
+            border-color: #F0F1F3;
+
+            .ant-collapse-item {
+                border-color: #F0F1F3;
+
+                .ant-collapse-content {
+                    border-color: #F0F1F3;
+
+                    .ant-collapse-content-box {
+                        padding: 12px;
+
+                        .ant-checkbox-group {
+                            width: 100%;
+                            flex-direction: column;
+                        }
+
+                        .ant-checkbox-wrapper {
+                            width: 100%;
+                            font-family: 'Inter', sans-serif;
+                            font-size: 14px;
+                            font-weight: 500;
+                            line-height: 20px;
+                            letter-spacing: 0.005em;
+                            color: #667085;
+                            margin-bottom: 16px;
+                        }
+                    }
+                }
+            }
+
+            .ant-collapse-header {
+                background-color: #F9F9FC;
+                height: 36px;
+                padding: 0 15px;
+                border-radius: 8px;
+                align-items: center;
+                justify-content: space-between;
+
+                .ant-collapse-header-text {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 20px;
+                    letter-spacing: 0.005em;
+                    text-align: left;
+                }
+            }
+        }
+    
+        .modal-cancel-button {
+            margin-right: 15px;
+        }
+
+        button {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            letter-spacing: 0.005em;            
+        }
+
+        .ant-btn-disabled {
+            background-color: #858D9D;
+            color: #fff;
+            border: none;
+        }
+    }
+
+    .reset-button {
+        display: flex;
+        align-items: center;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 20px;
+        letter-spacing: 0.005em;
+        cursor: pointer;
+
+        .material-symbols-outlined {
+            font-size: 15px;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        p {
+            text-decoration: underline;
+        }
+
+        &:hover {
+            color: #5C59E8;
         }
     }
 }

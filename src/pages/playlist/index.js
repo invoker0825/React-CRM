@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Space, Select, Modal, Input, Row, Col, Checkbox, Upload, message } from 'antd';
+import { Button, Card, Space, Select, Modal, Input, Row, Col, Checkbox, Upload, message, Collapse } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
@@ -8,10 +8,17 @@ import watchImg from '../../assets/img/watch.png';
 import './playlist.scss';
 
 const { Dragger } = Upload;
+const CheckboxGroup = Checkbox.Group;
 
 const PlayList = () => {
 
     const [editShow, setEditShow] = useState(false);
+    const [filterShow, setFilterShow] = useState(false);
+    const [checkedList, setCheckedList] = useState([]);
+
+    const fileTypes = ['Video', 'Picture', 'Stream', 'Powerpoint', 'Capture Card'];
+    const checkAll = fileTypes.length === checkedList.length;
+    const indeterminate = checkedList.length > 0 && checkedList.length < fileTypes.length;
 
     const panelData = [
         {
@@ -41,7 +48,7 @@ const PlayList = () => {
         }
     ]
 
-    const imageList = [watchImg, packImg, packImg, packImg, watchImg, packImg, watchImg, packImg, watchImg, watchImg]
+    const imageList = [{src: watchImg, type: 'jpg'}, {src: packImg, type: 'png'}, {src: packImg, type: 'png'}, {src: packImg, type: 'png'}, {src: watchImg, type: 'jpg'}, {src: packImg, type: 'png'}, {src: watchImg, type: 'jpg'}, {src: packImg, type: 'png'}, {src: watchImg, type: 'jpg'}, {src: watchImg, type: 'jpg'}]
 
     const playListColumns = [
         {
@@ -139,6 +146,29 @@ const PlayList = () => {
 
     const savePlayList = () => {
         setEditShow(false);
+    }
+
+    const fileTypeCheck = () => {
+        return (
+            <>
+                <Checkbox indeterminate={indeterminate} onChange={onCheckAllTypes} checked={checkAll}>
+                    All
+                </Checkbox>
+                <CheckboxGroup options={fileTypes} value={checkedList} onChange={onChangeFileType} />
+            </>
+        );
+    }
+
+    const onChangeFileType = (list) => {
+        setCheckedList(list);
+    };
+
+    const onCheckAllTypes = (e) => {
+        setCheckedList(e.target.checked ? fileTypes : []);
+    };
+
+    const resetFilter = () => {
+        setCheckedList([]);
     }
 
     return (
@@ -247,7 +277,7 @@ const PlayList = () => {
                         <Card className='right-card'>
                             <div className='d-flex align-center j-c-space-between'>
                                 <p className='sub-title'>Media Library</p>
-                                <Button className='filter-btn'>
+                                <Button className='filter-btn' onClick={() => setFilterShow(true)}>
                                     <div className='d-flex align-center'>
                                         <span className="material-symbols-outlined">tune</span><span>&nbsp;&nbsp;Filters</span>
                                     </div>
@@ -274,8 +304,9 @@ const PlayList = () => {
                             <Row gutter={[10, 10]}>
                                 {
                                     imageList.map(image => 
-                                        <Col span={12}>
-                                            <img src={image} className='img-placeholder' alt=''/>
+                                        <Col span={12} style={{position: 'relative'}}>
+                                            <img src={image.src} className='img-placeholder' alt=''/>
+                                            <p className='media-format'>{image.type}</p>
                                         </Col>
                                     )
                                 }
@@ -285,6 +316,44 @@ const PlayList = () => {
                 </Row>
                 <Button type='primary' className='save-button' onClick={confirmSave}>Save Playlist</Button>
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
+            </Modal>
+            
+            <Modal
+                title={
+                    <div className='d-flex align-center j-c-space-between'>
+                        <p>Filters</p>
+                        <div className='reset-button' onClick={resetFilter}><span className="material-symbols-outlined">close</span><p>Reset</p></div>
+                    </div>
+                }
+                centered
+                open={filterShow}
+                onCancel={() => setFilterShow(false)}
+                footer={false}
+                className='filter-modal'
+            >
+                <Collapse
+                    items={[
+                        {
+                        key: '1',
+                        label: 'File Type',
+                        children: <>{fileTypeCheck()}</>,
+                        }
+                    ]}
+                    defaultActiveKey={['1']}
+                    expandIconPosition='end'
+                    className='file-type-collapse'
+                />
+                <div className='d-flex align-center j-c-end'>
+                    <Button className='modal-cancel-button' onClick={() => setFilterShow(false)}>Cancel</Button>
+                    <Button 
+                        type='primary' 
+                        disabled={checkedList.length === 0} 
+                        className={checkedList.length === 0 && 'ant-btn-disabled'} 
+                        onClick={() => setFilterShow(false)}
+                    >
+                        Apply Filter
+                    </Button>
+                </div>
             </Modal>
         </>
     );

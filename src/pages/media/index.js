@@ -111,6 +111,7 @@ const Media = () => {
     const [checkedList, setCheckedList] = useState([]);
     const [editMedia, setEditMedia] = useState();
     const [importMenuOpen, setImportMenuOpen] = useState(false);
+    const [moveToShow, setMoveToShow] = useState(false);
 
     const fileTypes = ['Video', 'Picture', 'Stream', 'Powerpoint', 'Capture Card'];
     const checkAll = fileTypes.length === checkedList.length;
@@ -305,6 +306,7 @@ const Media = () => {
                                                     className='context-menu'
                                                 >
                                                     <MenuItem onClick={closeContext}>Rename</MenuItem>
+                                                    <MenuItem onClick={() => {closeContext(); setMoveToShow(true);}}>Move to</MenuItem>
                                                     <MenuItem onClick={closeContext}>Download</MenuItem>
                                                     <MenuItem onClick={closeContext}>Settings</MenuItem>
                                                     <MenuItem onClick={closeContext}>Delete</MenuItem>
@@ -471,6 +473,36 @@ const Media = () => {
                 <p className='select-label'>Author/Provider</p>
                 <Select />
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
+            </Modal>
+            
+            <Modal
+                title='Move To'
+                centered
+                open={moveToShow}
+                onCancel={() => setMoveToShow(false)}
+                footer={false}
+                className='edit-modal move-to-modal'
+            >
+                <p className='select-label'>Group</p>
+                <Select
+                    defaultValue='group1'
+                    options={[
+                        {
+                            value: 'group1',
+                            label: 'group 1'
+                        },
+                        {
+                            value: 'group2',
+                            label: 'group 2'
+                        },
+                        {
+                            value: 'group3',
+                            label: 'group 3'
+                        }
+                    ]}
+                />
+                <Button type='primary' onClick={() => setMoveToShow(false)}>Save</Button>
+                <Button className='modal-cancel-button' onClick={() => setMoveToShow(false)}>Cancel</Button>
             </Modal>
         </div>
     );

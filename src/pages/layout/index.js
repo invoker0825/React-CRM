@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, Space, Select, Modal, Input, Row, Col } from 'antd';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { SearchOutlined } from '@ant-design/icons';
@@ -27,6 +27,7 @@ const Layout = () => {
     const [heightCount, setHeightCount] = useState(1);
     const [areaWidth, setAreaWidth] = useState('1920');
     const [areaHeight, setAreaHeight] = useState('1080');
+    const [gridSize, setGridSize] = useState([0, 0])
     const [panelList, setPanelList] = useState([
         {
             name: 'Panel 1',
@@ -125,12 +126,20 @@ const Layout = () => {
         }
     ];
 
+    useEffect(() => {
+        if (1920 / parseInt(areaWidth) >= 1080 / parseInt(areaHeight)) {
+            setGridSize([Math.floor(areaWidth * 612 / areaHeight), 612])
+        } else {
+            setGridSize([1089, Math.floor(areaHeight * 1089 / areaWidth)])
+        }
+    }, [areaWidth, areaHeight]);
+
     const onLayoutChange = (layout) => {
         let temp = [...panelList];
         temp.forEach(t => {
             const l = layout.filter(lo => lo.i === t.name)[0];
             t.x = Math.floor(l.x);
-            t.y = l.y > (parseInt(areaHeight)*612/1080).toFixed(2) - l.h ? Math.floor(parseInt(areaHeight)*612/1080) - l.h : l.y;
+            t.y = l.y > gridSize[1] - l.h ? gridSize[1] - l.h : l.y;
             t.w = Math.floor(l.w);
             t.h = Math.floor(l.h);
         })
@@ -292,17 +301,17 @@ const Layout = () => {
                             onLayoutChange={onLayoutChange}
                             onDragStop={onLayoutChange}
                             isResizable={true}
-                            cols={{ lg: Math.floor(parseInt(areaWidth)*1089/1920), md: Math.floor(parseInt(areaWidth)*1089/1920), sm: Math.floor(parseInt(areaWidth)*1089/1920), xs: Math.floor(parseInt(areaWidth)*1089/1920), xxs: Math.floor(parseInt(areaWidth)*1089/1920) }}
+                            cols={{ lg: gridSize[0], md: gridSize[0], sm: gridSize[0], xs: gridSize[0], xxs: gridSize[0] }}
                             rowHeight={1}
                             autoSize={false}
                             margin={[0, 0]}
                             isBounded={false}
                             allowOverlap
-                            style={{width: Math.floor(parseInt(areaWidth)*1089/1920) + 'px', height: Math.floor(parseInt(areaHeight)*612/1080) + 'px'}}
+                            style={{width: gridSize[0] + 'px', height: gridSize[1] + 'px'}}
                         >
                             {
                                 panelList.map(panel => 
-                                    <div className='panel-div' key={panel.name} data-grid={{ x: panel.x, y: panel.y, w: panel.w > parseInt(areaWidth)*1089/1920 ? parseInt(areaWidth)*1089/1920 : panel.w, h: panel.h > parseInt(areaHeight)*612/1080 ? Math.floor(parseInt(areaHeight)*612/1080) : panel.h, maxW: parseInt(areaWidth)*1089/1920, maxH: Math.floor(parseInt(areaHeight)*612/1080), isResizable: true}}>
+                                    <div className='panel-div' key={panel.name} data-grid={{ x: panel.x, y: panel.y, w: panel.w > gridSize[0] ? gridSize[0] : panel.w, h: panel.h > gridSize[1] ? gridSize[1] : panel.h, maxW: gridSize[0], maxH: gridSize[1], isResizable: true}}>
                                     </div>
                                 )
                             }
@@ -339,7 +348,7 @@ const Layout = () => {
                                                                         <span className="material-symbols-outlined" {...provided.dragHandleProps}>drag_indicator</span>
                                                                         <div style={{marginLeft: '10px'}}>
                                                                             <p className='layout-name'>{item.name}</p>
-                                                                            <p className='layout-position'><span>W</span>{Math.floor(item.w*parseInt(areaWidth)/Math.floor(parseInt(areaWidth)*1089/1920))} <span>H</span>{Math.floor(item.h*parseInt(areaHeight)/Math.floor(parseInt(areaHeight)*612/1080))} <span>X</span>{Math.ceil(item.x*1920/1089)} <span>Y</span>{Math.ceil(item.y*1080/612)}</p>
+                                                                            <p className='layout-position'><span>W</span>{Math.floor(item.w*parseInt(areaWidth)/gridSize[0])} <span>H</span>{Math.floor(item.h*parseInt(areaHeight)/gridSize[1])} <span>X</span>{Math.ceil(item.x*parseInt(areaWidth)/gridSize[0])} <span>Y</span>{Math.ceil(item.y*parseInt(areaHeight)/gridSize[1])}</p>
                                                                         </div>
                                                                     </div>
                                                                     <div className='d-flex align-center'>

@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
-import { Button, Card, Modal, Select, Input, Checkbox, Tabs, Col, Row, Upload } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Modal, Select, Input, Checkbox, Tabs, Col, Row, Upload, Badge, Menu } from 'antd';
+import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
+import ContextMenu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import './settings.scss';
 const { TextArea } = Input;
 const { Dragger } = Upload;
 
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+    };
+}
+
 const User = () => {
 
     const [currentTab, setCurrentTab] = useState('general');
     const [editShow, setEditShow] = useState(false);
+    const [menuContextMenu, setMenuContextMenu] = useState(null);
 
     const userColumns = [
         {
@@ -75,6 +88,39 @@ const User = () => {
         }
     ]
 
+    const items = [
+        getItem('Folder', 'sub1', <AppstoreOutlined />, [
+            getItem('Sub Folder', '1'),
+            getItem('Sub Folder', '2'),
+        ]),
+        getItem(<div className='d-flex align-center j-c-space-between'><p>Menu</p><Badge count={13} /></div>, 'sub2', <AppstoreOutlined />),
+        getItem(<div className='d-flex align-center j-c-space-between pr-20'><p>Menu</p><Badge count={5} /></div>, 'sub4', <AppstoreOutlined />, [
+            getItem('Sub Menu 1', '9'),
+            getItem('Sub Menu 2', '10')
+        ]),
+    ];
+
+    const handleMenuContextMenu = (event) => {
+        event.preventDefault();
+        setMenuContextMenu(
+            menuContextMenu === null
+            ? {
+                mouseX: event.clientX + 2,
+                mouseY: event.clientY - 6,
+              }
+            : 
+              null,
+        );
+    };
+    
+    const closeContext = () => {
+        setMenuContextMenu(null);
+    };
+
+    const onClickMenu = (e) => {
+      console.log('click------------------ ', e);
+    };
+
     return (
         <>
             <div className="settings-page">
@@ -125,9 +171,9 @@ const User = () => {
                         </div>
                     }
                     { currentTab === 'user' &&
-                        <>
+                        <div className='user-card'>
                             <div className='d-flex align-center j-c-space-between top-section'>
-                                <p className='card-title'>Settings</p>
+                                <p className='card-title'>User</p>
                                 <div className='d-flex align-center'>
                                     <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
                                     <Button className='view-mode-btn' type='primary' onClick={() => setEditShow(true)}>
@@ -137,11 +183,46 @@ const User = () => {
                                     </Button> 
                                 </div>
                             </div>
-                            <Table
-                                columns={userColumns}
-                                dataSource={userData}
-                            />
-                        </>
+                            <Row>
+                                <Col span={5} style={{padding: '0 25px'}}>
+                                    <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input' style={{marginBottom: '20px'}}/>
+                                    <div onContextMenu={handleMenuContextMenu} style={{ cursor: 'context-menu' }}>
+                                        <Menu
+                                            onClick={onClickMenu}
+                                            style={{
+                                                width: 256,
+                                            }}
+                                            defaultOpenKeys={['sub1']}
+                                            items={items}
+                                            mode="inline"
+                                            className='media-filter-menu'
+                                            selectable={false}
+                                        />
+                                        <ContextMenu
+                                            open={menuContextMenu !== null}
+                                            onClose={closeContext}
+                                            anchorReference="anchorPosition"
+                                            anchorPosition={
+                                                menuContextMenu !== null
+                                                ? { top: menuContextMenu.mouseY, left: menuContextMenu.mouseX }
+                                                : undefined
+                                            }
+                                            className='context-menu'
+                                        >
+                                            <MenuItem onClick={closeContext}>New Folder</MenuItem>
+                                            <MenuItem onClick={closeContext}>Rename</MenuItem>
+                                            <MenuItem onClick={closeContext}>Delete</MenuItem>
+                                        </ContextMenu>
+                                    </div>
+                                </Col>
+                                <Col span={19}>
+                                    <Table
+                                        columns={userColumns}
+                                        dataSource={userData}
+                                    />
+                                </Col>
+                            </Row>
+                        </div>
                     }
                 </Card>
             </div> 

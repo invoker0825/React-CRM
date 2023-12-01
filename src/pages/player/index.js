@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Space, Pagination, Select, Modal, Input, Row, Col, Checkbox, Badge, Menu } from 'antd';
 import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
+import Tag from '../../components/tag';
 import ContextMenu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Table from '../../components/table';
@@ -25,6 +26,8 @@ const Player = () => {
     const [editPlayer, setEditPlayer] = useState();
     const [displaySelect, setDisplaySelect] = useState('');
     const [cardContextMenu, setCardContextMenu] = useState(null);
+    const [menuContextMenu, setMenuContextMenu] = useState(null);
+    const [moveToShow, setMoveToShow] = useState(false);
 
     const playerColumns = [
         {
@@ -100,11 +103,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 1',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '2',
@@ -114,11 +117,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 2',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Android'
         },
         {
             key: '3',
@@ -128,11 +131,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 3',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'webOS'
         },
         {
             key: '4',
@@ -142,11 +145,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 4',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Tizen'
         },
         {
             key: '5',
@@ -156,11 +159,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 5',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Linux'
         },
         {
             key: '6',
@@ -170,11 +173,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 6',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Tizen'
         },
         {
             key: '7',
@@ -184,11 +187,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 1',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '8',
@@ -198,11 +201,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 2',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Android'
         },
         {
             key: '9',
@@ -212,11 +215,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 3',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '10',
@@ -226,11 +229,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 4',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '11',
@@ -240,11 +243,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 5',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '12',
@@ -254,11 +257,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 6',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '13',
@@ -268,11 +271,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 1',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '14',
@@ -282,11 +285,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 2',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '15',
@@ -296,11 +299,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 3',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '16',
@@ -310,11 +313,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 4',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '17',
@@ -324,11 +327,11 @@ const Player = () => {
             location: 'Kuala Lumpur',
             pixel: '800x600',
             ip: 'Landscape',
-            platform: 'platform 5',
             version: '1.1.6.57',
             freeSpace: '96 / 111.3G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
         {
             key: '18',
@@ -338,11 +341,11 @@ const Player = () => {
             location: 'Petaling Jaya',
             pixel: '1920x1080',
             ip: 'Portrait',
-            platform: 'platform 6',
             version: '1.1.6.57',
             freeSpace: '12.1/29.5G',
             lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'}
+            status: {label: 'Active', color: 'green'},
+            platform: 'Windows'
         },
     ];
 
@@ -387,10 +390,38 @@ const Player = () => {
               null,
         );
     };
+
+    const handleMenuContextMenu = (event) => {
+        event.preventDefault();
+        setMenuContextMenu(
+            menuContextMenu === null
+            ? {
+                mouseX: event.clientX + 2,
+                mouseY: event.clientY - 6,
+              }
+            : 
+              null,
+        );
+    };
     
     const closeContext = () => {
         setCardContextMenu(null);
+        setMenuContextMenu(null);
     };
+
+    const getPlatformColor = (platform) => {
+        if (platform === 'Windows') {
+            return 'blue';
+        } else if (platform === 'Android') {
+            return 'green';
+        } else if (platform === 'webOS') {
+            return 'orange'
+        } else if (platform === 'Tizen') {
+            return 'grey';
+        } else {
+            return 'black';
+        }
+    }
 
     return (
         <>
@@ -433,31 +464,49 @@ const Player = () => {
                                 <Row className='border-row'>
                                     <Col span={4} style={{paddingLeft: '20px'}}>
                                         <p className='sub-title'>Location</p>
-                                        <Menu
-                                            onClick={onClickMenu}
-                                            style={{
-                                                width: 256,
-                                            }}
-                                            defaultOpenKeys={['sub1']}
-                                            items={items}
-                                            mode="inline"
-                                            className='media-filter-menu'
-                                            selectable={false}
-                                        />
+                                        <div onContextMenu={handleMenuContextMenu} style={{ cursor: 'context-menu' }}>
+                                            <Menu
+                                                onClick={onClickMenu}
+                                                style={{
+                                                    width: 256,
+                                                }}
+                                                defaultOpenKeys={['sub1']}
+                                                items={items}
+                                                mode="inline"
+                                                className='media-filter-menu'
+                                                selectable={false}
+                                            />
+                                            <ContextMenu
+                                                open={menuContextMenu !== null}
+                                                onClose={closeContext}
+                                                anchorReference="anchorPosition"
+                                                anchorPosition={
+                                                    menuContextMenu !== null
+                                                    ? { top: menuContextMenu.mouseY, left: menuContextMenu.mouseX }
+                                                    : undefined
+                                                }
+                                                className='context-menu'
+                                            >
+                                                <MenuItem onClick={closeContext}>New Folder</MenuItem>
+                                                <MenuItem onClick={closeContext}>Rename</MenuItem>
+                                                <MenuItem onClick={closeContext}>Delete</MenuItem>
+                                            </ContextMenu>
+                                        </div>
                                     </Col>
                                     <Col span={19} offset={1} style={{height: '100%'}}>
                                         <p className='sub-title'>All Location</p>
-                                        <div className='d-flex align-center flex-wrap' style={{height: 'calc(100% - 38px)', overflowY: 'auto'}}>
+                                        <Row gutter={[10, 10]} style={{height: 'calc(100% - 38px)', overflowY: 'auto', paddingRight: '10px'}}>
                                             {
-                                                playerData.map(player => 
+                                                playerData.length > 0 && playerData.map(player => 
                                                     <>
-                                                        <div className='w-25'>
-                                                            
+                                                        <Col span={4}>
                                                             <div onContextMenu={handleCardContextMenu} style={{ cursor: 'context-menu' }}>
                                                                 <Card 
                                                                     className='player-card'
                                                                     style={{backgroundImage: 'url(' + player.screenshot + ')'}}
                                                                 >
+                                                                    <Checkbox style={{marginLeft: '5px'}}></Checkbox>
+                                                                    <Tag label={player.platform} color={getPlatformColor(player.platform)}/>
                                                                 </Card>
                                                                 <ContextMenu
                                                                     open={cardContextMenu !== null}
@@ -471,6 +520,7 @@ const Player = () => {
                                                                     className='context-menu'
                                                                 >
                                                                     <MenuItem onClick={closeContext}>Rename</MenuItem>
+                                                                    <MenuItem onClick={() => {closeContext(); setMoveToShow(true);}}>Move to</MenuItem>
                                                                     <MenuItem onClick={closeContext}>Download</MenuItem>
                                                                     <MenuItem onClick={closeContext}>Settings</MenuItem>
                                                                     <MenuItem onClick={closeContext}>Delete</MenuItem>
@@ -487,11 +537,11 @@ const Player = () => {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </Col>
                                                     </>
                                                 )
                                             }
-                                        </div>
+                                        </Row>
                                     </Col>
                                 </Row>
                             </div>
@@ -555,6 +605,8 @@ const Player = () => {
                 </Row>
                 <p className='select-label'>IP Address</p>
                 <Input className='grey-input' placeholder='Month August' />
+                <p className='select-label'>#Tag</p>
+                <Input className='grey-input' />
                 <p className='select-label'>Display (Commercial display only)</p>
                 <Select
                     value={displaySelect}
@@ -679,6 +731,36 @@ const Player = () => {
                 }
                 <Button type='primary' onClick={() => setEditShow(false)}>Save</Button>
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
+            </Modal>
+            
+            <Modal
+                title='Move To'
+                centered
+                open={moveToShow}
+                onCancel={() => setMoveToShow(false)}
+                footer={false}
+                className='edit-player-modal'
+            >
+                <p className='select-label'>Group</p>
+                <Select
+                    defaultValue='group1'
+                    options={[
+                        {
+                            value: 'group1',
+                            label: 'group 1'
+                        },
+                        {
+                            value: 'group2',
+                            label: 'group 2'
+                        },
+                        {
+                            value: 'group3',
+                            label: 'group 3'
+                        }
+                    ]}
+                />
+                <Button type='primary' onClick={() => setMoveToShow(false)}>Save</Button>
+                <Button className='modal-cancel-button' onClick={() => setMoveToShow(false)}>Cancel</Button>
             </Modal>
         </>
     );
