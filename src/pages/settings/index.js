@@ -224,6 +224,62 @@ const User = () => {
                             </Row>
                         </div>
                     }
+                    { currentTab === 'maintenance' &&
+                        <div className='general-card'>
+                            <div className='d-flex align-center j-c-space-between top-section'>
+                                <p className='card-title'>Maintenance</p>
+                            </div>
+                            <Row style={{marginLeft: '25px'}}>
+                                <Col span={7}>
+                                    <p className='select-label'>Date Of Purchase</p>
+                                    <Select
+                                        defaultValue='date1'
+                                        options={[
+                                            {
+                                                value: 'date1',
+                                                label: 'Date 1',
+                                            },
+                                            {
+                                                value: 'date2',
+                                                label: 'Date 2',
+                                            },
+                                            {
+                                                value: 'date3',
+                                                label: 'Date 3',
+                                            }
+                                        ]}
+                                    />
+                                    <p className='select-label'>Date of Deployment</p>
+                                    <Select
+                                        defaultValue='date1'
+                                        options={[
+                                            {
+                                                value: 'date1',
+                                                label: 'Date 1',
+                                            },
+                                            {
+                                                value: 'date2',
+                                                label: 'Date 2',
+                                            },
+                                            {
+                                                value: 'date3',
+                                                label: 'Date 3',
+                                            }
+                                        ]}
+                                    />
+                                    <p className='select-label'>Notes</p>
+                                    <TextArea
+                                        maxLength={100}
+                                        placeholder="Notes..."
+                                        style={{
+                                            height: 120,
+                                            resize: 'none',
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
+                        </div>
+                    }
                 </Card>
             </div> 
             

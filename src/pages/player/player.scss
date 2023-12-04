@@ -4,7 +4,7 @@
     }
 
     .table-card {
-        width: 97%;
+        width: 100%;
         box-shadow: 0px 1.5px 2px 0px #1018281A;
         margin-bottom: 25px;
 
@@ -33,6 +33,13 @@
             .search-input {
                 width: 25vw;
                 margin-right: 25px;
+            }
+
+            .filter-btn {
+                color: #8a84f5;
+                border-color: #8a84f5;
+                margin-right: 25px;
+                min-width: 0;
             }
         }
 
@@ -269,6 +276,42 @@
             color: #4ac50e;
         }
     }
+
+    .ant-space-item {
+        line-height: 0;
+
+        &:nth-child(2) {
+            border-radius: 50%;
+            background-color: #000;
+            height: 23px;
+            width: 23px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .power-icon {
+                color: #fff;
+                font-size: 21px;
+            }
+
+            &:hover {
+                background-color: #5C59E8;
+            }
+        }
+    }
+
+    .filled-icon {
+        color: #000;
+        font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+
+    .grey-icon {
+        color: #6f6f6f;
+    }
 }
 
 .ant-select-item {
@@ -383,7 +426,8 @@
 .context-menu {
     .MuiPaper-root {
         width: 250px;
-        box-shadow: 0px 2px 4px 0px #0000001A;
+        box-shadow: none;
+        border: 1px solid #E0E2E7;
 
         li {
             height: 48px;

@@ -9,6 +9,7 @@ import './media.scss';
 
 const { Dragger } = Upload;
 const CheckboxGroup = Checkbox.Group;
+const { RangePicker } = DatePicker;
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -224,6 +225,7 @@ const Media = () => {
                                         <Button type='primary' onClick={() => {setRssShow(true); setImportMenuOpen(false)}}>+ RSS/Ticker</Button>
                                         <Button type='primary' onClick={() => setImportMenuOpen(false)}>+ Stream Feed</Button>
                                         <Button type='primary' onClick={() => setImportMenuOpen(false)}>+ Capture Card Feed</Button>
+                                        <Button type='primary' onClick={() => {setImportMenuOpen(false); setImportModalShow(true);}}>+ Video/Image</Button>
                                     </div>)
                                 } 
                                 title="" 
@@ -232,7 +234,7 @@ const Media = () => {
                                 open={importMenuOpen}
                                 onOpenChange={(e) => setImportMenuOpen(e)}
                             >
-                                <Button type='primary' onClick={() => setImportMenuOpen(true)}>Import Media</Button>
+                                <Button type='primary' onClick={() => setImportMenuOpen(!importMenuOpen)}>Import Media</Button>
                                 {/* <Button type='primary' onClick={() => setImportModalShow(true)}>Import Media</Button> */}
                             </Popover>
                             
@@ -308,7 +310,7 @@ const Media = () => {
                                                     <MenuItem onClick={closeContext}>Rename</MenuItem>
                                                     <MenuItem onClick={() => {closeContext(); setMoveToShow(true);}}>Move to</MenuItem>
                                                     <MenuItem onClick={closeContext}>Download</MenuItem>
-                                                    <MenuItem onClick={closeContext}>Settings</MenuItem>
+                                                    <MenuItem onClick={() => {closeContext(); editMediaData(media);}}>Settings</MenuItem>
                                                     <MenuItem onClick={closeContext}>Delete</MenuItem>
                                                 </ContextMenu>
                                             </div>
@@ -468,8 +470,8 @@ const Media = () => {
                         }
                     ]}
                 />
-                <p className='select-label'>Expiry Date</p>
-                <DatePicker />
+                <p className='select-label'>Start-End Date</p>
+                <RangePicker />
                 <p className='select-label'>Author/Provider</p>
                 <Select />
                 <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>

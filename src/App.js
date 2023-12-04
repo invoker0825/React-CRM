@@ -5,6 +5,9 @@ import Layout from './components/layout';
 import Dashboard from "./pages/dashboard";
 import Media from "./pages/media";
 import Report from "./pages/report";
+import UserReport from "./pages/userReport";
+import MediaReport from "./pages/mediaReport";
+import PlayBackReport from './pages/playBackReport';
 import User from "./pages/user";
 import Player from './pages/player';
 import Schedule from './pages/schedule';
@@ -29,6 +32,9 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/media" element={<Media />} />
               <Route path="/report" element={<Report />} />
+              <Route path="/report/user" element={<UserReport />} />
+              <Route path="/report/media" element={<MediaReport />} />
+              <Route path="/report/playback" element={<PlayBackReport />} />
               <Route path="/user" element={<User />} />
               <Route path="/player" element={<Player />} />
               <Route path="/schedule" element={<Schedule />} />

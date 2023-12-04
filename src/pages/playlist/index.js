@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Button, Card, Space, Select, Modal, Input, Row, Col, Checkbox, Upload, message, Collapse } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Card, Space, Select, Modal, Input, Row, Col, Checkbox, Upload, Collapse } from 'antd';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
@@ -10,43 +11,52 @@ import './playlist.scss';
 const { Dragger } = Upload;
 const CheckboxGroup = Checkbox.Group;
 
+const panelData = [
+    {
+        name: 'Panel 1',
+        duration: '00:06:00',
+        number: '0'
+    },
+    {
+        name: 'Panel 2',
+        duration: '00:02:00',
+        number: '3'
+    },
+    {
+        name: 'Panel 3',
+        duration: '00:06:00',
+        number: '5'
+    },
+    {
+        name: 'Panel 4',
+        duration: '00:02:00',
+        number: '8'
+    },
+    {
+        name: 'Panel 5',
+        duration: '00:06:00',
+        number: '2'
+    }
+]
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
 const PlayList = () => {
 
     const [editShow, setEditShow] = useState(false);
     const [filterShow, setFilterShow] = useState(false);
     const [checkedList, setCheckedList] = useState([]);
+    const [fileList, setFileList] = useState([]);
 
     const fileTypes = ['Video', 'Picture', 'Stream', 'Powerpoint', 'Capture Card'];
     const checkAll = fileTypes.length === checkedList.length;
     const indeterminate = checkedList.length > 0 && checkedList.length < fileTypes.length;
-
-    const panelData = [
-        {
-            name: 'Panel 1',
-            duration: '00:06:00',
-            number: '0'
-        },
-        {
-            name: 'Panel 2',
-            duration: '00:02:00',
-            number: '3'
-        },
-        {
-            name: 'Panel 3',
-            duration: '00:06:00',
-            number: '5'
-        },
-        {
-            name: 'Panel 4',
-            duration: '00:02:00',
-            number: '8'
-        },
-        {
-            name: 'Panel 5',
-            duration: '00:06:00',
-            number: '2'
-        }
-    ]
 
     const imageList = [{src: watchImg, type: 'jpg'}, {src: packImg, type: 'png'}, {src: packImg, type: 'png'}, {src: packImg, type: 'png'}, {src: watchImg, type: 'jpg'}, {src: packImg, type: 'png'}, {src: watchImg, type: 'jpg'}, {src: packImg, type: 'png'}, {src: watchImg, type: 'jpg'}, {src: watchImg, type: 'jpg'}]
 
@@ -111,23 +121,32 @@ const PlayList = () => {
         }
     ];
 
+    useEffect(() => {
+        let temp = new Array(panelData.length).fill([])
+        setFileList(temp);
+    }, []);
+
     const editPlayListData = () => {
         setEditShow(true);
     }
 
-    const onFileChange = (info) => {
-        const { status } = info.file;
-        if (status !== 'uploading') {
-            console.log(info.file, info.fileList);
+    const onFileChange = (info, i) => {
+        console.log(info.file.status)
+        if (info.file.status === 'uploading') {
+            let temp = [...fileList];
+            temp[i] = info.fileList.map(file => ({...file, thumbUrl: ''}));
+            console.log('-------------', temp)
+            setFileList(temp.map(files => files.map(file => ({...file}))));
         }
-        if (status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully.`);
-        } else if (status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
+        if (info.file.status === 'done') {
+            let temp = [...fileList];
+            temp[i] = info.fileList.map(file => ({...file}));
+            console.log('================', temp)
+            setFileList(temp.map(files => files.map(file => ({...file}))));
         }
     };
 
-    const onFileDrop = (e) => {
+    const onDrop = (e) => {
     }
 
     const confirmSave = () => {
@@ -169,6 +188,27 @@ const PlayList = () => {
 
     const resetFilter = () => {
         setCheckedList([]);
+    }
+
+    const onDragEnd = (result, i) => {
+        if (!result.destination) {
+          return;
+        }
+    
+        const tempItems = reorder(
+            fileList[i],
+            result.source.index,
+            result.destination.index
+        );
+        let temp = [...fileList]
+        temp[i] = tempItems
+        setFileList(temp);
+    }
+
+    const removeFile = (pIndex, i) => {
+        let temp = [...fileList];
+        temp[pIndex].splice(i, 1);
+        setFileList(temp);
     }
 
     return (
@@ -236,12 +276,12 @@ const PlayList = () => {
                     <Input className='grey-input' defaultValue='#Promo #ABC' />
                 </Card>
                 <Row gutter={10}>
-                    <Col span={19} className='left-section'>
+                    <Col span={18} className='left-section'>
                         {
-                            panelData.map(pData => 
+                            panelData.map((pData, pIndex) => 
                                 <Card>
                                     <Row gutter={10}>
-                                        <Col span={5}>
+                                        <Col span={4}>
                                             <div className='img-placeholder thumb-placeholder'></div>
                                             <div className='d-flex align-center j-c-space-between'>
                                                 <p className='panel-name'>{pData.name}</p>
@@ -251,21 +291,56 @@ const PlayList = () => {
                                                 </div>
                                             </div>
                                         </Col>
-                                        <Col span={19}>
+                                        <Col span={20}>
                                             <Dragger
-                                                name="file"
+                                                name={pData.name}
                                                 multiple={true}
                                                 listType='picture-card'
                                                 action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
                                                 accept="image/png, image/jpeg"
-                                                onChange={onFileChange}
-                                                onDrop={onFileDrop}
+                                                onChange={(e) => onFileChange(e, pIndex)}
+                                                onDrop={onDrop}
                                                 className='import-drag-file'
+                                                openFileDialogOnClick={false}
+                                                fileList={fileList[pIndex]}
                                             >
                                                 <p className="ant-upload-drag-icon">
                                                     <div><span className="material-symbols-outlined">imagesmode</span></div>
                                                 </p>
-                                                <p className="ant-upload-text">Drag and drop image here, or click add image</p>
+                                                <p className="ant-upload-text">Drag and drop media here</p>
+                                                <div className='file-view-section'>
+                                                    <DragDropContext onDragEnd={(result) => onDragEnd(result, pIndex)}>
+                                                        <Droppable droppableId="droppable" direction='horizontal'>
+                                                            {(provided, snapshot) => (
+                                                                <div
+                                                                    {...provided.droppableProps}
+                                                                    ref={provided.innerRef}
+                                                                    style={{display: 'flex'}}
+                                                                >
+                                                                    {fileList[pIndex]?.length > 0 && fileList[pIndex]?.map((item, index) => (
+                                                                        <Draggable key={item.uid} draggableId={item.uid} index={index}>
+                                                                            {(provided, snapshot) => (
+                                                                                <div
+                                                                                    ref={provided.innerRef}
+                                                                                    {...provided.draggableProps}
+                                                                                    {...provided.dragHandleProps}
+                                                                                >
+                                                                                    <div className='preview-item'>
+                                                                                        <img src={item.thumbUrl} alt='' />
+                                                                                        <div className='overlay'>
+                                                                                            <span className="material-symbols-outlined" onClick={() => removeFile(pIndex, index)}>delete</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            )}
+                                                                        </Draggable>
+                                                                    ))}
+                                                                    {provided.placeholder}
+                                                                </div>
+                                                            )}
+                                                        </Droppable>
+                                                    </DragDropContext>
+                                                </div>  
                                             </Dragger>
                                         </Col>
                                     </Row>
@@ -273,7 +348,7 @@ const PlayList = () => {
                             )
                         }
                     </Col>
-                    <Col span={5}>
+                    <Col span={6}>
                         <Card className='right-card'>
                             <div className='d-flex align-center j-c-space-between'>
                                 <p className='sub-title'>Media Library</p>
@@ -304,7 +379,7 @@ const PlayList = () => {
                             <Row gutter={[10, 10]}>
                                 {
                                     imageList.map(image => 
-                                        <Col span={12} style={{position: 'relative'}}>
+                                        <Col span={8} style={{position: 'relative'}}>
                                             <img src={image.src} className='img-placeholder' alt=''/>
                                             <p className='media-format'>{image.type}</p>
                                         </Col>

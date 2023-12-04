@@ -489,7 +489,8 @@
 .context-menu {
     .MuiPaper-root {
         width: 250px;
-        box-shadow: 0px 3px 10px 0px #00000033, 0px 1px 2px 0px #0000001A;
+        box-shadow: none;
+        border: 1px solid #E0E2E7;
 
         li {
             height: 48px;

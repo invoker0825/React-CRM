@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { Button, Card, Space, Select, Input, Row, Col, Modal, DatePicker } from 'antd';
+import { useNavigate } from "react-router-dom";
 import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
@@ -68,6 +69,8 @@ const reportData = [
 
 const Report = () => {
 
+    const navigate = useNavigate();
+
     const [modalTitle, setModalTitle] = useState('');
     const [newShow, setNewShow] = useState(false);
     const [reportType, setReportType] = useState('');
@@ -80,6 +83,11 @@ const Report = () => {
 
     const changeReportType = (e) => {
         setReportType(e);
+    }
+
+    const saveReport =() => {
+        setNewShow(false);
+        navigate(`/report/${reportType}`)
     }
 
     return (
@@ -186,6 +194,7 @@ const Report = () => {
                     ]}
                     disabled={reportType === '' || reportType === 'user'}
                 />
+                <Button type='primary' onClick={saveReport}>Ok</Button>
                 <Button className='modal-cancel-button' onClick={() => setNewShow(false)}>Cancel</Button>
             </Modal>
         </>

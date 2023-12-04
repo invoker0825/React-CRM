@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Space, Pagination, Select, Modal, Input, Row, Col, Checkbox, Badge, Menu } from 'antd';
+import { Button, Card, Space, Pagination, Select, Modal, Input, Row, Col, Checkbox, Badge, Menu, Collapse } from 'antd';
 import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import ContextMenu from '@mui/material/Menu';
@@ -8,6 +8,8 @@ import Table from '../../components/table';
 import packImg from '../../assets/img/pack.png';
 import watchImg from '../../assets/img/watch.png';
 import './player.scss';
+
+const CheckboxGroup = Checkbox.Group;
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -28,6 +30,8 @@ const Player = () => {
     const [cardContextMenu, setCardContextMenu] = useState(null);
     const [menuContextMenu, setMenuContextMenu] = useState(null);
     const [moveToShow, setMoveToShow] = useState(false);
+    const [filterShow, setFilterShow] = useState(false);
+    const [checkedList, setCheckedList] = useState([]);
 
     const playerColumns = [
         {
@@ -58,7 +62,8 @@ const Player = () => {
         },
         {
             title: 'Platform',
-            dataIndex: 'platform'
+            dataIndex: 'platform',
+            render: (platform) => <Tag label={platform} color={getPlatformColor(platform)}/>
         },
         {
             title: 'Version #',
@@ -87,8 +92,11 @@ const Player = () => {
             title: 'Action',
             dataIndex: 'actino',
             render: (_, record) => (
-              <Space size="small">
+              <Space size={3}>
                 <span className="material-symbols-outlined" onClick={() => editPlayerData(record)}>edit</span>
+                <span className="material-symbols-outlined power-icon" onClick={() => editPlayerData(record)}>power_settings_new</span>
+                {record.platform === 'Windows' && <span className="material-symbols-outlined filled-icon" onClick={() => editPlayerData(record)}>settings</span>}
+                <span className="material-symbols-outlined filled-icon grey-icon" onClick={() => editPlayerData(record)}>delete</span>
               </Space>
             ),
         }
@@ -361,6 +369,29 @@ const Player = () => {
         ]),
     ];
 
+    const fileTypes = ['Online', 'Offline', 'Windows', 'webOS', 'Android', 'Tizen', 'Enabled', 'Disabled'];
+    const checkAll = fileTypes.length === checkedList.length;
+    const indeterminate = checkedList.length > 0 && checkedList.length < fileTypes.length;
+
+    const fileTypeCheck = () => {
+        return (
+            <>
+                <Checkbox indeterminate={indeterminate} onChange={onCheckAllTypes} checked={checkAll}>
+                    All
+                </Checkbox>
+                <CheckboxGroup options={fileTypes} value={checkedList} onChange={onChangeFileType} />
+            </>
+        );
+    }
+
+    const onChangeFileType = (list) => {
+        setCheckedList(list);
+    };
+
+    const onCheckAllTypes = (e) => {
+        setCheckedList(e.target.checked ? fileTypes : []);
+    };
+
     const toggleViewMode = () => {
         viewMode === 'list' ? setViewMode('thumb') : setViewMode('list');
     }
@@ -423,6 +454,10 @@ const Player = () => {
         }
     }
 
+    const resetFilter = () => {
+        setCheckedList([]);
+    }
+
     return (
         <>
             <div className="player-page">
@@ -448,6 +483,11 @@ const Player = () => {
                                     }
                                 ]}
                             />}
+                            <Button className='filter-btn' onClick={() => setFilterShow(true)}>
+                                <div className='d-flex align-center'>
+                                    <span className="material-symbols-outlined">tune</span><span>&nbsp;&nbsp;Filters</span>
+                                </div>
+                            </Button>
                             <Button className='view-mode-btn' type='primary' onClick={toggleViewMode}>{viewMode === 'list' ? <div className='d-flex align-center j-c-center'><span className="material-symbols-outlined">grid_view</span>Thumb View</div> : <div className='d-flex align-center j-c-center'><span className="material-symbols-outlined">lists</span>List View</div>}</Button>    
                         </div>
                     </div>
@@ -761,6 +801,44 @@ const Player = () => {
                 />
                 <Button type='primary' onClick={() => setMoveToShow(false)}>Save</Button>
                 <Button className='modal-cancel-button' onClick={() => setMoveToShow(false)}>Cancel</Button>
+            </Modal>
+            
+            <Modal
+                title={
+                    <div className='d-flex align-center j-c-space-between'>
+                        <p>Filters</p>
+                        <div className='reset-button' onClick={resetFilter}><span className="material-symbols-outlined">close</span><p>Reset</p></div>
+                    </div>
+                }
+                centered
+                open={filterShow}
+                onCancel={() => setFilterShow(false)}
+                footer={false}
+                className='filter-modal'
+            >
+                <Collapse
+                    items={[
+                        {
+                        key: '1',
+                        label: 'File Type',
+                        children: <>{fileTypeCheck()}</>,
+                        }
+                    ]}
+                    defaultActiveKey={['1']}
+                    expandIconPosition='end'
+                    className='file-type-collapse'
+                />
+                <div className='d-flex align-center j-c-end'>
+                    <Button className='modal-cancel-button' onClick={() => setFilterShow(false)}>Cancel</Button>
+                    <Button 
+                        type='primary' 
+                        disabled={checkedList.length === 0} 
+                        className={checkedList.length === 0 && 'ant-btn-disabled'} 
+                        onClick={() => setFilterShow(false)}
+                    >
+                        Apply Filter
+                    </Button>
+                </div>
             </Modal>
         </>
     );

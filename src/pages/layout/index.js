@@ -27,7 +27,11 @@ const Layout = () => {
     const [heightCount, setHeightCount] = useState(1);
     const [areaWidth, setAreaWidth] = useState('1920');
     const [areaHeight, setAreaHeight] = useState('1080');
-    const [gridSize, setGridSize] = useState([0, 0])
+    const [tempAreaWidth, setTempAreaWidth] = useState('1920');
+    const [tempAreaHeight, setTempAreaHeight] = useState('1080');
+    const [gridSize, setGridSize] = useState([0, 0]);
+    const [activePanel, setActivePanel] = useState('');
+    const [ratio, setRatio] = useState('16:9');
     const [panelList, setPanelList] = useState([
         {
             name: 'Panel 1',
@@ -113,7 +117,7 @@ const Layout = () => {
             resolution: '800x600',
             orientation: 'Landscape',
             user: {name: 'John Bushmill', email: 'Johnb@mail.com'},
-            status: {label: 'Uploading', color: 'orange'}
+            status: {label: 'Active', color: 'green'}
         },
         {
             key: '2',
@@ -122,7 +126,7 @@ const Layout = () => {
             resolution: '1920x1080',
             orientation: 'Portrait',
             user: {name: 'Ilham Budi A', email: 'ilahmbudi@mail.com'},
-            status: {label: 'Processing', color: 'purple'}
+            status: {label: 'Inactive', color: 'grey'}
         }
     ];
 
@@ -132,7 +136,12 @@ const Layout = () => {
         } else {
             setGridSize([1089, Math.floor(areaHeight * 1089 / areaWidth)])
         }
+        setRatio(`${parseInt(areaWidth)/gcd(parseInt(areaWidth), parseInt(areaHeight))}:${parseInt(areaHeight)/gcd(parseInt(areaWidth), parseInt(areaHeight))}`);
     }, [areaWidth, areaHeight]);
+
+    const gcd = (k, n) => {
+        return k ? gcd(n % k, k) : n;
+    }
 
     const onLayoutChange = (layout) => {
         let temp = [...panelList];
@@ -144,6 +153,7 @@ const Layout = () => {
             t.h = Math.floor(l.h);
         })
         setPanelList(temp);
+        setActivePanel('');
     }
 
     const editLayoutListData = () => {
@@ -151,8 +161,8 @@ const Layout = () => {
     }
 
     const generateVW = () => {
-        let tempCount = panelCount;
-        let temp = [...panelList];
+        let tempCount = 0;
+        let temp = [];
         for (let i = 0; i < heightCount; i++) {
             for (let j = 0; j < widthCount; j++) {
                 tempCount ++;         
@@ -192,13 +202,16 @@ const Layout = () => {
     }
 
     const changeOrientation = (e) => {
-        console.log('-----------------', e)
         if (e === 'landscape') {
             setAreaHeight('1080');
             setAreaWidth('1920');
+            setTempAreaHeight('1080');
+            setTempAreaWidth('1920');
         } else {
             setAreaHeight('1080');
             setAreaWidth('600');
+            setTempAreaHeight('1080');
+            setTempAreaWidth('600');
         }
     }
 
@@ -282,15 +295,19 @@ const Layout = () => {
                         </Col>
                         <Col span={2} style={{paddingRight: '30px'}}>
                             <p className='select-label'>Ratio</p>
-                            <Input className='grey-input' defaultValue='16:9' />
+                            <Input className='grey-input' defaultValue='16:9' value={ratio} />
                         </Col>
                         <Col span={2}>
                             <p className='select-label'>Width (px)</p>
-                            <Input className='grey-input' defaultValue={areaWidth} onBlur={(e) => setAreaWidth(e.target.value)} />
+                            <Input className='grey-input' value={tempAreaWidth} onChange={(e) => setTempAreaWidth(e.target.value)} onBlur={(e) => setAreaWidth(e.target.value)} />
                         </Col>
                         <Col span={2}>
                             <p className='select-label'>Height (px)</p>
-                            <Input className='grey-input' defaultValue={areaHeight} onBlur={(e) => setAreaHeight(e.target.value)} />
+                            <Input className='grey-input' value={tempAreaHeight} onChange={(e) => setTempAreaHeight(e.target.value)} onBlur={(e) => setAreaHeight(e.target.value)} />
+                        </Col>
+                        <Col span={5}>
+                            <p className='select-label'>#Tag</p>
+                            <Input className='grey-input' />
                         </Col>
                     </Row>
                 </Card>
@@ -307,11 +324,14 @@ const Layout = () => {
                             margin={[0, 0]}
                             isBounded={false}
                             allowOverlap
+                            onResizeStart={(ls, l) => setActivePanel(l.i)}
+                            onResizeEnd={() => setActivePanel('')}
+                            onDragStart={(ls, l) => setActivePanel(l.i)}
                             style={{width: gridSize[0] + 'px', height: gridSize[1] + 'px'}}
                         >
                             {
                                 panelList.map(panel => 
-                                    <div className='panel-div' key={panel.name} data-grid={{ x: panel.x, y: panel.y, w: panel.w > gridSize[0] ? gridSize[0] : panel.w, h: panel.h > gridSize[1] ? gridSize[1] : panel.h, maxW: gridSize[0], maxH: gridSize[1], isResizable: true}}>
+                                    <div className='panel-div' key={panel.name} onMouseDown={() => console.log('------------------')} data-grid={{ x: panel.x, y: panel.y, w: panel.w > gridSize[0] ? gridSize[0] : panel.w, h: panel.h > gridSize[1] ? gridSize[1] : panel.h, maxW: gridSize[0], maxH: gridSize[1], isResizable: true}}>
                                     </div>
                                 )
                             }
@@ -343,7 +363,7 @@ const Layout = () => {
                                                                 ref={provided.innerRef}
                                                                 {...provided.draggableProps}
                                                             >
-                                                                <div className='layout-drag-item'>
+                                                                <div className={activePanel === item.name ? 'layout-drag-item active-layout-drag-item' : 'layout-drag-item'}>
                                                                     <div className='d-flex align-center'>
                                                                         <span className="material-symbols-outlined" {...provided.dragHandleProps}>drag_indicator</span>
                                                                         <div style={{marginLeft: '10px'}}>

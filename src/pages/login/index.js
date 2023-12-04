@@ -41,6 +41,7 @@ const LogIn = () => {
                         <div>
                             <p className='logo-text'>EUMEDIA DMS</p>
                             <p className='login-title'>Login</p>
+                            <p className='version-label'>Version: 8.88</p>
                             
                             <Form
                                 name="login"
@@ -115,7 +116,6 @@ const LogIn = () => {
                                     <Button type="primary" htmlType="submit">
                                         Login
                                     </Button>
-                                    <p className='signup-link'>Don't have an account?<span><a href='/'> Create free account</a></span></p>
                                 </Form.Item>
                             </Form>
                             <p className='expire-warn'>Maintenance Date : Expired</p>

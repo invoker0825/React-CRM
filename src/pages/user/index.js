@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { Button, Card, Space, Modal, Select, Input, Checkbox } from 'antd';
+import { Button, Card, Space, Modal, Select, Input, Checkbox, Collapse } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import './user.scss';
 
+const CheckboxGroup = Checkbox.Group;
+
 const User = () => {
+    
+    const [filterShow, setFilterShow] = useState(false);
+    const [checkedList, setCheckedList] = useState([]);
+    const [editShow, setEditShow] = useState(false);
 
     const userColumns = [
         {
@@ -60,11 +66,36 @@ const User = () => {
         }
     ];
 
-    const [editShow, setEditShow] = useState(false);
+    const fileTypes = ['Active', 'Inactive', 'Expired', 'Suspended'];
+    const checkAll = fileTypes.length === checkedList.length;
+    const indeterminate = checkedList.length > 0 && checkedList.length < fileTypes.length;
 
     const editUser = (user) => {
         console.log('-------------------', user);
         setEditShow(true);
+    }
+
+    const fileTypeCheck = () => {
+        return (
+            <>
+                <Checkbox indeterminate={indeterminate} onChange={onCheckAllTypes} checked={checkAll}>
+                    All
+                </Checkbox>
+                <CheckboxGroup options={fileTypes} value={checkedList} onChange={onChangeFileType} />
+            </>
+        );
+    }
+
+    const onChangeFileType = (list) => {
+        setCheckedList(list);
+    };
+
+    const onCheckAllTypes = (e) => {
+        setCheckedList(e.target.checked ? fileTypes : []);
+    };
+
+    const resetFilter = () => {
+        setCheckedList([]);
     }
 
     return (
@@ -80,6 +111,11 @@ const User = () => {
                                     <span className="material-symbols-outlined">add</span>User
                                 </div>
                             </Button> 
+                            <Button className='filter-btn' onClick={() => setFilterShow(true)}>
+                                <div className='d-flex align-center'>
+                                    <span className="material-symbols-outlined">tune</span><span>&nbsp;&nbsp;Filters</span>
+                                </div>
+                            </Button>
                         </div>
                     </div>
                     <Table
@@ -196,6 +232,44 @@ const User = () => {
                 <div className='d-flex align-center'>
                     <Button type='primary' onClick={() => setEditShow(false)}>Save User</Button>
                     <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
+                </div>
+            </Modal>
+            
+            <Modal
+                title={
+                    <div className='d-flex align-center j-c-space-between'>
+                        <p>Filters</p>
+                        <div className='reset-button' onClick={resetFilter}><span className="material-symbols-outlined">close</span><p>Reset</p></div>
+                    </div>
+                }
+                centered
+                open={filterShow}
+                onCancel={() => setFilterShow(false)}
+                footer={false}
+                className='user-filter-modal'
+            >
+                <Collapse
+                    items={[
+                        {
+                        key: '1',
+                        label: 'File Type',
+                        children: <>{fileTypeCheck()}</>,
+                        }
+                    ]}
+                    defaultActiveKey={['1']}
+                    expandIconPosition='end'
+                    className='file-type-collapse'
+                />
+                <div className='d-flex align-center j-c-end'>
+                    <Button className='modal-cancel-button' onClick={() => setFilterShow(false)}>Cancel</Button>
+                    <Button 
+                        type='primary' 
+                        disabled={checkedList.length === 0} 
+                        className={checkedList.length === 0 && 'ant-btn-disabled'} 
+                        onClick={() => setFilterShow(false)}
+                    >
+                        Apply Filter
+                    </Button>
                 </div>
             </Modal>
         </>

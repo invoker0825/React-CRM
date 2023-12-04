@@ -26,6 +26,7 @@ const CustomTable = (props) => {
             dataSource={props.dataSource}
             className={props.className ? props.className + ' custom-table' : 'custom-table'}
             pagination={{pageSize: 10, showTotal: showTotal}}
+            scroll={props.scroll}
         />
     );
 }
