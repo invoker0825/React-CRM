@@ -134,7 +134,7 @@ const PlayList = () => {
         console.log(info.file.status)
         if (info.file.status === 'uploading') {
             let temp = [...fileList];
-            temp[i] = info.fileList.map(file => ({...file, thumbUrl: ''}));
+            temp[i] = info.fileList.map(file => ({...file}));
             console.log('-------------', temp)
             setFileList(temp.map(files => files.map(file => ({...file}))));
         }
