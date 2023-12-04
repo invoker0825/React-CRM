@@ -1,4 +1,4 @@
-.layout-page {
+.meeting-layout-page {
     width: 100vw;
     height: 100vh;
     overflow-y: auto;
@@ -15,23 +15,6 @@
         top: 0;
         left: 0;
         z-index: 2;
-
-        .control-btn {
-            background-color: #2320D4;
-
-            &:hover {
-                background-color: #5653fb;
-            }
-        }
-
-        .meeting-btn {
-            background-color: #305CC0;
-            margin: 0 18px;
-
-            &:hover {
-                background-color: #658fed;
-            }
-        }
     }
 
     .routing-section {

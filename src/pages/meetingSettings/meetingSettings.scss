@@ -1,0 +1,117 @@
+.meeting-setting-page {
+    .pr-20 {
+        padding-right: 20px;
+    }
+
+    .table-card {
+        width: 100%;
+        height: calc(100vh - 115px);
+        box-shadow: 0px 1.5px 2px 0px #1018281A;
+        margin-bottom: 25px;
+        padding: 18px 25px;
+
+        .ant-picker {
+            width: 100%;
+            text-align: left;
+            height: 40px;
+            background-color: #F9F9FC;
+            margin-bottom: 6px;
+        }
+
+        .ant-input {
+            margin-bottom: 6px;
+            text-align: left;
+            height: 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #333843;        
+            background-color: #F9F9FC;    
+        }
+        
+        button {
+            margin-top: 50px;
+        }
+
+        .ant-card-body {
+            padding: 0;
+        }
+
+        .top-section {
+            margin-bottom: 18px;
+
+            button {
+                min-width: 146px;
+
+                .material-symbols-outlined {
+                    font-size: 18px;
+                    margin-right: 10px;
+                }
+            }
+
+            .ant-select {
+                width: 170px;
+                height: 40px;
+                margin-right: 25px;
+            }
+
+            .search-input {
+                width: 25vw;
+            }
+        }
+
+        .report-table {
+            .ant-table {
+                min-height: calc(100vh - 275px);
+            }
+
+            .ant-pagination {
+                border-top: 1px solid #F0F1F3;
+            }
+        }
+
+        .card-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 28px;
+            letter-spacing: 0.005em;
+            color: #333843;
+            margin-right: 10px;
+        }
+
+        .ant-input-affix-wrapper {
+            height: 40px;
+            border-radius: 8px;
+            background-color: #F9F9FC;
+            
+            input {
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                letter-spacing: 0.005em;
+                background-color: #F9F9FC;
+            }
+
+            svg {
+                width: 19px;
+                height: 19px;
+            }
+        }
+
+        .select-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 0.005em;
+            color: #4D5464;
+            margin-bottom: 6px;
+            text-align: left;
+        }
+
+    }
+}

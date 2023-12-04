@@ -85,7 +85,11 @@ const Layout = () => {
                         className='nav-radio'
                     />
                 </div>
-                <Button type='primary' onClick={logOut}>Logout</Button>
+                <div className='d-flex align-center'>
+                  <Button type='primary' className='control-btn' onClick={() => navigate('/control')}>Control Room (CRS)</Button>
+                  <Button type='primary' className='meeting-btn' onClick={() => navigate('/meeting')}>Meeting Room (MRS)</Button>
+                  <Button type='primary' onClick={logOut}>Logout</Button>
+                </div>
             </div>
             <div className='routing-section'>
                 <Routes>
