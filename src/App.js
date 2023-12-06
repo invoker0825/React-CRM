@@ -19,6 +19,8 @@ import Booking from './pages/booking';
 import MeetingRooms from './pages/meetingRooms';
 import MeetingUsers from './pages/meetingUsers';
 import MeetingSettings from './pages/meetingSettings';
+import LiveControlRoom from './pages/liveControlRoom';
+import PlayerControlRoom from './pages/playerControlRoom';
 import './App.scss';
 
 function App() {
@@ -53,6 +55,8 @@ function App() {
               <Route path='/meeting/users' element={<MeetingUsers />} />
                   <Route path='/meeting/settings' element={<MeetingSettings />} />
             </Route>
+            <Route path="/control/live" element={<LiveControlRoom />} />
+            <Route path="/control/play" element={<PlayerControlRoom />} />
             <Route path="/login" element={<Login />} />
           </Routes>
         </BrowserRouter>

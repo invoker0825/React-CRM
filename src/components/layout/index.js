@@ -86,7 +86,7 @@ const Layout = () => {
                     />
                 </div>
                 <div className='d-flex align-center'>
-                  <Button type='primary' className='control-btn' onClick={() => navigate('/control')}>Control Room (CRS)</Button>
+                  <Button type='primary' className='control-btn' onClick={() => navigate('/control/live')}>Control Room (CRS)</Button>
                   <Button type='primary' className='meeting-btn' onClick={() => navigate('/meeting')}>Meeting Room (MRS)</Button>
                   <Button type='primary' onClick={logOut}>Logout</Button>
                 </div>
