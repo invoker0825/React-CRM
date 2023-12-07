@@ -63,6 +63,22 @@ const LiveControlRoom = () => {
     }
 
     const onClickLayout = (i) => {
+        if (i !== selectedLayout) {
+            Modal.confirm({
+                title: 'Confirm',
+                content: 'Are you sure you want to change layout?',
+                onOk: () => changeLayout(i),
+                footer: (_, { OkBtn, CancelBtn }) => (
+                    <>
+                    <CancelBtn />
+                    <OkBtn />
+                    </>
+                ),
+            });
+        }
+    }
+
+    const changeLayout = (i) => {
         setSelectedLayout(i);
         setSelectedPanel();
         let temp = new Array(layoutData[i].v * layoutData[i].h).fill(1);
@@ -265,6 +281,7 @@ const LiveControlRoom = () => {
                     </div>
                 </Card>
             </div>
+            
             <Modal
                 title={
                     <div className='d-flex align-center j-c-space-between'>
