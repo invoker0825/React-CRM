@@ -26,9 +26,9 @@ const PlayerControlRoom = () => {
     const [checkedList, setCheckedList] = useState([]);
     const [fileList, setFileList] = useState([]);
     const [showPreset, setShowPreset] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
-    const [xPos, setXPos] = useState(0);
-    const [prevX, setPrevX] = useState(0);
+    // const [showMenu, setShowMenu] = useState(false);
+    // const [xPos, setXPos] = useState(0);
+    // const [prevX, setPrevX] = useState(0);
     const [presetLayout, setPresetLayout] = useState();
     const [layoutData, setLayoutData] = useState([
         {name: 'Preset 1', h: 1, v: 1, shortcut: ''},
@@ -40,8 +40,8 @@ const PlayerControlRoom = () => {
         {name: 'Preset 7', h: 4, v: 3, shortcut: ''}
     ]);
     const [hotKey, setHotKey] = useState(false);
-    const [touchStart, setTouchStart] = useState(null);
-    const [touchEnd, setTouchEnd] = useState(null);
+    // const [touchStart, setTouchStart] = useState(null);
+    // const [touchEnd, setTouchEnd] = useState(null);
 
     const fileTypes = ['Video', 'Picture', 'Stream', 'Powerpoint', 'Capture Card'];
     const checkAll = fileTypes.length === checkedList.length;
@@ -190,30 +190,30 @@ const PlayerControlRoom = () => {
         setFileList(temp);
     }
 
-    const handleMouseMove = (event) => {
-        setXPos(event.clientX);
-    }
+    // const handleMouseMove = (event) => {
+    //     setXPos(event.clientX);
+    // }
 
-    const presetTagDown = () => {
-        setPrevX(xPos);
-    }
+    // const presetTagDown = () => {
+    //     setPrevX(xPos);
+    // }
 
-    const presetTagUp = () => {
-        if(prevX > xPos) {
-            if (!showMenu && !showPreset) {
-                setShowPreset(true);
-            } else if (showMenu) {
-                setShowMenu(false);
-            }
-        }
-        if(prevX < xPos) {
-            if (!showMenu && !showPreset) {
-                setShowMenu(true);
-            } else if (showPreset) {
-                setShowPreset(false);
-            }
-        }
-    }
+    // const presetTagUp = () => {
+    //     if(prevX > xPos) {
+    //         if (!showMenu && !showPreset) {
+    //             setShowPreset(true);
+    //         } else if (showMenu) {
+    //             setShowMenu(false);
+    //         }
+    //     }
+    //     if(prevX < xPos) {
+    //         if (!showMenu && !showPreset) {
+    //             setShowMenu(true);
+    //         } else if (showPreset) {
+    //             setShowPreset(false);
+    //         }
+    //     }
+    // }
 
     const deleteLayout = (i) => {
         let temp = [...layoutData];
@@ -227,44 +227,52 @@ const PlayerControlRoom = () => {
         setLayoutData(temp);
     }
 
-    const onTouchStart = (e) => {
-        setTouchEnd(null);
-        setTouchStart({x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY});
+    // const onTouchStart = (e) => {
+    //     setTouchEnd(null);
+    //     setTouchStart({x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY});
+    // }
+      
+    // const onTouchMove = (e) => setTouchEnd({x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY});
+      
+    // const onTouchEnd = (e) => {
+    //     if (!touchStart || !touchEnd) return
+    //     const distanceX = touchStart.x - touchEnd.x;
+    //     const distanceY = touchStart.y - touchEnd.y;
+    //     if (Math.abs(distanceX) > 1.2 * Math.abs(distanceY)) {
+    //         const isLeftSwipe = distanceX > 50;
+    //         const isRightSwipe = distanceX < -50;
+    //         if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
+    //         if (isLeftSwipe) {
+    //             if (!showMenu && !showPreset) {
+    //                 setShowPreset(true);
+    //             } else if (showMenu) {
+    //                 setShowMenu(false);
+    //             }
+    //         } else {
+    //             if (!showMenu && !showPreset) {
+    //                 setShowMenu(true);
+    //             } else if (showPreset) {
+    //                 setShowPreset(false);
+    //             }
+    //         }
+    //         return false;
+    //     }
+    // }
+
+    const keyDown = (e) => {
+        if (e.code === "Escape") setShowPreset(false);
     }
-      
-    const onTouchMove = (e) => setTouchEnd({x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY});
-      
-    const onTouchEnd = (e) => {
-        if (!touchStart || !touchEnd) return
-        const distanceX = touchStart.x - touchEnd.x;
-        const distanceY = touchStart.y - touchEnd.y;
-        if (Math.abs(distanceX) > 1.2 * Math.abs(distanceY)) {
-            const isLeftSwipe = distanceX > 50;
-            const isRightSwipe = distanceX < -50;
-            if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
-            if (isLeftSwipe) {
-                if (!showMenu && !showPreset) {
-                    setShowPreset(true);
-                } else if (showMenu) {
-                    setShowMenu(false);
-                }
-            } else {
-                if (!showMenu && !showPreset) {
-                    setShowMenu(true);
-                } else if (showPreset) {
-                    setShowPreset(false);
-                }
-            }
-            return false;
-        }
+
+    const mouseWheel = (e) => {
+        document.getElementsByClassName('bottom-section')[0].scrollLeft += e.deltaY;
     }
 
     return (
         <>
-            <div className='page-container'>
-                <div className="control-player-page" onMouseMove={handleMouseMove} onMouseDown={presetTagDown} onMouseUp={presetTagUp} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} >
-                    <div className='preset-panel-tag' onClick={() => {setShowPreset(true); setShowMenu(false)}}></div>
-                    <div className='menu-tag' onClick={() => {setShowPreset(false); setShowMenu(true)}}></div>
+            <div className='page-container' onKeyDown={keyDown} tabIndex="0">
+                <div className="control-player-page">
+                    <div className='preset-panel-tag' onClick={() => setShowPreset(true)}>Presets</div>
+                    {/* <div className='menu-tag' onClick={() => {setShowPreset(false); setShowMenu(true)}}></div> */}
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='page-title'>Control Room Panel</p>
                         <Button type='primary' className='custom-button'>Save as Preset</Button>
@@ -317,7 +325,7 @@ const PlayerControlRoom = () => {
                                                             openFileDialogOnClick={false}
                                                             fileList={fileList[pIndex]}
                                                         >
-                                                            <div className='file-view-section'>
+                                                            <div className='file-view-section' onMouseMove={(e) => e.stopPropagation()}>
                                                                 <DragDropContext onDragEnd={(result) => onDragEnd(result, pIndex)} style={{overflow: 'hidden'}}>
                                                                     <Droppable droppableId="droppable" direction='horizontal'>
                                                                         {(provided, snapshot) => (
@@ -430,7 +438,7 @@ const PlayerControlRoom = () => {
                         </Row>
                     </Card>
                     <Card className='bottom-card'>
-                        <div className='d-flex align-center' style={{width: '100%', height: '100%', overflowX: 'auto'}}>
+                        <div className='d-flex align-center bottom-section' style={{width: '100%', height: '100%', overflowX: 'auto'}} onWheel={mouseWheel}>
                             {
                                 layoutData.map((layout, index) => 
                                     <div className={'d-flex align-items j-c-space-between flex-column layout-item ' + (selectedLayout === index ? 'selected-layout-item' : '')} onClick={() => onClickLayout(index)}>
@@ -448,13 +456,13 @@ const PlayerControlRoom = () => {
                     </Card>
                 </div>
                 
-                <div className="preset-panel" style={{left: showPreset ? '100px' : '100vw'}} onMouseMove={handleMouseMove} onMouseDown={presetTagDown} onMouseUp={presetTagUp} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} >
+                <div className="preset-panel" style={{left: showPreset ? '0px' : '100vw'}}>
                     <p className='title'>Double tap to activate the preset</p>
                     <Row gutter={[10, 10]} wrap>
                         {
                             layoutData.map((layout, index) =>
                                 <Col xl={6} lg={8} md={12}>
-                                    <div className={'preset-card ' + (index === presetLayout ? 'selected-preset-card' : '')} onClick={() => setPresetLayout(index)}>
+                                    <div className={'preset-card ' + (index === presetLayout ? 'selected-preset-card' : '')} onClick={() => setPresetLayout(index)} onDoubleClick={() => setShowPreset(false)}>
                                         <div className='content'>
                                             <div className='preset-layout'>
                                                 <div className='d-flex align-items j-c-space-between flex-column layout-item'>
@@ -480,7 +488,7 @@ const PlayerControlRoom = () => {
                     </Row>
                 </div>
 
-                <div className="menu-container" style={{left: showMenu ? '0px' : '-250px'}} onMouseMove={handleMouseMove} onMouseDown={presetTagDown} onMouseUp={presetTagUp} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} >
+                {/* <div className="menu-container" style={{left: showMenu ? '0px' : '-250px'}}>
                     <p className='menu-title'>EUMEDIA CRS</p>
                     <div className='menu-item' onClick={() => navigate('/media')}>
                         <span class="material-symbols-outlined filled">subscriptions</span>
@@ -504,7 +512,7 @@ const PlayerControlRoom = () => {
                             <p className='menu-item-title'>Settings</p>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <Modal
