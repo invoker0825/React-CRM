@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button, Checkbox, Form, Input, Col, Row } from 'antd';
-import {useNavigate} from 'react-router-dom';
-import loginImage from '../../assets/img/login-image.png'
+import { Button, Checkbox, Form, Input, Col, Row, notification } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import loginImage from '../../assets/img/login-image.png';
 import './login.scss';
 
 const LogIn = () => {
@@ -9,10 +10,38 @@ const LogIn = () => {
 
     const [ step, setStep ] = useState('login');
     const [ logInData, setLogInData ] = useState({});
+    const [api, contextHolder] = notification.useNotification();
 
     const onFinishLogIn = (values) => {
         setLogInData(values);
-        if (values.username === 'test@test.com' && values.password === 'test1234') setStep('authenticate');
+        axios.post('http://localhost:5001/api/login', values)
+        .then((res) => {
+            if (res.status === 200) {
+                console.log('-------------', res)
+                if (!res.data.message) {
+                    api.success({
+                        message: 'Success',
+                        description:
+                          'You have successfully logged in.',
+                    });
+                    localStorage.setItem('logged', true);
+                    localStorage.setItem('loggedUser', JSON.stringify(res.data));
+                    navigate('/dashboard');
+                } else {
+                    api.error({
+                        message: 'Error',
+                        description: res.data.message,
+                    });
+                }
+            }
+        }).catch((err) => {
+            console.log('err-------------', err)
+            api.error({
+                message: 'Error',
+                description:
+                  'Check for missing fields or duplicate email.',
+            });
+        });
     };
 
     const backToLogin = () => {
@@ -20,12 +49,13 @@ const LogIn = () => {
     }
 
     const onFinishAuth = (value) => {
-        localStorage.setItem('logged', true);
-        if (value.code === '123456') navigate('/dashboard');
+        // localStorage.setItem('logged', true);
+        // if (value.code === '123456') navigate('/dashboard');
     }
 
     return (
         <div className="login-page">
+            {contextHolder}
             <div className='left-blue'>
                 <div className='login-left-section d-flex j-c-space-between flex-column'>
                     <div>

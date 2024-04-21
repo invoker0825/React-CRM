@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
-import { Button, Card, Space, Select, Input, Row, Col, Modal, DatePicker, Tree, TimePicker, Checkbox } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Card, Space, Select, Input, Row, Col, Modal, DatePicker, Tree, TimePicker, Checkbox, notification } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import axios from 'axios';
 import dayjs from 'dayjs';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
 import './schedule.scss';
 
 const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -25,6 +27,17 @@ const Schedule = () => {
     const [playForever, setPlayForever] = useState(false);
     const [playListTime, setPlayListTime] = useState({start: null, end: null});
     const [playListDuration, setPlayListDuration] = useState('Daily');
+    const [api, contextHolder] = notification.useNotification();
+    const [locationData, setLocationData] = useState([]);
+    const [currentUser, setCurrentUser] = useState('');
+    const [tags, setTags] = useState([]);
+    const [searchText, setSearchText] = useState('');
+    const [scheduleData, setScheduleData] = useState([]);
+    const [filteredScheduleData, setFilteredScheduleData] = useState([]);
+    const [newScheduleData, setNewScheduleData] = useState([]);
+    const [mode, setMode] = useState('');
+    const [playListData, setPlayListData] = useState('');
+
     const [playList, setPlayList] = useState([
         {
             id: 'Playlist 1',
@@ -59,7 +72,7 @@ const Schedule = () => {
     const scheduleColumns = [
         {
             title: 'Name',
-            dataIndex: 'name'
+            dataIndex: 'Name'
         },
         {
             title: 'Location',
@@ -71,62 +84,37 @@ const Schedule = () => {
         },
         {
             title: 'By User',
-            dataIndex: 'user',
-            render: (user) => <><p className='black-text'>{user.name}</p><p className='small-text'>{user.email}</p></>,
+            dataIndex: 'CreatedBy',
+            render: (CreatedBy) => <><p className='black-text'>{CreatedBy}</p><p className='small-text'>{CreatedBy}</p></>,
         },
         {
             title: 'Start - End Date',
             dataIndex: 'dateRange',        
-            render: (dateRange) => <p>{dateRange[0] + ' - ' + dateRange[1]}</p>,
+            render: (_, record) => <p>{record.StartTime.split('T')[0].replaceAll('-', '/') + ' - ' + record.EndTime.split('T')[0].replaceAll('-', '/')}</p>,
         },
         {
             title: 'Start - End Time',
             dataIndex: 'timeRange',        
-            render: (timeRange) => <p>{timeRange[0] + ' - ' + timeRange[1]}</p>,
+            render: (_, record) => <p>{record.StartTime.split('T')[1].split('.')[0] + ' - ' + record.EndTime.split('T')[1].split('.')[0]}</p>,
         },
         {
             title: 'Priority',
-            dataIndex: 'priority'
+            dataIndex: 'Priority'
         },
         {
             title: 'Status',
             dataIndex: 'status',        
-            render: (status) => <Tag label={status.label} color={status.color}/>
+            // render: (status) => <Tag label={status.label} color={status.color}/>
         },
         {
             title: 'Action',
             dataIndex: 'actino',
             render: (_, record) => (
               <Space size="small">
-                <span className="material-symbols-outlined" onClick={() => editSchedule(record)}>edit</span>
+                <span className="material-symbols-outlined" onClick={() => {setNewScheduleData(record); setNewShow(true); setMode('edit');}}>edit</span>
               </Space>
             ),
         }
-    ];
-    
-    const scheduleData = [
-        {
-            key: '1',
-            name: 'Schedule 1',
-            location: 'Ballroom',
-            tag: '#Event #Sponsor',
-            user: {name: 'John Bushmill', email: 'Johnb@mail.com'},
-            dateRange: ['3/12/2023', '8/8/2024'],
-            timeRange: ['6:00:00', '14:00:00'],
-            priority: '10',
-            status: {label: 'Active', color: 'green'}
-        },
-        {
-            key: '2',
-            name: 'Schedule 2',
-            location: 'Mutiara',
-            tag: '#GM',
-            user: {name: 'Ilham Budi A', email: 'ilahmbudi@mail.com'},
-            dateRange: ['3/8/2023', '8/8/2023'],
-            timeRange: ['15:00:00', '19:00:00'],
-            priority: '10',
-            status: {label: 'Active', color: 'green'}
-        },
     ];
 
     const locationsTree = [
@@ -166,6 +154,98 @@ const Schedule = () => {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     const days = new Array(32).fill(0);
+
+    useEffect(() => {
+        setCurrentUser(JSON.parse(localStorage.getItem('loggedUser')));
+        axios.get('http://localhost:5001/api/playlist')
+        .then((res) => {
+            if (res.status === 200) {
+                res.data.sort((a, b) => {
+                    const nameA = a.Name.toUpperCase();
+                    const nameB = b.Name.toUpperCase();
+                    
+                    if (nameA < nameB) {
+                        return -1;
+                    } else if (nameA > nameB) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+                setPlayListData(res.data);
+            }
+        }).catch((err) => {
+            console.log('err-------------', err)
+        });
+        
+        axios.get('http://localhost:5001/api/location')
+        .then((res) => {
+            if (res.status === 200) {
+                setLocationData(res.data);
+                let tempLocatoin = res.data;
+
+                axios.get('http://localhost:5001/api/tag')
+                .then((tagRes) => {
+                    if (tagRes.status === 200) {
+                        setTags(tagRes.data);
+        
+                        axios.get('http://localhost:5001/api/schedule')
+                        .then((res) => {
+                            if (res.status === 200) {
+                                let temp = [];
+                                res.data.forEach(d => {
+                                    let tempTags = [];
+                                    let tempLocations = [];
+                                    d.Tag.length > 0 && d.Tag.forEach(t => {
+                                        tempTags.push('#' + tagRes.data.filter(tag => tag.ID === t)[0].Name);
+                                    })
+                                    d.Location.length > 0 && d.Location.forEach(l => {
+                                        tempLocations.push(tempLocatoin.filter(location => location.ID === l)[0].Name);
+                                    })
+                                    temp.push({...d, tag: tempTags.join(' '), location: tempLocations.join(', ')});
+                                })
+                                let tempSchedules = [];
+                                let tempName = [];
+                                temp.forEach(t => {
+                                    if (!tempName.includes(t.Name)) {
+                                        let tempSchedule = [];
+                                        temp.filter(te => te.Name === t.Name).forEach(f => {
+                                            tempSchedule.push({PlaylistMasterID: f.PlaylistMasterID, Frequency: f.Frequency, Sequence: f.Sequence});
+                                        })
+                                        tempSchedule.sort((a, b) => a.Sequence - b.Sequence);
+                                        tempSchedules.push({...t, Playlist: tempSchedule});
+                                        tempName.push(t.Name);
+                                    }
+                                })
+                                tempSchedules.sort((a, b) => {
+                                    const nameA = a.Name.toUpperCase();
+                                    const nameB = b.Name.toUpperCase();
+                                  
+                                    if (nameA < nameB) {
+                                      return -1;
+                                    } else if (nameA > nameB) {
+                                      return 1;
+                                    } else {
+                                      return 0;
+                                    }
+                                });
+                                console.log('======================>>>>>>>>>>>>>>>>>>>>>>', tempSchedules)
+                                setScheduleData(tempSchedules);
+                                setFilteredScheduleData(tempSchedules);
+                                setSearchText('');
+                            }
+                        }).catch((err) => {
+                            console.log('err-------------', err)
+                        });
+                    }
+                }).catch((err) => {
+                    console.log('err-------------', err)
+                });
+            }
+        }).catch((err) => {
+            console.log('err-------------', err)
+        });
+    }, []);
 
     const editSchedule = (schedule) => {
         setNewShow(true);
@@ -242,18 +322,26 @@ const Schedule = () => {
     }
 
     const saveSchedule = () => {
-        setNewShow(false);
+        console.log('-----------------------', newScheduleData);
+        // setNewShow(false);
+    }
+
+    const changeSearch = (e) => {
+        setSearchText(e.target.value);
+        let temp = [...scheduleData];
+        setFilteredScheduleData(temp.filter(t => t.Name.toLowerCase().includes(e.target.value.toLowerCase())));
     }
 
     return (
         <>
+            {contextHolder}
             <div className="schedule-page">
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Schedule</p>
                         <div className='d-flex align-center'>
-                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
-                            <Button className='view-mode-btn' type='primary' onClick={() => setNewShow(true)}>
+                            <Input placeholder="search..." prefix={<SearchOutlined />} className='search-input' value={searchText} onChange={changeSearch}/>
+                            <Button className='view-mode-btn' type='primary' onClick={() => {setNewScheduleData({Name: '', Priority: 1, Tag: [], StartTime: '', EndTime: '', CreatedBy: currentUser.Email, ModifiedBy: currentUser.Email, Playlist: [], LoopPlaylist: false, Location: []}); setNewShow(true); setMode('new');}}>
                                 <div className='d-flex align-center j-c-center'>
                                     <span className="material-symbols-outlined">add</span>Schedule
                                 </div>
@@ -262,7 +350,7 @@ const Schedule = () => {
                     </div>
                     <Table
                         columns={scheduleColumns}
-                        dataSource={scheduleData}
+                        dataSource={filteredScheduleData}
                     />
                 </Card>
             </div> 
@@ -282,26 +370,20 @@ const Schedule = () => {
                             <Row gutter={10}>
                                 <Col span={10}>
                                     <p className='select-label'>Name</p>
-                                    <Input className='grey-input' placeholder='name...' />
+                                    <Input className='grey-input' value={newScheduleData.Name} onChange={(e) => setNewScheduleData((prevState) => ({ ...prevState, Name: e.target.value }))}/>
                                 </Col>
                                 <Col span={5}>
                                     <p className='select-label'>Priority</p>
                                     <Select
-                                        options={[
-                                            {
-                                                value: '10',
-                                                label: '10'
-                                            },
-                                            {
-                                                value: '20',
-                                                label: '20'
-                                            },
-                                            {
-                                                value: '30',
-                                                label: '30'
-                                            }
-                                        ]}
-                                    />
+                                        value={newScheduleData.Priority ? newScheduleData.Priority : 1} 
+                                        onChange={(e) => setNewScheduleData((prevState) => ({ ...prevState, Priority: e }))}
+                                    >
+                                        {
+                                            new Array(20).fill(0).map((item, index) => {
+                                                return <Option key={index + 1}>{index + 1}</Option>
+                                            })
+                                        }
+                                    </Select>
                                 </Col>
                             </Row>
                             <Row gutter={10}>
@@ -331,13 +413,15 @@ const Schedule = () => {
                                 <Col span={8}>
                                     <p className='select-label'>Loop Playlists (Sequential Mode)</p>
                                     <Select
+                                        value={newScheduleData.LoopPlaylist ? newScheduleData.LoopPlaylist : false}
+                                        onChange={(e) => setNewScheduleData((prevState) => ({ ...prevState, LoopPlaylist: e }))}
                                         options={[
                                             {
-                                                value: 'Yes',
+                                                value: true,
                                                 label: 'Yes'
                                             },
                                             {
-                                                value: 'No',
+                                                value: false,
                                                 label: 'No'
                                             }
                                         ]}
@@ -345,7 +429,17 @@ const Schedule = () => {
                                 </Col>
                             </Row>
                             <p className='select-label'>#Tag</p>
-                            <Input className='grey-input' defaultValue='#Promo #ABC'/>
+                            <Select
+                                mode="tags"
+                                value={newScheduleData.Tag}
+                                onChange={(e) => setNewScheduleData((prevState) => ({ ...prevState, Tag: e }))}
+                            >
+                                {
+                                    tags.map((item) => {
+                                        return <Option defaultValue key={item.ID}>{item.Name}</Option>
+                                    })
+                                }
+                            </Select>
                             <Button type='primary' className='add-button' onClick={() => setDetailShow(true)}><span className="material-symbols-outlined">add</span>Playlist</Button>
                             <div className='playlist-section'>
                                 <DragDropContext onDragEnd={onDragEnd}>
@@ -355,8 +449,8 @@ const Schedule = () => {
                                                 {...provided.droppableProps}
                                                 ref={provided.innerRef}
                                             >
-                                                {playList.map((item, index) => (
-                                                    <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                {newScheduleData.Playlist.length > 0 && newScheduleData.Playlist.map((item, index) => (
+                                                    <Draggable key={item.PlaylistMasterID} draggableId={item.PlaylistMasterID} index={index}>
                                                         {(provided, snapshot) => (
                                                             <div
                                                                 ref={provided.innerRef}
@@ -365,9 +459,9 @@ const Schedule = () => {
                                                                 <div className='playlist-drag-item'>
                                                                     <div className='d-flex align-center'>
                                                                         <span className="material-symbols-outlined" {...provided.dragHandleProps}>drag_indicator</span>
-                                                                        <p className='playlist-name'>{item.name}</p>
-                                                                        <p className='playlist-time-range'>{item.timeRange}</p>
-                                                                        <p className='playlist-duration'><span>{item.duration}: </span>{item.period}</p>
+                                                                        <p className='playlist-name'>{JSON.parse(item.Frequency).playlists[0].Name}</p>
+                                                                        <p className='playlist-time-range'>{JSON.parse(item.Frequency).start} to {JSON.parse(item.Frequency).end}</p>
+                                                                        <p className='playlist-duration'><span>{JSON.parse(item.Frequency).occurrence}: </span>aaaa</p>
                                                                     </div>
                                                                     <span className="material-symbols-outlined" onClick={() => editPlayList(item)}>edit</span>
                                                                 </div>

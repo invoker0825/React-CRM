@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, Input, Menu, Badge, Row, Col, Checkbox, Modal, Upload, message, Collapse, Select, Breadcrumb, DatePicker, Popover } from 'antd';
 import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
 import ContextMenu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import packImg from '../../assets/img/pack.png';
-import watchImg from '../../assets/img/watch.png';
+import axios from 'axios';
 import './media.scss';
 
 const { Dragger } = Upload;
@@ -21,83 +20,71 @@ function getItem(label, key, icon, children, type) {
     };
 }
 
-const items = [
-    getItem('Folder', 'sub1', <AppstoreOutlined />, [
-        getItem('Sub Folder', '1'),
-        getItem('Sub Folder', '2'),
-    ]),
-    getItem(<div className='d-flex align-center j-c-space-between'><p>Menu</p><Badge count={13} /></div>, 'sub2', <AppstoreOutlined />),
-    getItem(<div className='d-flex align-center j-c-space-between pr-20'><p>Menu</p><Badge count={5} /></div>, 'sub4', <AppstoreOutlined />, [
-        getItem('Sub Menu 1', '9'),
-        getItem('Sub Menu 2', '10')
-    ]),
-];
-
-var mediaFilterData = [
-    {
-        name: 'BP-backdrop 1',
-        duration: 10,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 8/8/2023',
-        screenshot: packImg,
-        format: 'jpg'
-    },
-    {
-        name: 'BP-backdrop 2',
-        duration: 15,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 9/9/2023',
-        screenshot: packImg,
-        format: 'jpg'
-    },
-    {
-        name: 'BP-backdrop 3',
-        duration: 43,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 10/10/2023',
-        screenshot: packImg,
-        format: 'png'
-    },
-    {
-        name: 'BP-backdrop',
-        duration: 23,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 11/11/2023',
-        screenshot: watchImg,
-        format: 'jpg'
-    },
-    {
-        name: 'BP-backdrop 1',
-        duration: 10,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 8/8/2023',
-        screenshot: packImg,
-        format: 'png'
-    },
-    {
-        name: 'BP-backdrop 2',
-        duration: 15,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 9/9/2023',
-        screenshot: packImg,
-        format: 'png'
-    },
-    {
-        name: 'BP-backdrop 3',
-        duration: 43,
-        resolution: '1920x1080',
-        user: 'Arnold',
-        date: ' 10/10/2023',
-        screenshot: packImg,
-        format: 'jpg'
-    }
-]
+// var mediaFilterData = [
+//     {
+//         name: 'BP-backdrop 1',
+//         duration: 10,
+//         resolution: '1920x1080',
+//         user: 'Arnold',
+//         date: ' 8/8/2023',
+//         screenshot: packImg,
+//         format: 'jpg'
+//     },
+//     {
+//         name: 'BP-backdrop 2',
+//         duration: 15,
+//         resolution: '1920x1080',
+//         user: 'Arnold',
+//         date: ' 9/9/2023',
+//         screenshot: packImg,
+//         format: 'jpg'
+//     },
+//     {
+//         name: 'BP-backdrop 3',
+//         duration: 43,
+//         resolution: '1920x1080',
+//         user: 'Arnold',
+//         date: ' 10/10/2023',
+//         screenshot: packImg,
+//         format: 'png'
+//     },
+//     {
+//         name: 'BP-backdrop',
+//         duration: 23,
+//         resolution: '1920x1080',
+//         user: 'Arnold',
+//         date: ' 11/11/2023',
+//         screenshot: watchImg,
+//         format: 'jpg'
+//     },
+//     {
+//         name: 'BP-backdrop 1',
+//         duration: 10,
+//         resolution: '1920x1080',
+//         user: 'Arnold',
+//         date: ' 8/8/2023',
+//         screenshot: packImg,
+//         format: 'png'
+//     },
+//     {
+//         name: 'BP-backdrop 2',
+//         duration: 15,
+//         resolution: '1920x1080',
+//         user: 'Arnold',
+//         date: ' 9/9/2023',
+//         screenshot: packImg,
+//         format: 'png'
+//     },
+//     {
+//         name: 'BP-backdrop 3',
+//         duration: 43,
+//         resolution: '1920x1080',
+//         user: 'Arnold',
+//         date: ' 10/10/2023',
+//         screenshot: packImg,
+//         format: 'jpg'
+//     }
+// ]
 
 const Media = () => {
 
@@ -113,10 +100,97 @@ const Media = () => {
     const [editMedia, setEditMedia] = useState();
     const [importMenuOpen, setImportMenuOpen] = useState(false);
     const [moveToShow, setMoveToShow] = useState(false);
+    const [mediaFilterData, setMediaFilterData] = useState([]);
+    const [mediaData, setMediaData] = useState([]);
+    const [items, setItems] =useState([]);
+    const [categoryData, setCategoryData] = useState([]);
+    const [currentCategory, setCurrentCategory] = useState('');
 
-    const fileTypes = ['Video', 'Picture', 'Stream', 'Powerpoint', 'Capture Card'];
+    const fileTypes = [
+        {
+            label: 'Video',
+            value: 1
+        },
+        {
+            label: 'Picture',
+            value: 2
+        },
+        {
+            label: 'Stream',
+            value: 6
+        },
+        {
+            label: 'Powerpoint',
+            value: 3
+        },
+        {
+            label: 'Capture Card',
+            value: 5
+        }
+    ];
     const checkAll = fileTypes.length === checkedList.length;
     const indeterminate = checkedList.length > 0 && checkedList.length < fileTypes.length;
+
+    useEffect(() => {
+        axios.get('http://localhost:5001/api/media')
+        .then((mediaRes) => {
+            if (mediaRes.status === 200) {
+                console.log('=============', mediaRes.data)
+                setMediaFilterData(mediaRes.data);
+                setMediaData(mediaRes.data);
+                axios.get('http://localhost:5001/api/category')
+                .then((res) => {
+                    if (res.status === 200) {
+                        setCategoryData(res.data);
+                        const result = [];
+                        let number = 1;
+                        
+                        for (const obj of res.data) {
+                            if (obj.Parent === '00000000-0000-0000-0000-000000000000') {
+                                let tempObj = res.data.filter(r => r.Parent === obj.ID);
+                                let tempChild = [];
+                                if (tempObj.length > 0) {
+                                    tempObj.forEach(t => {
+                                        const temp = mediaRes.data.filter(m => m.CategoryID === t.ID)
+                                        tempChild.push(getItem(<div className='d-flex align-center j-c-space-between' onClick={() => selectCategory(t.ID)}><p>{t.Category}</p><Badge count={temp.length} /></div>, t.ID));
+                                        number ++;
+                                    });
+                                    const temp = mediaRes.data.filter(m => m.CategoryID === obj.ID)
+                                    result.push(getItem(<div className='d-flex align-center j-c-space-between pr-20' onClick={() => selectCategory(obj.ID)}><p>{obj.Category}</p><Badge count={temp.length} /></div>, obj.ID, <AppstoreOutlined />, [...tempChild]));
+                                    number ++;
+                                } else {
+                                    const temp = mediaRes.data.filter(m => m.CategoryID === obj.ID)
+                                    result.push(getItem(<div className='d-flex align-center j-c-space-between' onClick={() => selectCategory(obj.ID)}><p>{obj.Category}</p><Badge count={temp.length} /></div>, obj.ID, <AppstoreOutlined />));
+                                    number ++;
+                                }
+                            }
+                        }
+                        setItems(result);
+                    }
+                }).catch((err) => {
+                    console.log('err-------------', err)
+                });
+            }
+        }).catch((err) => {
+            console.log('err-------------', err)
+        });
+    }, []);
+
+    const convertDateFormat = (dateString) => {
+        const date = new Date(dateString);
+
+        const month = date.getMonth() + 1; // Months are zero-based, so we add 1
+        const day = date.getDate();
+        const year = date.getFullYear();
+
+        const formattedDate = `${month}/${day}/${year}`;
+        return formattedDate;
+    }
+
+    const convertLongString = (str) => {
+        const truncatedString = str.length > 15 ? str.substring(0, 15) + "..." : str;
+        return truncatedString;
+    }
 
     const onClickMenu = (e) => {
       console.log('click------------------ ', e);
@@ -127,7 +201,7 @@ const Media = () => {
     };
 
     const onCheckAllTypes = (e) => {
-        setCheckedList(e.target.checked ? fileTypes : []);
+        setCheckedList(e.target.checked ? fileTypes.map(type => {return type.value}) : []);
     };
 
     const resetFilter = () => {
@@ -201,6 +275,17 @@ const Media = () => {
         setMenuContextMenu(null);
     };
 
+    const applyFilter = () => {
+        let temp = mediaData.filter(m => checkedList.includes(m.TypeID));
+        setMediaFilterData(temp);
+        setFilterShow(false);
+    }
+
+    const selectCategory = (id) => {
+        console.log('----------->>>>>>>>>>>>>>>>>>', id)
+        setCurrentCategory(id);
+    }
+
     return (
         <div>
             <div className="media-page">
@@ -240,15 +325,13 @@ const Media = () => {
                             
                             <div onContextMenu={handleMenuContextMenu} style={{ cursor: 'context-menu' }}>
                                 <Menu
-                                    onClick={onClickMenu}
                                     style={{
                                         width: 256,
                                     }}
-                                    defaultOpenKeys={['sub1']}
                                     items={items}
                                     mode="inline"
                                     className='media-filter-menu'
-                                    selectable={false}
+                                    selectable={true}
                                 />
                                 <ContextMenu
                                     open={menuContextMenu !== null}
@@ -290,10 +373,10 @@ const Media = () => {
                                             <div onContextMenu={handleCardContextMenu} style={{ cursor: 'context-menu' }}>
                                                 <Card
                                                     className='filter-media-card'
-                                                    style={{backgroundImage: 'url(' + media.screenshot + ')'}}
+                                                    style={{backgroundImage: `url(http://localhost:5001/uploads/img/${media.ID}.png)`}}
                                                 >
                                                     <Checkbox className='card-check'/>
-                                                    <p className='media-format'>{media.format}</p>
+                                                    <p className='media-format'>{media.Ext.split('.')[1]}</p>
                                                     <span className="material-symbols-outlined" onClick={() => editMediaData(media)}>edit</span>
                                                 </Card>
                                                 <ContextMenu
@@ -315,11 +398,11 @@ const Media = () => {
                                                 </ContextMenu>
                                             </div>
                                             <div className='d-flex align-center j-c-space-between'>
-                                                <p>{media.name}</p>
-                                                <p>{media.duration}sec</p>
+                                                <p>{convertLongString(media.Description)}</p>
+                                                <p>{media.TotalDuration}sec</p>
                                             </div>
-                                            <p className='grey-text'>{media.resolution}px</p>
-                                            <p className='grey-text'>Imported by {media.user} on {media.date}</p>
+                                            <p className='grey-text'>{media.Width}x{media.Height}px</p>
+                                            <p className='grey-text'>Imported by {media.CreatedBy} on {convertDateFormat(media.CreatedOn)}</p>
                                         </Col>
                                     )
                                 }
@@ -422,7 +505,7 @@ const Media = () => {
                         type='primary' 
                         disabled={checkedList.length === 0} 
                         className={checkedList.length === 0 && 'ant-btn-disabled'} 
-                        onClick={() => setFilterShow(false)}
+                        onClick={applyFilter}
                     >
                         Apply Filter
                     </Button>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, Space, Pagination, Select, Modal, Input, Row, Col, Checkbox, Badge, Menu, Collapse } from 'antd';
 import { SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
+import axios from 'axios';
 import Tag from '../../components/tag';
 import ContextMenu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -32,50 +33,53 @@ const Player = () => {
     const [moveToShow, setMoveToShow] = useState(false);
     const [filterShow, setFilterShow] = useState(false);
     const [checkedList, setCheckedList] = useState([]);
+    const [playerData, setPlayerData] = useState([]);
+    const [playerDisplayData, setPlayerDisplayData] = useState([]);
+    const [searchText, setSearchText] = useState('');
 
     const playerColumns = [
         {
             title: 'Name',
-            dataIndex: 'name'
+            dataIndex: 'Name'
         },
         {
             title: 'Screenshot',
-            dataIndex: 'screenshot',
-            render: (screenShot) => <img src={screenShot} alt='' />
+            // dataIndex: 'screenshot',
+            // render: (screenShot) => <img src={screenShot} alt='' />
         },
         {
             title: 'Schedule',
-            dataIndex: 'schedule'
+            // dataIndex: 'schedule'
         },
         {
             title: 'Location',
-            dataIndex: 'location'
+            dataIndex: 'Location'
         },
         {
             title: 'Pixel',
-            dataIndex: 'pixel',
-            sorter: (a, b) => a.pixel.localeCompare(b.pixel)
+            // dataIndex: 'pixel',
+            // sorter: (a, b) => a.pixel.localeCompare(b.pixel)
         },
         {
             title: 'IP / MAC',
-            dataIndex: 'ip'
+            dataIndex: 'ClientIp'
         },
         {
             title: 'Platform',
-            dataIndex: 'platform',
-            render: (platform) => <Tag label={platform} color={getPlatformColor(platform)}/>
+            // dataIndex: 'platform',
+            // render: (platform) => <Tag label={platform} color={getPlatformColor(platform)}/>
         },
         {
             title: 'Version #',
-            dataIndex: 'version'
+            dataIndex: 'Owner'
         },
         {
             title: 'Free Space',
-            dataIndex: 'freeSpace'
+            dataIndex: 'Operator'
         },
         {
             title: 'Last Active',
-            dataIndex: 'lastActive',
+            dataIndex: 'LastActive',
             width: '120px'
         },
         {
@@ -102,260 +106,260 @@ const Player = () => {
         }
     ];
     
-    const playerData = [
-        {
-            key: '1',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '2',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Android'
-        },
-        {
-            key: '3',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'webOS'
-        },
-        {
-            key: '4',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Tizen'
-        },
-        {
-            key: '5',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Linux'
-        },
-        {
-            key: '6',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Tizen'
-        },
-        {
-            key: '7',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '8',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Android'
-        },
-        {
-            key: '9',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '10',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '11',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '12',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '13',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '14',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '15',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '16',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '17',
-            name: 'SCH 1',
-            screenshot: packImg,
-            schedule: 'Schedule A',
-            location: 'Kuala Lumpur',
-            pixel: '800x600',
-            ip: 'Landscape',
-            version: '1.1.6.57',
-            freeSpace: '96 / 111.3G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-        {
-            key: '18',
-            name: 'SCH 2',
-            screenshot: watchImg,
-            schedule: 'Schedule B',
-            location: 'Petaling Jaya',
-            pixel: '1920x1080',
-            ip: 'Portrait',
-            version: '1.1.6.57',
-            freeSpace: '12.1/29.5G',
-            lastActive: '22/05/23 09:07:24',
-            status: {label: 'Active', color: 'green'},
-            platform: 'Windows'
-        },
-    ];
+    // const playerData = [
+    //     {
+    //         key: '1',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '2',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Android'
+    //     },
+    //     {
+    //         key: '3',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'webOS'
+    //     },
+    //     {
+    //         key: '4',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Tizen'
+    //     },
+    //     {
+    //         key: '5',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Linux'
+    //     },
+    //     {
+    //         key: '6',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Tizen'
+    //     },
+    //     {
+    //         key: '7',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '8',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Android'
+    //     },
+    //     {
+    //         key: '9',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '10',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '11',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '12',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '13',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '14',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '15',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '16',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '17',
+    //         name: 'SCH 1',
+    //         screenshot: packImg,
+    //         schedule: 'Schedule A',
+    //         location: 'Kuala Lumpur',
+    //         pixel: '800x600',
+    //         ip: 'Landscape',
+    //         version: '1.1.6.57',
+    //         freeSpace: '96 / 111.3G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    //     {
+    //         key: '18',
+    //         name: 'SCH 2',
+    //         screenshot: watchImg,
+    //         schedule: 'Schedule B',
+    //         location: 'Petaling Jaya',
+    //         pixel: '1920x1080',
+    //         ip: 'Portrait',
+    //         version: '1.1.6.57',
+    //         freeSpace: '12.1/29.5G',
+    //         lastActive: '22/05/23 09:07:24',
+    //         status: {label: 'Active', color: 'green'},
+    //         platform: 'Windows'
+    //     },
+    // ];
 
     const items = [
         getItem('Folder', 'sub1', <AppstoreOutlined />, [
@@ -368,6 +372,21 @@ const Player = () => {
             getItem('Sub Menu 2', '10')
         ]),
     ];
+    
+    useEffect(() => {
+        axios.get('http://localhost:5001/api/player')
+        .then((res) => {
+            if (res.status === 200) {
+                // setUserData(res.data);
+                console.log('=============', res.data)
+                setPlayerData(res.data);
+                setPlayerDisplayData(res.data);
+                setSearchText('');
+            }
+        }).catch((err) => {
+            console.log('err-------------', err)
+        });
+    }, []);
 
     const fileTypes = ['Online', 'Offline', 'Windows', 'webOS', 'Android', 'Tizen', 'Enabled', 'Disabled'];
     const checkAll = fileTypes.length === checkedList.length;
@@ -458,6 +477,12 @@ const Player = () => {
         setCheckedList([]);
     }
 
+    const changeSearch = (e) => {
+        setSearchText(e.target.value);
+        let temp = [...playerData];
+        e.target.value !== '' ? setPlayerDisplayData([...temp.filter(t => t.Name.toLowerCase().includes(e.target.value.toLowerCase()))]) : setPlayerDisplayData([...temp]);
+    }
+
     return (
         <>
             <div className="player-page">
@@ -465,7 +490,7 @@ const Player = () => {
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Player</p>
                         <div className='d-flex align-center'>
-                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>       
+                            <Input placeholder="search..." prefix={<SearchOutlined />} className='search-input' value={searchText} onChange={changeSearch}/>       
                             { viewMode !== 'list' && <Select
                                 defaultValue='group1'
                                 options={[
@@ -495,7 +520,7 @@ const Player = () => {
                         viewMode === 'list' ? 
                         <Table
                             columns={playerColumns}
-                            dataSource={playerData}
+                            dataSource={playerDisplayData}
                             className='report-table'
                         />
                         : 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Space, Select, Modal, Input, Row, Col, Checkbox, Upload, Collapse } from 'antd';
+import { Button, Card, Space, Select, Modal, Input, Row, Col, Checkbox, Upload, Collapse, notification } from 'antd';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import axios from 'axios';
 import { SearchOutlined } from '@ant-design/icons';
 import Tag from '../../components/tag';
 import Table from '../../components/table';
@@ -9,6 +10,7 @@ import watchImg from '../../assets/img/watch.png';
 import './playlist.scss';
 
 const { Dragger } = Upload;
+const { Option } = Select;
 const CheckboxGroup = Checkbox.Group;
 
 const panelData = [
@@ -46,6 +48,7 @@ const reorder = (list, startIndex, endIndex) => {
 
   return result;
 };
+const colors = ['#ff80ed', '#065535', '#ff0000', '#ffd700', '#00ffff', '#0000ff', '#bada55', '#00ff00'];
 
 const PlayList = () => {
 
@@ -53,8 +56,41 @@ const PlayList = () => {
     const [filterShow, setFilterShow] = useState(false);
     const [checkedList, setCheckedList] = useState([]);
     const [fileList, setFileList] = useState([]);
+    const [playListData, setPlayListData] = useState([]);
+    const [filteredPlayListData, setFilteredPlayListData] = useState([]);
+    const [newPlayList, setNewPlayList] = useState({Name: '', Tag: [], CreatedBy: '', ModifiedBy: '', Duration: 0});
+    const [currentUser, setCurrentUser] = useState();
+    const [mediaFilterData, setMediaFilterData] = useState([]);
+    const [mediaData, setMediaData] = useState([]);
+    const [api, contextHolder] = notification.useNotification();
+    const [tags, setTags] = useState([]);
+    const [mode, setMode] = useState('new');
+    const [searchModalText, setSearchModalText] = useState('');
+    const [searchText, setSearchText] = useState('');
+    const [layoutData, setLayoutData] = useState([]);
 
-    const fileTypes = ['Video', 'Picture', 'Stream', 'Powerpoint', 'Capture Card'];
+    const fileTypes = [
+        {
+            label: 'Video',
+            value: 1
+        },
+        {
+            label: 'Picture',
+            value: 2
+        },
+        {
+            label: 'Stream',
+            value: 6
+        },
+        {
+            label: 'Powerpoint',
+            value: 3
+        },
+        {
+            label: 'Capture Card',
+            value: 5
+        }
+    ];
     const checkAll = fileTypes.length === checkedList.length;
     const indeterminate = checkedList.length > 0 && checkedList.length < fileTypes.length;
 
@@ -63,16 +99,25 @@ const PlayList = () => {
     const playListColumns = [
         {
             title: 'Name',
-            dataIndex: 'name'
+            dataIndex: 'Name',
+            width: '300px'
         },
         {
             title: 'Layout',
             dataIndex: 'layout',
-            render: (screenShot) => <img src={screenShot} alt='' />
+            render: (layout) => (
+                layout ? <div className='table-layout' style={{width: `${layout.resolution.Width * 49.5 / layout.resolution.Height}px`}}>
+                    {
+                        layout.details.map((detail, i) => 
+                            <div style={{width: `${detail.Width * 49.5 / layout.resolution.Height}px`, height: `${detail.Height * 49.5 / layout.resolution.Height}px`, left: `${detail.X * 49.5 / layout.resolution.Height}px`, top: `${detail.Y * 49.5 / layout.resolution.Height}px`, backgroundColor: `${colors[i]}`, position: 'absolute'}}></div>
+                        )
+                    }
+                </div> : <></>
+            )
         },
         {
             title: 'Duration',
-            dataIndex: 'duration'
+            dataIndex: 'Duration'
         },
         {
             title: '#Tag',
@@ -80,53 +125,100 @@ const PlayList = () => {
         },
         {
             title: 'By User',
-            dataIndex: 'user',
-            render: (user) => <><p className='black-text'>{user.name}</p><p className='small-text'>{user.email}</p></>,
+            dataIndex: 'CreatedBy',
+            render: (CreatedBy) => <><p className='black-text'>{CreatedBy}</p><p className='small-text'>{CreatedBy}</p></>,
         },
         {
             title: 'Status',
-            dataIndex: 'status',        
-            render: (status) => <Tag label={status.label} color={status.color}/>,
-            sorter: (a, b) => a.status.label.localeCompare(b.status.label)
+            dataIndex: 'Status',        
+            render: (Status) => <>{Status === 1 ? <Tag label='Active' color='green'/> : <Tag label='Inactive' color='red'/>}</>,
+            sorter: (a, b) => a.Status - b.Status,
         },
         {
             title: 'Action',
             dataIndex: 'actino',
             render: (_, record) => (
               <Space size="small">
-                <span className="material-symbols-outlined" onClick={() => editPlayListData()}>edit</span>
+                <span className="material-symbols-outlined" onClick={() => editPlayListData(record)}>edit</span>
               </Space>
             ),
         }
     ];
-    
-    const playListData = [
-        {
-            key: '1',
-            name: 'Playlist 1',
-            layout: packImg,
-            duration: '00:06:30',
-            tag: '#Promo',
-            user: {name: 'John Bushmill', email: 'Johnb@mail.com'},
-            status: {label: 'Active', color: 'green'}
-        },
-        {
-            key: '2',
-            name: 'Playlist 2',
-            layout: watchImg,
-            duration: '00:05:00',
-            tag: '#Promo #ABC',
-            user: {name: 'Ilham Budi A', email: 'ilahmbudi@mail.com'},
-            status: {label: 'Active', color: 'green'}
-        }
-    ];
 
     useEffect(() => {
+        setCurrentUser(JSON.parse(localStorage.getItem('loggedUser')));
+        
+        axios.get('http://localhost:5001/api/layout')
+        .then((res) => {
+            if (res.status === 200) {
+                res.data.forEach(d => {
+                    d.details.sort((a, b) => a.Panel - b.Panel);
+                });
+                setLayoutData(res.data);
+                let tempLayout = res.data;
+
+                axios.get('http://localhost:5001/api/tag')
+                .then((tagRes) => {
+                    if (tagRes.status === 200) {
+                        setTags(tagRes.data);
+        
+                        axios.get('http://localhost:5001/api/playlist')
+                        .then((res) => {
+                            if (res.status === 200) {
+                                let temp = [];
+                                console.log('=============', tagRes.data)
+                                res.data.forEach(d => {
+                                    let tempTags = [];
+                                    d.Tag.forEach(t => {
+                                        tempTags.push('#' + tagRes.data.filter(tag => tag.ID === t)[0].Name);
+                                    })
+                                    temp.push({...d, tag: tempTags.join(' '), layout: tempLayout.filter(l => l.ID === d.LayoutMasterID)[0]});
+                                })
+                                temp.sort((a, b) => {
+                                    const nameA = a.Name.toUpperCase();
+                                    const nameB = b.Name.toUpperCase();
+                                  
+                                    if (nameA < nameB) {
+                                      return -1;
+                                    } else if (nameA > nameB) {
+                                      return 1;
+                                    } else {
+                                      return 0;
+                                    }
+                                });
+                                setPlayListData(temp);
+                                setFilteredPlayListData(temp);
+                                setSearchText('');
+                            }
+                        }).catch((err) => {
+                            console.log('err-------------', err)
+                        });
+                    }
+                }).catch((err) => {
+                    console.log('err-------------', err)
+                });
+            }
+        }).catch((err) => {
+            console.log('err-------------', err)
+        });
+        
+        axios.get('http://localhost:5001/api/media')
+        .then((res) => {
+            if (res.status === 200) {
+                setMediaData(res.data);
+                setMediaFilterData(res.data);
+            }
+        }).catch((err) => {
+            console.log('err-------------', err)
+        });
+
         let temp = new Array(panelData.length).fill([])
         setFileList(temp);
     }, []);
 
-    const editPlayListData = () => {
+    const editPlayListData = (r) => {
+        setMode('edit');
+        setNewPlayList(r);
         setEditShow(true);
     }
 
@@ -164,7 +256,135 @@ const PlayList = () => {
     }
 
     const savePlayList = () => {
-        setEditShow(false);
+        console.log('=========================', newPlayList)
+        if (newPlayList.Name !== '') {
+            if (mode === 'new') {
+                axios.post('http://localhost:5001/api/playlist/add', newPlayList)
+                .then((res) => {
+                    if (res.status === 200) {
+                        api.success({
+                            message: 'Success',
+                            description:
+                            'The new report has been added successfully.',
+                        });
+                        setEditShow(false);
+
+                        
+
+                        axios.get('http://localhost:5001/api/tag')
+                        .then((tagRes) => {
+                            if (tagRes.status === 200) {
+                                setTags(tagRes.data);
+                                axios.get('http://localhost:5001/api/playlist')
+                                .then((res) => {
+                                    if (res.status === 200) {
+                                        let temp = [];
+                                        res.data.forEach(d => {
+                                            let tempTags = [];
+                                            d.Tag.forEach(t => {
+                                                tempTags.push('#' + tagRes.data.filter(tag => tag.ID === t)[0].Name);
+                                            })
+                                            temp.push({...d, tag: tempTags.join(' '), layout: layoutData.filter(l => l.ID === d.LayoutMasterID)[0]});
+                                        })
+                                        temp.sort((a, b) => {
+                                            const nameA = a.Name.toUpperCase();
+                                            const nameB = b.Name.toUpperCase();
+                                        
+                                            if (nameA < nameB) {
+                                            return -1;
+                                            } else if (nameA > nameB) {
+                                            return 1;
+                                            } else {
+                                            return 0;
+                                            }
+                                        });
+                                        setPlayListData(temp);
+                                        setFilteredPlayListData(temp);
+                                        setSearchText('');
+                                    }
+                                }).catch((err) => {
+                                    console.log('err-------------', err)
+                                });
+                            }
+                        }).catch((err) => {
+                            console.log('err-------------', err)
+                        });
+                    }
+                }).catch((err) => {
+                    console.log('err-------------', err)
+                });
+            } else {
+                axios.post('http://localhost:5001/api/playlist/delete', newPlayList)
+                .then((res) => {
+                    if (res.status === 200) {
+                        console.log('deleteres----------------', res)
+                        axios.post('http://localhost:5001/api/playlist/add', newPlayList)
+                        .then((res) => {
+                            if (res.status === 200) {
+                                api.success({
+                                    message: 'Success',
+                                    description:
+                                    'The new report has been updated successfully.',
+                                });
+                                setEditShow(false);
+
+                                axios.get('http://localhost:5001/api/tag')
+                                .then((tagRes) => {
+                                    if (tagRes.status === 200) {
+                                        setTags(tagRes.data);
+                                        axios.get('http://localhost:5001/api/playlist')
+                                        .then((res) => {
+                                            if (res.status === 200) {
+                                                let temp = [];
+                                                res.data.forEach(d => {
+                                                    let tempTags = [];
+                                                    d.Tag.forEach(t => {
+                                                        tempTags.push('#' + tagRes.data.filter(tag => tag.ID === t)[0].Name);
+                                                    })
+                                                    temp.push({...d, tag: tempTags.join(' '), layout: layoutData.filter(l => l.ID === d.LayoutMasterID)[0]});
+                                                })
+                                                temp.sort((a, b) => {
+                                                    const nameA = a.Name.toUpperCase();
+                                                    const nameB = b.Name.toUpperCase();
+                                                
+                                                    if (nameA < nameB) {
+                                                    return -1;
+                                                    } else if (nameA > nameB) {
+                                                    return 1;
+                                                    } else {
+                                                    return 0;
+                                                    }
+                                                });
+                                                setPlayListData(temp);
+                                                setFilteredPlayListData(temp);
+                                                setSearchText('');
+                                            }
+                                        }).catch((err) => {
+                                            console.log('err-------------', err)
+                                        });
+                                    }
+                                }).catch((err) => {
+                                    console.log('err-------------', err)
+                                });
+                            } else {
+                                console.log('addres----------------', res)
+
+                            }
+                        }).catch((err) => {
+                            console.log('err-------------', err)
+                        });
+                    }
+                }).catch((err) => {
+                    console.log('err-------------', err)
+                });
+            }
+        } else {
+            api.error({
+                message: 'Error',
+                description:
+                  'Check for missing fields.',
+            });
+        }
     }
 
     const fileTypeCheck = () => {
@@ -183,7 +403,7 @@ const PlayList = () => {
     };
 
     const onCheckAllTypes = (e) => {
-        setCheckedList(e.target.checked ? fileTypes : []);
+        setCheckedList(e.target.checked ? fileTypes.map(type => {return type.value}) : []);
     };
 
     const resetFilter = () => {
@@ -211,15 +431,34 @@ const PlayList = () => {
         setFileList(temp);
     }
 
+    const applyFilter = () => {
+        let temp = mediaData.filter(m => checkedList.includes(m.TypeID));
+        searchModalText !== '' ? setMediaFilterData([...temp.filter(t => t.Filename.toLowerCase().includes(searchModalText.toLowerCase()))]) : setMediaFilterData([...temp]);
+        setFilterShow(false);
+    }
+
+    const changeModalSearch = (e) => {
+        setSearchModalText(e.target.value);
+        let temp = checkedList.length > 0 ? mediaData.filter(m => checkedList.includes(m.TypeID)) : [...mediaData];
+        e.target.value !== '' ? setMediaFilterData([...temp.filter(t => t.Filename.toLowerCase().includes(e.target.value.toLowerCase()))]) : setMediaFilterData([...temp]);
+    }
+
+    const changeSearch = (e) => {
+        setSearchText(e.target.value);
+        let temp = [...playListData];
+        e.target.value !== '' ? setFilteredPlayListData([...temp.filter(t => t.Name.toLowerCase().includes(e.target.value.toLowerCase()))]) : setFilteredPlayListData([...temp]);
+    }
+
     return (
         <>
+            {contextHolder}
             <div className="playlist-page">
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Playlist</p>
                         <div className='d-flex align-center'>
-                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
-                            <Button className='view-mode-btn' type='primary' onClick={() => setEditShow(true)}>
+                            <Input placeholder="search..." prefix={<SearchOutlined />} className='search-input' value={searchText} onChange={changeSearch}/>
+                            <Button className='view-mode-btn' type='primary' onClick={() => {setNewPlayList({Name: '', Tag: [], CreatedBy: currentUser.Email, ModifiedBy: currentUser.Email, Duration: 0}); setEditShow(true); setMode('new');}}>
                                 <div className='d-flex align-center j-c-center'>
                                     <span className="material-symbols-outlined">add</span>Playlist
                                 </div>
@@ -228,7 +467,7 @@ const PlayList = () => {
                     </div>
                     <Table
                         columns={playListColumns}
-                        dataSource={playListData}
+                        dataSource={filteredPlayListData}
                     />
                 </Card>
             </div>
@@ -246,54 +485,61 @@ const PlayList = () => {
                     <Row gutter={10} align='bottom'>
                         <Col span={4}>
                             <p className='select-label'>Name</p>
-                            <Input className='grey-input' defaultValue='Playlist ABV' />
+                            <Input className='grey-input' value={newPlayList.Name} onChange={(e) => setNewPlayList((prevState) => ({ ...prevState, Name: e.target.value }))}/>
                         </Col>
                         <Col span={5}>
                             <p className='select-label'>Layout</p>
                             <Select
-                                defaultValue='layout1'
-                                options={[
-                                    {
-                                        value: 'layout1',
-                                        label: 'Layout 1'
-                                    },
-                                    {
-                                        value: 'layout2',
-                                        label: 'Layout 2'
-                                    },
-                                    {
-                                        value: 'layout3',
-                                        label: 'Layout 3'
-                                    }
-                                ]}
-                            />
+                                value={newPlayList.layout ? newPlayList.layout.ID : ''} 
+                                onChange={(e) => setNewPlayList((prevState) => ({ ...prevState, layout: layoutData.filter(l => l.ID === e)[0] }))}
+                            >
+                                {
+                                    layoutData.map((item) => {
+                                        return <Option defaultValue key={item.ID}>{item.Name}</Option>
+                                    })
+                                }
+                            </Select>
                         </Col>
                         <Col span={11} offset={1}>
                             <Checkbox>Hide Locked Panel</Checkbox>
                         </Col>
                     </Row>
                     <p className='select-label'>#Tag</p>
-                    <Input className='grey-input' defaultValue='#Promo #ABC' />
+                    <Select
+                        mode="tags"
+                        value={newPlayList.Tag}
+                        onChange={(e) => setNewPlayList((prevState) => ({ ...prevState, Tag: e }))}
+                    >
+                        {
+                            tags.map((item) => {
+                                return <Option defaultValue key={item.ID}>{item.Name}</Option>
+                            })
+                        }
+                    </Select>
                 </Card>
                 <Row gutter={10}>
                     <Col span={18} className='left-section'>
                         {
-                            panelData.map((pData, pIndex) => 
+                            newPlayList.layout && newPlayList.layout.details.map((pData, pIndex) => 
                                 <Card>
                                     <Row gutter={10}>
                                         <Col span={4}>
-                                            <div className='img-placeholder thumb-placeholder'></div>
+                                            <div style={{width: '100%', textAlign: 'center'}}>
+                                                <div className='img-placeholder thumb-placeholder' style={{width: `${newPlayList.layout.resolution.Width * 90 / newPlayList.layout.resolution.Height}px`}}>
+                                                    <div style={{width: `${pData.Width * 90 / newPlayList.layout.resolution.Height}px`, height: `${pData.Height * 90 / newPlayList.layout.resolution.Height}px`, left: `${pData.X * 90 / newPlayList.layout.resolution.Height}px`, top: `${pData.Y * 90 / newPlayList.layout.resolution.Height}px`, backgroundColor: '#999', position: 'absolute'}}></div>
+                                                </div>
+                                            </div>
                                             <div className='d-flex align-center j-c-space-between'>
-                                                <p className='panel-name'>{pData.name}</p>
+                                                <p className='panel-name'>Panel {pData.PanelName}</p>
                                                 <div className='d-flex align-center'>
-                                                    <p className='panel-tag'>{pData.duration}</p>
-                                                    <p className='panel-tag'>{pData.number}</p>
+                                                    <p className='panel-tag'>00:00:06</p>
+                                                    <p className='panel-tag'>{pData.PanelName}</p>
                                                 </div>
                                             </div>
                                         </Col>
                                         <Col span={20}>
                                             <Dragger
-                                                name={pData.name}
+                                                name={pData.PanelName}
                                                 multiple={true}
                                                 listType='picture-card'
                                                 action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
@@ -358,7 +604,7 @@ const PlayList = () => {
                                     </div>
                                 </Button>
                             </div>
-                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
+                            <Input placeholder="search..." prefix={<SearchOutlined />} className='search-input' value={searchModalText} onChange={changeModalSearch}/>
                             <Select
                                 defaultValue='folder1'
                                 options={[
@@ -378,10 +624,10 @@ const PlayList = () => {
                             />
                             <Row gutter={[10, 10]}>
                                 {
-                                    imageList.map(image => 
+                                    mediaFilterData.map(image => 
                                         <Col span={8} style={{position: 'relative'}}>
-                                            <img src={image.src} className='img-placeholder' alt=''/>
-                                            <p className='media-format'>{image.type}</p>
+                                            <img src={`http://localhost:5001/uploads/img/${image.ID}.png`} className='img-placeholder' alt={image.FileName}/>
+                                            <p className='media-format'>{image.Ext.split('.')[1]}</p>
                                         </Col>
                                     )
                                 }
@@ -390,7 +636,7 @@ const PlayList = () => {
                     </Col>
                 </Row>
                 <Button type='primary' className='save-button' onClick={confirmSave}>Save Playlist</Button>
-                <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
+                <Button className='modal-cancel-button' onClick={() => {setEditShow(false); setNewPlayList({Name: '', Tag: [], CreatedBy: currentUser.Email, ModifiedBy: currentUser.Email, Duration: 0});}}>Cancel</Button>
             </Modal>
             
             <Modal
@@ -424,7 +670,7 @@ const PlayList = () => {
                         type='primary' 
                         disabled={checkedList.length === 0} 
                         className={checkedList.length === 0 && 'ant-btn-disabled'} 
-                        onClick={() => setFilterShow(false)}
+                        onClick={applyFilter}
                     >
                         Apply Filter
                     </Button>

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Space, Select, Modal, Input, Row, Col } from 'antd';
+import { Button, Card, Space, Select, Modal, Input, Row, Col, notification } from 'antd';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { SearchOutlined } from '@ant-design/icons';
 import { Responsive, WidthProvider } from "react-grid-layout";
-import Tag from '../../components/tag';
+import axios from 'axios';
 import Table from '../../components/table';
-import packImg from '../../assets/img/pack.png';
-import watchImg from '../../assets/img/watch.png';
 import './layout.scss';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -18,160 +16,149 @@ const reorder = (list, startIndex, endIndex) => {
 
   return result;
 };
+const colors = ['#ff80ed', '#065535', '#ff0000', '#ffd700', '#00ffff', '#0000ff', '#bada55', '#00ff00'];
 
 const Layout = () => {
 
+    const [currentUser, setCurrentUser] = useState();
     const [editShow, setEditShow] = useState(false);
     const [VWShow, setVWShow] = useState(false);
     const [widthCount, setWidthCount] = useState(1);
     const [heightCount, setHeightCount] = useState(1);
-    const [areaWidth, setAreaWidth] = useState('1920');
-    const [areaHeight, setAreaHeight] = useState('1080');
     const [tempAreaWidth, setTempAreaWidth] = useState('1920');
     const [tempAreaHeight, setTempAreaHeight] = useState('1080');
     const [gridSize, setGridSize] = useState([0, 0]);
     const [activePanel, setActivePanel] = useState('');
     const [ratio, setRatio] = useState('16:9');
-    const [panelList, setPanelList] = useState([
-        {
-            name: 'Panel 1',
-            w: 308,
-            h: 288,
-            x: 20,
-            y: 20,
-            icon: 'volume_mute'
-        },
-        {
-            name: 'Panel 2',
-            w: 30,
-            h: 28,
-            x: 34,
-            y: 234,
-            icon: 'volume_up'
-        },
-        {
-            name: 'Panel 3',
-            w: 123,
-            h: 54,
-            x: 123,
-            y: 20,
-            icon: 'volume_mute'
-        },
-        {
-            name: 'Panel 4',
-            w: 58,
-            h: 92,
-            x: 265,
-            y: 123,
-            icon: 'volume_mute'
-        },
-    ]);
-    const [panelCount, setPanelCount] = useState(panelList.length);
+    const [realRatio, setRealRatio] = useState(0);
+    const [orientation, setOrientation] = useState('landscape');
+    const [layoutListData, setLayoutListData] = useState([]);
+    const [layoutData, setLayoutData] = useState([]);
+    const [newLayout, setNewLayout] = useState({Name: '', CreatedBy: '', ModifiedBy: '', resolution: {Width: 1920, Height: 1080}, details: [{PanelName: '0', Width: 1920, Height: 1080, X:0, Y:0, icon: 'volume_mute'}]});
+    const [mode, setMode] = useState('new');
+    const [searchText, setSearchText] = useState('');
+    const [api, contextHolder] = notification.useNotification();
 
     const layoutListColumns = [
         {
             title: 'Name',
-            dataIndex: 'name'
+            dataIndex: 'Name'
         },
         {
             title: 'Layout',
             dataIndex: 'layout',
-            render: (screenShot) => <img src={screenShot} alt='' />
+            render: (_, record) => <>
+                <div className='table-layout' style={{width: `${record.resolution.Width * 49.5 / record.resolution.Height}px`}}>
+                    {
+                        record.details.map((detail, i) => 
+                            <div style={{width: `${detail.Width * 49.5 / record.resolution.Height}px`, height: `${detail.Height * 49.5 / record.resolution.Height}px`, left: `${detail.X * 49.5 / record.resolution.Height}px`, top: `${detail.Y * 49.5 / record.resolution.Height}px`, backgroundColor: `${colors[i]}`, position: 'absolute'}}></div>
+                        )
+                    }
+                </div>
+            </>
         },
         {
             title: 'By User',
-            dataIndex: 'user',
-            render: (user) => <><p className='black-text'>{user.name}</p><p className='small-text'>{user.email}</p></>,
+            dataIndex: 'CreatedBy',
+            render: (CreatedBy) => <><p className='black-text'>{CreatedBy}</p><p className='small-text'>{CreatedBy}</p></>,
         },
         {
             title: 'Resolution (px)',
             dataIndex: 'resolution',
-            sorter: (a, b) => a.resolution.localeCompare(b.resolution)
+            render: (resolution) => <p>{resolution.Name}</p>,
+            sorter: (a, b) => a.resolution.Name.localeCompare(b.resolution)
         },
         {
             title: 'Orientation',
-            dataIndex: 'orientation'
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',        
-            render: (status) => <Tag label={status.label} color={status.color}/>,
-            sorter: (a, b) => a.status.label.localeCompare(b.status.label)
+            dataIndex: 'orientation',
+            render: (_, record) => (
+                <p>{record.resolution.Width > record.resolution.Height ? 'Landscape' : 'Portrait'}</p>
+            ),
         },
         {
             title: 'Action',
             dataIndex: 'actino',
             render: (_, record) => (
               <Space size="small">
-                <span className="material-symbols-outlined" onClick={() => editLayoutListData()}>edit</span>
+                <span className="material-symbols-outlined" onClick={() => editLayoutListData(record)}>edit</span>
               </Space>
             ),
         }
     ];
     
-    const layoutListData = [
-        {
-            key: '1',
-            name: 'Layout 1',
-            layout: packImg,
-            resolution: '800x600',
-            orientation: 'Landscape',
-            user: {name: 'John Bushmill', email: 'Johnb@mail.com'},
-            status: {label: 'Active', color: 'green'}
-        },
-        {
-            key: '2',
-            name: 'Layout 2',
-            layout: watchImg,
-            resolution: '1920x1080',
-            orientation: 'Portrait',
-            user: {name: 'Ilham Budi A', email: 'ilahmbudi@mail.com'},
-            status: {label: 'Inactive', color: 'grey'}
-        }
-    ];
+    useEffect(() => {
+        setCurrentUser(JSON.parse(localStorage.getItem('loggedUser')));
+
+        axios.get('http://localhost:5001/api/layout')
+        .then((res) => {
+            if (res.status === 200) {
+                res.data.forEach(d => {
+                    d.details.sort((a, b) => a.Panel - b.Panel);
+                    d.details.forEach(detail => {
+                        detail.icon = 'volume_mute';
+                    })
+                })
+                setSearchText('');
+                setLayoutListData(res.data);
+                setLayoutData(res.data);
+            }
+        }).catch((err) => {
+            console.log('err-------------', err)
+        });
+    }, []);
 
     useEffect(() => {
-        if (1920 / parseInt(areaWidth) >= 1080 / parseInt(areaHeight)) {
-            setGridSize([Math.floor(areaWidth * 612 / areaHeight), 612])
+        if (1920 / parseInt(newLayout.resolution.Width) >= 1080 / parseInt(newLayout.resolution.Height)) {
+            setGridSize([Math.floor(newLayout.resolution.Width * 612 / newLayout.resolution.Height), 612]);
+            setRealRatio(612 / newLayout.resolution.Height);
         } else {
-            setGridSize([1089, Math.floor(areaHeight * 1089 / areaWidth)])
+            setGridSize([1089, Math.floor(newLayout.resolution.Height * 1089 / newLayout.resolution.Width)]);
+            setRealRatio(1089 / newLayout.resolution.Width);
         }
-        setRatio(`${parseInt(areaWidth)/gcd(parseInt(areaWidth), parseInt(areaHeight))}:${parseInt(areaHeight)/gcd(parseInt(areaWidth), parseInt(areaHeight))}`);
-    }, [areaWidth, areaHeight]);
-
-    const gcd = (k, n) => {
-        return k ? gcd(n % k, k) : n;
-    }
+    }, [tempAreaWidth, tempAreaHeight]);
 
     const onLayoutChange = (layout) => {
-        let temp = [...panelList];
-        temp.forEach(t => {
-            const l = layout.filter(lo => lo.i === t.name)[0];
-            t.x = Math.floor(l.x);
-            t.y = l.y > gridSize[1] - l.h ? gridSize[1] - l.h : l.y;
-            t.w = Math.floor(l.w);
-            t.h = Math.floor(l.h);
+        let temp = {...newLayout};
+        temp.details.forEach(t => {
+            const l = layout.filter(lo => lo.i === t.PanelName)[0];
+            t.X = Math.floor(l.x);
+            t.Y = l.y > gridSize[1] - l.h ? gridSize[1] - l.h : l.y;
+            t.Width = Math.floor(l.w);
+            t.Height = Math.floor(l.h);
         })
-        setPanelList(temp);
+        setNewLayout(temp);
         setActivePanel('');
     }
 
-    const editLayoutListData = () => {
+    const editLayoutListData = (layout) => {
+        let temp = {ID: layout.ID, Name: layout.Name, CreatedBy: currentUser.Email, ModifiedBy: currentUser.Email, resolution: {ID: layout.resolution.ID, Width: layout.resolution.Width, Height: layout.resolution.Height}, child: {...layout.child}, details: []};
+        layout.details.forEach(detail => {
+            if (1920 / parseInt(layout.resolution.Width) >= 1080 / parseInt(layout.resolution.Height)) {
+                setRealRatio(612 / layout.resolution.Height);
+                temp.details.push({...detail, Width: detail.Width * 612 / layout.resolution.Height, Height: detail.Height * 612 / layout.resolution.Height, X: detail.X * 612 / layout.resolution.Height, Y: detail.Y * 612 / layout.resolution.Height});
+            } else {
+                setRealRatio(1089 / layout.resolution.Width);
+                temp.details.push({...detail, Width: detail.Width * 1089 / layout.resolution.Width, Height: detail.Height * 1089 / layout.resolution.Width, X: detail.X * 1089 / layout.resolution.Width, Y: detail.Y * 1089 / layout.resolution.Width});
+            }
+        })
+        setNewLayout(temp)
+        setTempAreaWidth(layout.resolution.Width);
+        setTempAreaHeight(layout.resolution.Height);
+        setMode('edit');
         setEditShow(true);
     }
 
     const generateVW = () => {
-        let tempCount = 0;
-        let temp = [];
+        let tempCount = newLayout.details.length;
+        let temp = {...newLayout};
         for (let i = 0; i < heightCount; i++) {
             for (let j = 0; j < widthCount; j++) {
-                tempCount ++;         
-                temp.push({name: `Panel ${tempCount}`, icon: 'volume_mute', w: 100, h: 100, x: 100*j, y: 100*i});
+                tempCount ++;
+                temp.details.push({PanelName: `${tempCount}`, icon: 'volume_mute', Width: 100, Height: 100, X: 100*j, Y: 100*i});
             }            
         }
         setVWShow(false);
-        setPanelList(temp);
-        setPanelCount(tempCount);
+        setNewLayout(temp);
     }
 
     const onDragEnd = (result) => {
@@ -180,45 +167,87 @@ const Layout = () => {
         }
     
         const tempItems = reorder(
-            panelList,
+            newLayout.details,
             result.source.index,
             result.destination.index
         );
-        setPanelList(tempItems);
+
+        let temp = {...newLayout};
+        temp.details = tempItems;
+        setNewLayout(temp);
     }
     
     const addPanel = () => {
-        let tempCount = panelCount + 1;
-        let temp = [...panelList];
-        temp.push({name: `Panel ${tempCount}`, icon: 'volume_mute', w: 100, h: 100, x: 0, y: 0});
-        setPanelList(temp);
-        setPanelCount(tempCount);
+        let tempCount = newLayout.details.length;
+        let temp = {...newLayout};
+        temp.details.push({PanelName: `${tempCount}`, icon: 'volume_mute', Width: 100, Height: 100, X: 0, Y: 0});
+        setNewLayout(temp);
     }
 
     const removePanel = (i) => {
-        let temp = [...panelList];
-        temp.splice(i, 1);
-        setPanelList(temp);
+        let temp = {...newLayout};
+        temp.details.splice(i, 1);
+        setNewLayout(temp);
     }
 
     const changeOrientation = (e) => {
-        if (e === 'landscape') {
-            setAreaHeight('1080');
-            setAreaWidth('1920');
-            setTempAreaHeight('1080');
-            setTempAreaWidth('1920');
-        } else {
-            setAreaHeight('1080');
-            setAreaWidth('600');
-            setTempAreaHeight('1080');
-            setTempAreaWidth('600');
+        setOrientation(e);
+        let temp = {...newLayout};
+        let tempWidth = temp.resolution.Width;
+        setTempAreaWidth(temp.resolution.Height);
+        setTempAreaHeight(tempWidth);
+        temp.resolution.Width = temp.resolution.Height;
+        temp.resolution.Height = tempWidth;
+        setNewLayout(temp);
+    }
+
+    const changeRatio = (e) => {
+        setRatio(e);
+        if (e !== 'custom') {
+            if (orientation === 'landscape') {
+                let temp = {...newLayout};
+                temp.resolution.Height = Math.floor(temp.resolution.Width * parseInt(e.split(':')[1]) / parseInt(e.split(':')[0]));
+                setTempAreaHeight(Math.floor(temp.resolution.Width * parseInt(e.split(':')[1]) / parseInt(e.split(':')[0])));
+                setNewLayout(temp);
+            } else {
+                let temp = {...newLayout};
+                temp.resolution.Height = Math.floor(temp.resolution.Width * parseInt(e.split(':')[0]) / parseInt(e.split(':')[1]));
+                setTempAreaHeight(Math.floor(temp.resolution.Width * parseInt(e.split(':')[0]) / parseInt(e.split(':')[1])));
+                setNewLayout(temp);
+            }
         }
     }
 
+    const updateResolution = (e, c) => {
+        let temp = {...newLayout};
+        if(orientation === 'landscape') {
+            if (c === "Width") {
+                temp.resolution.Width = parseInt(e.target.value);
+                temp.resolution.Height = Math.floor(e.target.value * parseInt(ratio.split(':')[1]) / parseInt(ratio.split(':')[0]));
+                setTempAreaHeight(Math.floor(e.target.value * parseInt(ratio.split(':')[1]) / parseInt(ratio.split(':')[0])));
+            } else {
+                temp.resolution.Height = parseInt(e.target.value);
+                temp.resolution.Width = Math.floor(e.target.value * parseInt(ratio.split(':')[0]) / parseInt(ratio.split(':')[1]));
+                setTempAreaWidth(Math.floor(e.target.value * parseInt(ratio.split(':')[0]) / parseInt(ratio.split(':')[1])));
+            }
+        } else {
+            if (c === "Width") {
+                temp.resolution.Width = parseInt(e.target.value);
+                temp.resolution.Height = Math.floor(e.target.value * parseInt(ratio.split(':')[0]) / parseInt(ratio.split(':')[1]));
+                setTempAreaHeight(Math.floor(e.target.value * parseInt(ratio.split(':')[0]) / parseInt(ratio.split(':')[1])));
+            } else {
+                temp.resolution.Height = parseInt(e.target.value);
+                temp.resolution.Width = Math.floor(e.target.value * parseInt(ratio.split(':')[1]) / parseInt(ratio.split(':')[0]));
+                setTempAreaWidth(Math.floor(e.target.value * parseInt(ratio.split(':')[1]) / parseInt(ratio.split(':')[0])));
+            }
+        }
+        setNewLayout(temp);
+    }
+
     const toggleIcon = (i) => {
-        let temp = [...panelList];
-        temp[i].icon === 'volume_up' ? temp[i].icon = 'volume_mute' : temp[i].icon = 'volume_up';
-        setPanelList(temp);
+        let temp = {...newLayout};
+        temp.details[i].icon === 'volume_up' ? temp.details[i].icon = 'volume_mute' : temp.details[i].icon = 'volume_up';
+        setNewLayout(temp);
     }
 
     const confirmSave = () => {
@@ -236,18 +265,88 @@ const Layout = () => {
     }
 
     const saveLayout = () => {
-        setEditShow(false);
+        let temp = {...newLayout};
+        temp.details.forEach(detail => {
+            detail.Width = Math.floor(detail.Width*parseInt(temp.resolution.Width)/gridSize[0]);
+            detail.Height = Math.floor(detail.Height*parseInt(temp.resolution.Height)/gridSize[1]);
+            detail.X = Math.ceil(detail.X*parseInt(temp.resolution.Width)/gridSize[0]);
+            detail.Y = Math.ceil(detail.Y*parseInt(temp.resolution.Height)/gridSize[1]);
+        })
+        if (temp.Name !== '' && temp.resolution.Height > 0 && temp.resolution.Width > 0) {
+            if (mode === 'new') {
+                axios.post('http://localhost:5001/api/layout/add', temp)
+                .then((res) => {
+                    if (res.status === 200) {
+                        api.success({
+                            message: 'Success',
+                            description:
+                            'The new report has been added successfully.',
+                        });
+                        setEditShow(false);
+                        
+                        res.data.forEach(d => {
+                            d.details.sort((a, b) => a.Panel - b.Panel);
+                            d.details.forEach(detail => {
+                                detail.icon = 'volume_mute';
+                            })
+                        })
+                        setSearchText('');
+                        setLayoutListData(res.data);
+                        setLayoutData(res.data);
+                    }
+                }).catch((err) => {
+                    console.log('err-------------', err)
+                });
+            } else {
+                axios.post('http://localhost:5001/api/layout/update', temp)
+                .then((res) => {
+                    if (res.status === 200) {
+                        api.success({
+                            message: 'Success',
+                            description:
+                            'The layout has been updated successfully.',
+                        });
+                        setEditShow(false);
+                        
+                        res.data.forEach(d => {
+                            d.details.sort((a, b) => a.Panel - b.Panel);
+                            d.details.forEach(detail => {
+                                detail.icon = 'volume_mute';
+                            })
+                        })
+                        setSearchText('');
+                        setLayoutListData(res.data);
+                        setLayoutData(res.data);
+                    }
+                }).catch((err) => {
+                    console.log('err-------------', err)
+                });
+            }
+        } else {
+            api.error({
+                message: 'Error',
+                description:
+                  'Check for missing fields.',
+            });
+        }
+    }
+
+    const changeSearch = (e) => {
+        setSearchText(e.target.value);
+        let temp = [...layoutData];
+        e.target.value !== '' ? setLayoutListData([...temp.filter(t => t.Name.toLowerCase().includes(e.target.value.toLowerCase()))]) : setLayoutListData([...temp]);
     }
 
     return (
         <>
+            {contextHolder}
             <div className="layout-list-page">
                 <Card className='table-card'>
                     <div className='d-flex align-center j-c-space-between top-section'>
                         <p className='card-title'>Layout List</p>
                         <div className='d-flex align-center'>
-                            <Input placeholder="search..." prefix={<SearchOutlined />}  className='search-input'/>
-                            <Button className='view-mode-btn' type='primary' onClick={() => setEditShow(true)}>
+                            <Input placeholder="search..." prefix={<SearchOutlined />} className='search-input' value={searchText} onChange={changeSearch}/>
+                            <Button className='view-mode-btn' type='primary' onClick={() => {setNewLayout({Name: '', CreatedBy: currentUser.Email, ModifiedBy: currentUser.Email, resolution: {Width: 1920, Height: 1080}, details: [{PanelName: '0', Width: 1920, Height: 1080, X:0, Y:0, icon: 'volume_mute'}]}); setEditShow(true); setMode('new');}}>
                                 <div className='d-flex align-center j-c-center'>
                                     <span className="material-symbols-outlined">add</span>Layout
                                 </div>
@@ -274,7 +373,7 @@ const Layout = () => {
                     <Row gutter={10} align='bottom'>
                         <Col span={4}>
                             <p className='select-label'>Name</p>
-                            <Input className='grey-input' defaultValue='Layout 1' />
+                            <Input className='grey-input' value={newLayout.Name} onChange={(e) => setNewLayout((prevState) => ({ ...prevState, Name: e.target.value }))}/>
                         </Col>
                         <Col span={3}>
                             <p className='select-label'>Orientation</p>
@@ -293,28 +392,46 @@ const Layout = () => {
                                 onChange={(e) => changeOrientation(e)}
                             />
                         </Col>
-                        <Col span={2} style={{paddingRight: '30px'}}>
+                        <Col span={3} style={{paddingRight: '30px'}}>
                             <p className='select-label'>Ratio</p>
-                            <Input className='grey-input' defaultValue='16:9' value={ratio} />
+                            <Select
+                                defaultValue='16:9'
+                                options={[
+                                    {
+                                        value: '16:9',
+                                        label: '16:9'
+                                    },
+                                    {
+                                        value: '4:3',
+                                        label: '4:3'
+                                    },
+                                    {
+                                        value: '8:5',
+                                        label: '8:5'
+                                    },
+                                    {
+                                        value: 'custom',
+                                        label: 'custom'
+                                    },
+                                ]}
+                                onChange={(e) => changeRatio(e)}
+                            />
                         </Col>
                         <Col span={2}>
                             <p className='select-label'>Width (px)</p>
-                            <Input className='grey-input' value={tempAreaWidth} onChange={(e) => setTempAreaWidth(e.target.value)} onBlur={(e) => setAreaWidth(e.target.value)} />
+                            <Input className='grey-input' value={tempAreaWidth} onChange={(e) => setTempAreaWidth(e.target.value)} onBlur={(e) => updateResolution(e, 'Width')} />
+
                         </Col>
                         <Col span={2}>
                             <p className='select-label'>Height (px)</p>
-                            <Input className='grey-input' value={tempAreaHeight} onChange={(e) => setTempAreaHeight(e.target.value)} onBlur={(e) => setAreaHeight(e.target.value)} />
-                        </Col>
-                        <Col span={5}>
-                            <p className='select-label'>#Tag</p>
-                            <Input className='grey-input' />
+                            <Input className='grey-input'  value={tempAreaHeight} onChange={(e) => setTempAreaHeight(e.target.value)} onBlur={(e) => updateResolution(e, 'Height')} />
                         </Col>
                     </Row>
                 </Card>
                 <Row gutter={10} className='layout-section'>
                     <Col span={18} className='left-section'>
                         <ResponsiveGridLayout
-                            layout={panelList}
+                            layout={newLayout.details}
                             onLayoutChange={onLayoutChange}
                             onDragStop={onLayoutChange}
                             isResizable={true}
@@ -330,8 +447,8 @@ const Layout = () => {
                             style={{width: gridSize[0] + 'px', height: gridSize[1] + 'px'}}
                         >
                             {
-                                panelList.map(panel => 
-                                    <div className='panel-div' key={panel.name} onMouseDown={() => console.log('------------------')} data-grid={{ x: panel.x, y: panel.y, w: panel.w > gridSize[0] ? gridSize[0] : panel.w, h: panel.h > gridSize[1] ? gridSize[1] : panel.h, maxW: gridSize[0], maxH: gridSize[1], isResizable: true}}>
+                                newLayout.details.map(panel => 
+                                    <div className='panel-div' key={panel.PanelName} onMouseDown={() => console.log('------------------')} data-grid={{ x: panel.X, y: panel.Y, w: panel.Width > gridSize[0] ? gridSize[0] : panel.Width, h: panel.Height > gridSize[1] ? gridSize[1] : panel.Height, maxW: gridSize[0], maxH: gridSize[1], isResizable: true}}>
                                     </div>
                                 )
                             }
@@ -356,19 +473,20 @@ const Layout = () => {
                                                 {...provided.droppableProps}
                                                 ref={provided.innerRef}
                                             >
-                                                {panelList.map((item, index) => (
-                                                    <Draggable key={item.name} draggableId={item.name} index={index}>
+                                                {newLayout.details.map((item, index) => (
+                                                    <Draggable key={item.PanelName} draggableId={item.PanelName} index={index}>
                                                         {(provided, snapshot) => (
                                                             <div
                                                                 ref={provided.innerRef}
                                                                 {...provided.draggableProps}
                                                             >
-                                                                <div className={activePanel === item.name ? 'layout-drag-item active-layout-drag-item' : 'layout-drag-item'}>
+                                                                <div className={activePanel === item.PanelName ? 'layout-drag-item active-layout-drag-item' : 'layout-drag-item'}>
                                                                     <div className='d-flex align-center'>
                                                                         <span className="material-symbols-outlined" {...provided.dragHandleProps}>drag_indicator</span>
                                                                         <div style={{marginLeft: '10px'}}>
-                                                                            <p className='layout-name'>{item.name}</p>
-                                                                            <p className='layout-position'><span>W</span>{Math.floor(item.w*parseInt(areaWidth)/gridSize[0])} <span>H</span>{Math.floor(item.h*parseInt(areaHeight)/gridSize[1])} <span>X</span>{Math.ceil(item.x*parseInt(areaWidth)/gridSize[0])} <span>Y</span>{Math.ceil(item.y*parseInt(areaHeight)/gridSize[1])}</p>
+                                                                            <p className='layout-name'>Panel {item.PanelName}</p>
+                                                                            <p className='layout-position'><span>W</span>{Math.floor(item.Width/realRatio)} <span>H</span>{Math.floor(item.Height/realRatio)} <span>X</span>{Math.ceil(item.X/realRatio)} <span>Y</span>{Math.ceil(item.Y/realRatio)}</p>
+
                                                                         </div>
                                                                     </div>
                                                                     <div className='d-flex align-center'>
@@ -390,7 +508,7 @@ const Layout = () => {
                     </Col>
                 </Row>
                 <Button type='primary' className='save-button' onClick={confirmSave}>Save Layout</Button>
-                <Button className='modal-cancel-button' onClick={() => setEditShow(false)}>Cancel</Button>
+                <Button className='modal-cancel-button' onClick={() => {setEditShow(false);}}>Cancel</Button>
             </Modal>
 
             <Modal
